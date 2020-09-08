@@ -63,3 +63,6 @@ Working
 |          4.6 |         3.1 |          1.5 |         0.2 | setosa  |
 |          5.0 |         3.6 |          1.4 |         0.2 | setosa  |
 |          5.4 |         3.9 |          1.7 |         0.4 | setosa  |
+
+Test after making private
+=========================
