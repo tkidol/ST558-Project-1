@@ -3,7 +3,11 @@ NHL
 Todd Idol
 9/8/2020
 
+-   [Prject Repo](#prject-repo)
 -   [NHL Franchises](#nhl-franchises)
+
+[Prject Repo](https://github.com/tkidol/ST558-Project-1)
+========================================================
 
 NHL Franchises
 ==============
