@@ -1,0 +1,201 @@
+---
+title: "NHL"
+author: "Todd Idol"
+date: "9/8/2020"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE, message = FALSE)
+rmarkdown::find_pandoc(version = '2.10.1')
+library(tidyverse)
+library(tinytex)
+library(jsonlite)
+library(httr)
+library(DT)
+```
+# [Prject Repo](https://github.com/tkidol/ST558-Project-1)
+
+# NHL Franchises
+
+
+```{r Franchise API}
+# GET pull for NHL franchise
+FranchiseAPI <- function() {
+franchise <- GET("https://records.nhl.com/site/api/franchise")
+
+## As JSON text
+franchise <- content(franchise, "text")
+
+## As JSON List
+franchise <- fromJSON(franchise, flatten = TRUE)
+
+franchise <- franchise[[1]] %>% rename("Franchise ID" = id, "First Season" = firstSeasonId, "Last Season" = lastSeasonId, "Team ID" = mostRecentTeamId, "Name" = teamCommonName, "Location" = teamPlaceName)
+return(franchise)
+}
+```
+
+```{r TeamTotal API}
+# GET pull for NHL Team Totals
+TeamTotalsAPI<- function() {
+totals <- GET("https://records.nhl.com/site/api/franchise-team-totals")
+
+## As JSON text
+totals <- content(totals, "text")
+
+## As JSON List
+totals <- fromJSON(totals, flatten = TRUE)
+return(totals[[1]])
+}
+```
+
+```{r Team_DrillDown API}
+TeamDDAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+drill_down <- GET(paste0("https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+drill_down <- content(drill_down, "text")
+
+## As JSON List
+drill_down <- fromJSON(drill_down, flatten = TRUE)
+return(drill_down[[1]])
+}
+```
+
+```{r Goalie API}
+GoalieAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+goalie <- GET(paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+goalie <- content(goalie, "text")
+
+## As JSON List
+goalie <- fromJSON(goalie, flatten = TRUE)
+return(goalie[[1]])
+}
+```
+
+```{r Skater API}
+SkaterAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+skater <- GET(paste0("https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+skater <- content(skater, "text")
+
+## As JSON List
+skater <- fromJSON(skater, flatten = TRUE)
+return(skater[[1]])
+}
+```
+
+```{r, Test  Record API calls}
+FranchiseAPI_Call <- head(FranchiseAPI())
+knitr::kable(FranchiseAPI_Call)
+
+TeamTotalsAPI_Call <- head(TeamTotalsAPI())
+knitr::kable(TeamTotalsAPI_Call)
+
+TeamDDAPI_Call <- head(TeamDDAPI(5))
+knitr::kable(TeamDDAPI_Call)
+
+GoalieAPI_Call <- head(GoalieAPI(8))
+knitr::kable(GoalieAPI_Call)
+
+SkaterAPI_Call <- head(SkaterAPI(1))
+knitr::kable(SkaterAPI_Call)
+```
+
+```{r, Team Stats API}
+TeamStatsAPI <- function() {
+stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
+
+## As JSON text
+stats <- content(stats, "text")
+
+## As JSON List
+stats <- fromJSON(stats, flatten = TRUE)
+return(stats[[2]])
+}
+```
+
+
+```{r, Roster API}
+RosterAPI <- function(id, ...) {
+roster <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.roster"))
+
+## As JSON text
+roster <- content(roster, "text")
+
+## As JSON List
+roster <- fromJSON(roster, flatten = TRUE)
+roster <- as.data.frame(c(roster$teams$franchiseId, roster$teams$teamName, roster$teams$roster.roster))
+return(roster)
+}
+```
+
+
+```{r, Person API}
+PersonAPI <- function(id, ...) {
+person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=person.names"))
+
+## As JSON text
+person <- content(person, "text")
+
+## As JSON List
+person <- fromJSON(person, flatten = TRUE)
+glimpse(person)
+return(person[[2]])
+}
+```
+
+```{r, Next Game API}
+NextGAPI <- function(id, ...) {
+nextG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.next"))
+
+## As JSON text
+nextG <- content(nextG, "text")
+
+## As JSON List
+nextG <- fromJSON(nextG, flatten = TRUE)
+return(nextG[[2]])
+}
+```
+
+```{r, Prior Game API}
+PriorGAPI <- function(id, ...) {
+priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.previous"))
+
+## As JSON text
+priorG <- content(priorG, "text")
+
+## As JSON List
+priorG <- fromJSON(priorG, flatten = TRUE)
+priorG <- priorG[[2]]$previousGameSchedule.dates
+return(priorG)
+}
+```
+
+
+
+```{r, Test Stats API calls}
+TeamStatsAPI_Call <- head(TeamStatsAPI())
+knitr::kable(TeamStatsAPI_Call)
+
+RosterAPI_Call <- RosterAPI(10)
+knitr::kable(RosterAPI_Call)
+
+PersonAPI_Call <- PersonAPI(10)
+knitr::kable(PersonAPI_Call)
+
+NextGAPI_Call <- head(NextGAPI(1))
+knitr::kable(NextGAPI_Call)
+
+PriorGAPI_Call <- head(PriorGAPI(12))
+knitr::kable(PriorGAPI_Call)
+```
