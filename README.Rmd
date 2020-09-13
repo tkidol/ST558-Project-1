@@ -2,10 +2,8 @@
 title: "NHL"
 author: "Todd Idol"
 date: "9/8/2020"
-runtime: shiny
 output: 
-  html_document:
-  github_document:
+   github_document:
     toc: true
     toc_depth: 3
 ---
@@ -40,19 +38,6 @@ franchise <- franchise[[1]] %>% rename("Franchise ID" = id, "First Season" = fir
 return(franchise)
 }
 ```
-
-
-```{r, Team Total glimpse}
-totals <- GET("https://records.nhl.com/site/api/franchise-team-totals")
-
-## As JSON text
-totals <- content(totals, "text")
-
-## As JSON List
-totals <- fromJSON(totals, flatten = TRUE)
-glimpse(totals[[1]])
-```
-
 ```{r TeamTotal API}
 # GET pull for NHL Team Totals
 TeamTotalsAPI<- function() {
@@ -65,16 +50,6 @@ totals <- content(totals, "text")
 totals <- fromJSON(totals, flatten = TRUE)
 return(totals[[1]])
 }
-```
-```{r, drilldown glimpse}
-drill_down <- GET(paste0("https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=1"))
-
-## As JSON text
-drill_down <- content(drill_down, "text")
-
-## As JSON List
-drill_down <- fromJSON(drill_down, flatten = TRUE)
-glimpse(drill_down[1])
 ```
 
 ```{r, Team DrillDown API}
@@ -90,17 +65,6 @@ drill_down <- fromJSON(drill_down, flatten = TRUE)
 return(drill_down[[1]])
 }
 ```
-```{r, goalie glimpse}
-goalie <- GET(paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=1"))
-
-## As JSON text
-goalie <- content(goalie, "text")
-
-## As JSON List
-goalie <- fromJSON(goalie, flatten = TRUE)
-glimpse(goalie[[1]])
-```
-
 
 ```{r Goalie API}
 GoalieAPI <- function(id, ...) {
@@ -115,18 +79,7 @@ goalie <- fromJSON(goalie, flatten = TRUE)
 return(goalie[[1]])
 }
 ```
-```{r, skater glimpse}
-skater <- GET(paste0("https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=26"))
 
-## As JSON text
-skater <- content(skater, "text")
-
-## As JSON List
-skater <- fromJSON(skater, flatten = TRUE)
-glimpse(skater[[1]])
-```
-
-}
 ```{r, Skater API}
 SkaterAPI <- function(id, ...) {
 # GET pull for NHL Team Totals
@@ -143,7 +96,7 @@ return(skater[[1]])
 
 ```{r, Test  Record API calls}
 FranchiseAPI_Call <- arrange(FranchiseAPI(), desc("Team ID"))
-knitr::kable(FranchiseAPI_Call)
+knitr::kable(head(FranchiseAPI_Call))
 
 TeamTotalsAPI_Call <- head(TeamTotalsAPI())
 knitr::kable(TeamTotalsAPI_Call)
@@ -158,28 +111,6 @@ SkaterAPI_Call <- head(SkaterAPI(1))
 knitr::kable(SkaterAPI_Call)
 ```
 
-```{r, team glimpse}
-stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
-
-## As JSON text
-stats <- content(stats, "text")
-
-## As JSON List
-stats <- fromJSON(stats, flatten = TRUE)
-glimpse(stats[[2]])
-```
-
-```{r, team stats glimpse}
-stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
-
-## As JSON text
-stats <- content(stats, "text")
-
-## As JSON List
-stats <- fromJSON(stats, flatten = TRUE)
-glimpse(stats[[2]])
-```
-
 ```{r, Team Stats API}
 TeamStatsAPI <- function() {
 stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
@@ -191,20 +122,6 @@ stats <- content(stats, "text")
 stats <- fromJSON(stats, flatten = TRUE)
 return(stats[[2]])
 }
-```
-
-```{r, roster glimpse}
-roster <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/12/?expand=team.roster"))
-
-## As JSON text
-roster <- content(roster, "text")
-
-## As JSON List
-roster <- fromJSON(roster, flatten = TRUE)
-franchiseId <- roster$teams$franchiseId
-roster <- tbl_df(roster[[2]]$roster.roster[[1]]) %>% mutate("franchiseId" = franchiseId) %>% 
-select(franchiseId, everything())
-knitr::kable(roster)
 ```
 
 ```{r, Roster API}
@@ -223,18 +140,6 @@ return(roster)
 }
 ```
 
-```{r, person glimpse}
-person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/12/?expand=person.names"))
-
-## As JSON text
-person <- content(person, "text")
-
-## As JSON List
-person <- fromJSON(person, flatten = TRUE)
-glimpse(person[[2]])
-```
-
-
 ```{r, Person API}
 PersonAPI <- function(id, ...) {
 person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=person.names"))
@@ -247,19 +152,9 @@ person <- fromJSON(person, flatten = TRUE)
 return(person[[2]])
 }
 ```
-```{r, people glimpse}
-people <- GET(paste0("https://statsapi.web.nhl.com/api/v1/people/8468508"))
-
-## As JSON text
-people <- content(people, "text")
-
-## As JSON List
-people <- fromJSON(people, flatten = TRUE)
-glimpse(people[[2]])
-```
-
 
 ```{r, People API}
+# Detailed substitue for PersonAPI
 PeopleAPI <- function(id, ...) {
 people <- GET(paste0("https://statsapi.web.nhl.com/api/v1/people/", id))
 
@@ -272,16 +167,21 @@ return(people[[2]])
 }
 ```
 
-
-```{r, next game blimpse}
-nextG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/2/?expand=team.schedule.next"))
-
-## As JSON text
-nextG <- content(nextG, "text")
-
-## As JSON List
-nextG <- fromJSON(nextG, flatten = TRUE)
-glimpse(nextG[[2]]$nextGameSchedule.dates[[1]]$games[[1]])
+```{r, team player}
+## New DF combining People with Roster
+TeamPlayer <- function (id, ...) {
+playerId <- pull(RosterAPI(id), person.id)
+players <- as.data.frame(PeopleAPI(playerId[1]))
+  for (i in 2:length(playerId)) {
+    players[i, ] <- (PeopleAPI(playerId[i]))
+  }
+players <- players %>% select(c(-26, -24, -23, -22, -21, -12, -10, -9,  -5, -4))
+return(players) 
+}
+```
+```{r, test team player}
+TPtest <- TeamPlayer(12)
+knitr::kable(head(TPtest))
 ```
 
 ```{r, Next Game API}
@@ -293,19 +193,9 @@ nextG <- content(nextG, "text")
 
 ## As JSON List
 nextG <- fromJSON(nextG, flatten = TRUE)
-return(nextG[[2]]$nextGameSchedule.dates[[1]]$games[[1]])
+nextG <- nextG[[2]]$nextGameSchedule.dates[[1]]$games[[1]]
+return(nextG)
 }
-```
-
-```{r, prior game glimpse}
-priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/12?expand=team.schedule.previous"))
-
-## As JSON text
-priorG <- content(priorG, "text")
-
-## As JSON List
-priorG <- fromJSON(priorG, flatten = TRUE)
-glimpse(priorG[[2]]$previousGameSchedule.dates[[1]]$games[[1]])
 ```
 
 ```{r, Prior Game API}
@@ -322,17 +212,6 @@ return(priorG)
 }
 ```
 
-```{r, expanded stats glimpse}
-expStats <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/12?expand=team.stats"))
-
-## As JSON text
-expStats <- content(expStats, "text")
-
-## As JSON List
-expStats <- fromJSON(expStats, flatten = TRUE)
-expStats <- (as.data.frame(expStats[[2]]$teamStats[[1]]$splits))
-knitr::kable(expStats)
-```
 
 ```{r, Expanded Stats API}
 ExpStatsAPI <- function(id, ...) {
@@ -343,29 +222,15 @@ expStats <- content(expStats, "text")
 
 ## As JSON List
 expStats <- fromJSON(expStats, flatten = TRUE)
-expStats <- (as.data.frame(expStats[[2]]$teamStats[[1]]$splits))
+expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
 return(expStats)
 }
 ```
 ```{r, exp stats test}
 expstatstest <- ExpStatsAPI(12)
-glimpse(expstatstest)
 knitr::kable(tbl_df(expstatstest))
 ```
 
-
-```{r, season stats glimpse}
-season <- GET("https://statsapi.web.nhl.com/api/v1/teams/12/?expand=team.roster&season=20052006")
-
-## As JSON text
-season <- content(season, "text")
-
-## As JSON List
-season <- fromJSON(season, flatten = TRUE)
-franchiseId <- season$teams$franchiseId
-season <- tbl_df((season[[2]]$roster.roster[[1]])) %>% mutate("franchiseId" = franchiseId) %>% select(franchiseId, everything())
-knitr::kable(season)
-```
 
 ```{r, Season Stats API}
 SeasonAPI <- function(id, season, ...) {
@@ -382,17 +247,6 @@ return(season)
 }
 ```
 
-```{r, multi team glimpse}
-multi <- GET("https://statsapi.web.nhl.com/api/v1/teams/?teamId=10,11,12")
-
-## As JSON text
-multi <- content(multi, "text")
-
-## As JSON List
-multi <- fromJSON(multi, flatten = TRUE)
-glimpse(multi[[2]])
-```
-
 ```{r, Multi Teams API}
 MultiAPI <- function(id, ...) {
 multi <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", "?teamId=", id))
@@ -404,17 +258,6 @@ multi <- content(multi, "text")
 multi <- fromJSON(multi, flatten = TRUE)
 return(multi[[2]])
 }
-```
-
-```{r, playoff glimpse}
-playoff <- GET("https://statsapi.web.nhl.com/api/v1/teams/12?stats=statsSingleSeasonPlayoffs")
-
-## As JSON text
-playoff <- content(playoff, "text")
-
-## As JSON List
-playoff <- fromJSON(playoff, flatten = TRUE)
-glimpse(playoff[[2]])
 ```
 
 ```{r, Playoffs API}
@@ -430,37 +273,10 @@ return(playoff[[2]])
 }
 ```
 
-```{r, Actual Playoffs Glimpse}
-actualPO <- GET("https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=20182019")
-
-## As JSON text
-actualPO <- content(actualPO, "text")
-
-## As JSON List
-actualPO <- fromJSON(actualPO, flatten = TRUE)
-actualPO <- (actualPO$rounds$series[[1]])
-glimpse(actualPO)
-```
-
-```{r, Actual Playoffs API}
-ActualPOAPI <- function(season, ...) {
-actualPO<- GET(paste0("https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=", season ))
-
-## As JSON text
-actualPO <- content(actualPO, "text")
-
-## As JSON List
-actualPO <- fromJSON(actualPO, flatten = TRUE)
-return(actualPO$rounds$series[[1]])
-}
-```
 
 ```{r, Test Stats API calls}
 TeamStatsAPI_Call <- head(TeamStatsAPI())
 knitr::kable(TeamStatsAPI_Call)
-
-RosterAPI_Call <- head(RosterAPI(10))
-knitr::kable(RosterAPI_Call)
 
 RosterAPI_Call <- head(RosterAPI(10))
 knitr::kable(RosterAPI_Call)
@@ -485,14 +301,10 @@ knitr::kable(MultiID_Call)
 
 PlayoffAPI_Call <- head(PlayoffAPI(3))
 knitr::kable(PlayoffAPI_Call)
-
-ActualPOAPI_Call <- head(ActualPOAPI(20182019))
-knitr::kable(ActualPOAPI_Call)
 ```
 
-```{r, numeric input}
+##{r, user input}
 t_id <- FranchiseAPI()[ , "Team ID"] 
 selectInput("n",label = "Choose a Team ID", choices = t_id, selected = 26)
 renderDT({RosterAPI(input$n)})
 ```
-## test
