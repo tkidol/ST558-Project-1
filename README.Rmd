@@ -489,12 +489,10 @@ knitr::kable(PlayoffAPI_Call)
 ActualPOAPI_Call <- head(ActualPOAPI(20182019))
 knitr::kable(ActualPOAPI_Call)
 ```
-```{r, user input}
-selectInput("n_ID",label = "Choose a Franchise Id", choices = c(1:38), selected = 26)
-```
+
 ```{r, numeric input}
-id <- FranchiseAPI()[ , "Team ID"]
-selectInput("n",label = "Choose a Team ID", choices = id, selected = 26)
+t_id <- FranchiseAPI()[ , "Team ID"] 
+selectInput("n",label = "Choose a Team ID", choices = t_id, selected = 26)
 renderDT({RosterAPI(input$n)})
 ```
 
