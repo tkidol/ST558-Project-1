@@ -17,6 +17,10 @@ library(jsonlite)
 library(httr)
 library(DT)
 library(shiny)
+library(rmarkdown)
+```
+```{r, render readme}
+rmarkdown::render(input = "P1_TKIdol.Rmd", output_file = "README.md")
 ```
 # [Prject Repo](https://github.com/tkidol/ST558-Project-1)
 
