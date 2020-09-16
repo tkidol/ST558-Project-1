@@ -1,0 +1,348 @@
+---
+title: "NHL"
+author: "Todd Idol"
+date: "9/8/2020"
+output: 
+   github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE, message = FALSE)
+rmarkdown::find_pandoc(version = '2.10.1')
+options(knitr.duplicate.label = "allow")
+library(tidyverse)
+library(tinytex)
+library(jsonlite)
+library(httr)
+library(DT)
+library(shiny)
+library(dplyr)
+library(rmarkdown)
+```
+
+# NHL Franchises
+
+```{r, Franchise API}
+# GET pull for NHL franchise
+FranchiseAPI <- function() {
+franchise <- GET("https://records.nhl.com/site/api/franchise")
+
+## As JSON text
+franchise <- content(franchise, "text")
+
+## As JSON List
+franchise <- fromJSON(franchise, flatten = TRUE)
+
+franchise <- franchise[[1]] %>% rename("Franchise ID" = id, "First Season" = firstSeasonId, "Last Season" = lastSeasonId, "Team ID" = mostRecentTeamId, "Name" = teamCommonName, "Location" = teamPlaceName)
+return(franchise)
+}
+```
+
+```{r TeamTotal API}
+# GET pull for NHL Team Totals
+TeamTotalsAPI<- function() {
+totals <- GET("https://records.nhl.com/site/api/franchise-team-totals")
+
+## As JSON text
+totals <- content(totals, "text")
+
+## As JSON List
+totals <- fromJSON(totals, flatten = TRUE)
+return(totals[[1]])
+}
+```
+
+```{r, Team DrillDown API}
+TeamDDAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+drill_down <- GET(paste0("https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+drill_down <- content(drill_down, "text")
+
+## As JSON List
+drill_down <- fromJSON(drill_down, flatten = TRUE)
+return(drill_down[[1]])
+}
+```
+
+```{r Goalie API}
+GoalieAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+goalie <- GET(paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+goalie <- content(goalie, "text")
+
+## As JSON List
+goalie <- fromJSON(goalie, flatten = TRUE)
+return(goalie[[1]])
+}
+```
+
+```{r, Skater API}
+SkaterAPI <- function(id, ...) {
+# GET pull for NHL Team Totals
+skater <- GET(paste0("https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=", id))
+
+## As JSON text
+skater <- content(skater, "text")
+
+## As JSON List
+skater <- fromJSON(skater, flatten = TRUE)
+return(skater[[1]])
+}
+```
+
+```{r, franchise call}
+Franchise <- FranchiseAPI()
+Franchise <- arrange(Franchise, (Franchise[[4]]))
+knitr::kable((Franchise), caption = "Franchise All")
+```
+
+```{r, Record API calls}
+SkaterAPI_Call <- head(SkaterAPI(1))
+knitr::kable(SkaterAPI_Call)
+```
+
+```{r, Team Stats API}
+TeamStatsAPI <- function() {
+stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
+
+## As JSON text
+stats <- content(stats, "text")
+
+## As JSON List
+stats <- fromJSON(stats, flatten = TRUE)
+return(stats[[2]])
+}
+```
+
+```{r, Roster API}
+RosterAPI <- function(id, ...) {
+roster <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=team.roster"))
+
+## As JSON text
+roster <- content(roster, "text")
+
+## As JSON List
+roster <- fromJSON(roster, flatten = TRUE)
+franchiseId <- roster$teams$franchiseId
+roster <- tbl_df(roster[[2]]$roster.roster[[1]]) %>% mutate("franchiseId" = franchiseId) %>% 
+select(franchiseId, everything())
+return(roster)
+}
+```
+
+```{r, Person API}
+PersonAPI <- function(id, ...) {
+person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=person.names"))
+
+## As JSON text
+person <- content(person, "text")
+
+## As JSON List
+person <- fromJSON(person, flatten = TRUE)
+return(person[[2]])
+}
+```
+
+```{r, People API}
+# Detailed substitue for PersonAPI
+PeopleAPI <- function(id, ...) {
+people <- GET(paste0("https://statsapi.web.nhl.com/api/v1/people/", id))
+
+## As JSON text
+people <- content(people, "text")
+
+## As JSON List
+people <- fromJSON(people, flatten = TRUE)
+return(people[[2]])
+}
+```
+
+```{r, team player}
+## New DF combining People with Roster
+TeamPlayer <- function (id, ...) {
+playerId <- pull(RosterAPI(id), person.id)
+players <- as.data.frame(PeopleAPI(playerId[1]))
+  for (i in 2:length(playerId)) {
+    players[i, ] <- (PeopleAPI(playerId[i]))
+  }
+players <- players %>% select(id, fullName, currentAge, birthCountry)
+return(players) 
+}
+```
+```{r, test team player}
+TPtest <- TeamPlayer(12)
+knitr::kable(head(TPtest), caption = "Player Stats")
+```
+
+```{r, Next Game API}
+NextGAPI <- function(id, ...) {
+nextG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.next"))
+
+## As JSON text
+nextG <- content(nextG, "text")
+
+## As JSON List
+nextG <- fromJSON(nextG, flatten = TRUE)
+nextG <- nextG[[2]]$nextGameSchedule.dates[[1]]$games[[1]]
+return(nextG)
+}
+```
+
+```{r, Prior Game API}
+PriorGAPI <- function(id, ...) {
+priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.previous"))
+
+## As JSON text
+priorG <- content(priorG, "text")
+
+## As JSON List
+priorG <- fromJSON(priorG, flatten = TRUE)
+priorG <- priorG[[2]]$previousGameSchedule.dates
+return(priorG)
+}
+```
+
+
+```{r, Expanded Stats API}
+ExpStatsAPI <- function(id, ...) {
+expStats <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.stats"))
+
+## As JSON text
+expStats <- content(expStats, "text")
+
+## As JSON List
+expStats <- fromJSON(expStats, flatten = TRUE)
+expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
+return(expStats)
+}
+```
+```{r, exp stats test}
+expstatstest <- ExpStatsAPI(12)
+knitr::kable(tbl_df(expstatstest), caption = "Expanded Team Stats")
+```
+
+
+```{r, Season Stats API}
+SeasonAPI <- function(id, season, ...) {
+season <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.roster&season=", season))
+
+## As JSON text
+season <- content(season, "text")
+
+## As JSON List
+season <- fromJSON(season, flatten = TRUE)
+franchiseId <- season$teams$franchiseId
+teamName <- season$teams$teamName
+season <- tbl_df((season[[2]]$roster.roster[[1]])) %>% mutate("franchiseId" = franchiseId, "teamName" = teamName) %>% select(franchiseId, everything())
+return(season)
+}
+```
+
+```{r, Multi Teams API}
+MultiAPI <- function(id, ...) {
+multi <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", "?teamId=", id))
+
+## As JSON text
+multi <- content(multi, "text")
+
+## As JSON List
+multi <- fromJSON(multi, flatten = TRUE)
+return(multi[[2]])
+}
+```
+
+```{r, Playoffs API}
+PlayoffAPI <- function(id, ...) {
+playoff <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?stats=statsSingleSeasonPlayoffs"))
+
+## As JSON text
+playoff <- content(playoff, "text")
+
+## As JSON List
+playoff <- fromJSON(playoff, flatten = TRUE)
+return(playoff[[2]])
+}
+```
+
+```{r, presidents}
+# Roster for last 3 stanley cup champs
+pres17 <- SeasonAPI(15, 20162017)
+low17 <- SeasonAPI(21, 20162017)
+pres18 <- SeasonAPI(18, 20172018)
+low18 <- SeasonAPI(7, 20172018)
+
+# Combine results into single DS & add year & rank
+PresLow <- bind_rows(pres17, low17, pres18, low18)
+PresLow <- mutate(PresLow, year = ifelse((PresLow$teamName == "Capitals") | (PresLow$teamName == "Avalanche"), 2017, 2018))
+PresLow <- mutate(PresLow, rank = ifelse((PresLow$teamName == "Capitals") | (PresLow$teamName == "Predators"), "F", "L"))
+PresLow <- PresLow %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code)
+
+head(PresLow)
+
+# Skater for detailed stats
+
+# Franchise ID's for SkaterAPI argument
+
+pres17_FrId <- pres17$franchiseId[1]
+low17_FrId <- low17$franchiseId[1]
+pres18_FrId <- pres18$franchiseId[1]
+low18_FrId <- low18$franchiseId[1]
+
+# Skater for detailed stats
+
+pres17_Skater <- SkaterAPI(pres17_FrId)
+low17_Skater  <- SkaterAPI(low17_FrId)
+pres18_Skater <- SkaterAPI(pres18_FrId)
+low18_Skater <- SkaterAPI((low18_FrId))
+
+ 
+# Combine results into single DS
+PresLow_Skater <- bind_rows(pres17_Skater, low17_Skater, pres18_Skater, low18_Skater)
+PresLow_Skater <- PresLow_Skater %>% rename("person.id" = playerId) 
+PresLow_Skater
+
+# Join PresLow & PresLow_Skater fo Skaters on Pres-Low Teams / Seasons for analysis
+
+PL_SK_Season <- inner_join(PresLow, PresLow_Skater) 
+PL_SK_Season
+PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
+PL_SK_Season
+
+```
+
+```{r, Test Stats API calls}
+TeamStatsAPI_Call <- head(TeamStatsAPI())
+knitr::kable(TeamStatsAPI_Call)
+
+RosterAPI_Call <- head(RosterAPI(10))
+knitr::kable(RosterAPI_Call)
+
+PersonAPI_Call <- head(PersonAPI(10))
+knitr::kable(PersonAPI_Call)
+
+PeopleAPI_Call <- head(PeopleAPI(8468508))
+knitr::kable(PeopleAPI_Call)
+
+NextGAPI_Call <- head(NextGAPI(1))
+knitr::kable(NextGAPI_Call)
+
+PriorGAPI_Call <- head(PriorGAPI(12))
+knitr::kable(PriorGAPI_Call)
+
+SeasonAPI_Call <- head(SeasonAPI(12, 20052006))
+knitr::kable(SeasonAPI_Call)
+```
+
+##{r, user input}
+t_id <- FranchiseAPI()[ , "Team ID"] 
+selectInput("n",label = "Choose a Team ID", choices = t_id, selected = 26)
+renderDT({RosterAPI(input$n)})
+
+down::render("P1_TKIdol.Rmd", output_file = "README.md")
+```
