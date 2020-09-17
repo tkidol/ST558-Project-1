@@ -20,6 +20,7 @@ library(DT)
 library(shiny)
 library(dplyr)
 library(rmarkdown)
+library(R.cache)
 ```
 
 # NHL Franchises
@@ -104,7 +105,7 @@ knitr::kable((Franchise), caption = "Franchise All")
 
 ```{r, Record API calls}
 SkaterAPI_Call <- head(SkaterAPI(1))
-knitr::kable(SkaterAPI_Call)
+glimpse(SkaterAPI_Call)
 ```
 
 ```{r, Team Stats API}
@@ -118,6 +119,12 @@ stats <- content(stats, "text")
 stats <- fromJSON(stats, flatten = TRUE)
 return(stats[[2]])
 }
+```
+
+```{r}
+teams <- TeamStatsAPI()
+teams
+
 ```
 
 ```{r, Roster API}
@@ -171,14 +178,19 @@ players <- as.data.frame(PeopleAPI(playerId[1]))
   for (i in 2:length(playerId)) {
     players[i, ] <- (PeopleAPI(playerId[i]))
   }
-players <- players %>% select(id, fullName, currentAge, birthCountry)
+players <- players %>% select(currentTeam.id, id, fullName, birthCountry)
+if(length(players$currentTeam.id) > 2) {
+  players$currentTeam.id = players$currentTeam.id[[1]]
+}
 return(players) 
 }
 ```
+
 ```{r, test team player}
 TPtest <- TeamPlayer(12)
 knitr::kable(head(TPtest), caption = "Player Stats")
 ```
+
 
 ```{r, Next Game API}
 NextGAPI <- function(id, ...) {
@@ -222,11 +234,10 @@ expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
 return(expStats)
 }
 ```
-```{r, exp stats test}
+```{r, expstas test}
 expstatstest <- ExpStatsAPI(12)
-knitr::kable(tbl_df(expstatstest), caption = "Expanded Team Stats")
+expstatstest
 ```
-
 
 ```{r, Season Stats API}
 SeasonAPI <- function(id, season, ...) {
@@ -270,8 +281,12 @@ return(playoff[[2]])
 }
 ```
 
-```{r, presidents}
-# Roster for last 3 stanley cup champs
+## 2017 & 2018 PHigh Points Team vs. Low Points Team Analysis
+
+### Language
+
+```{r, presidents, cache = TRUE}
+# Roster for last 2 seasons, high points team (presidents cup) low points eam
 pres17 <- SeasonAPI(15, 20162017)
 low17 <- SeasonAPI(21, 20162017)
 pres18 <- SeasonAPI(18, 20172018)
@@ -305,19 +320,43 @@ low18_Skater <- SkaterAPI((low18_FrId))
 # Combine results into single DS
 PresLow_Skater <- bind_rows(pres17_Skater, low17_Skater, pres18_Skater, low18_Skater)
 PresLow_Skater <- PresLow_Skater %>% rename("person.id" = playerId) 
-PresLow_Skater
+head(PresLow_Skater)
 
 # Join PresLow & PresLow_Skater fo Skaters on Pres-Low Teams / Seasons for analysis
 
 PL_SK_Season <- inner_join(PresLow, PresLow_Skater) 
 PL_SK_Season
 PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
-PL_SK_Season
+head((PL_SK_Season), n = 100)
 
 ```
 
+# 2020 Player Origin Country vs Penalty Minutes by Conference Analysis
+
+```{r, player origin, cache = TRUE}
+# ttt
+TeamCodes <- TeamStatsAPI()
+TeamIDs <- as.integer(TeamCodes$id)
+
+
+Players <- lapply(TeamIDs, TeamPlayer)
+
+# All active 2020 players including Team ID & Continent of Origin
+PlayerCont <- bind_rows(Players)
+PlayerCont$currentTeam.id <- as.integer(PlayerCont$currentTeam.id)
+PlayerCont <- mutate(PlayerCont, continent = ifelse((birthCountry == "CAN") | (birthCountry == "USA") | (nchar(birthCountry) == 2), "N.America", "Europe"))
+PlayerCont <- mutate(PlayerCont, conference = ifelse((currentTeam.id < 16) | (currentTeam.id == 17) | (currentTeam.id == 29), "Eastern", "Western")) 
+PlayerCont <- mutate(PlayerCont, playoffs = ifelse((currentTeam.id %in% c(2, 4, 5, 6, 10, 12, 14, 15, 18:23, 25, 54)), TRUE, FALSE))
+PlayerCont <- PlayerCont %>% select(continent, conference, playoffs, everything()) 
+head((PlayerCont), n = 100)
+```
+
+```{r}
+glimpse(PlayerCont)
+```
+
 ```{r, Test Stats API calls}
-TeamStatsAPI_Call <- head(TeamStatsAPI())
+TeamStatsAPI_Call <- (TeamStatsAPI())
 knitr::kable(TeamStatsAPI_Call)
 
 RosterAPI_Call <- head(RosterAPI(10))
