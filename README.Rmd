@@ -22,6 +22,145 @@ library(rmarkdown)
 library(knitr)
 library(GGally)
 ```
+# NHL API Wrapper
+
+
+
+```{r, Franchise API Wrapper}
+# Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
+
+FR_Wrapper <- function(endpoint, team = NULL, ...) {
+  menu <- FranchiseAPI()
+  records <- c("franchise", "totals", "drilldown", "goalie", "skater")
+  teamlist <- list(menu[5])
+  frIDs <- list(menu[1])
+  
+  if(!(is.character(endpoint))) stop("Invalid Input")
+  
+  if(is.character(team)) {
+    if ((team %in% teamlist)) stop ("Invalid Input")
+  }
+ 
+  if(is.numeric(team)) {
+    if((team %in% frIDs)) stop ("Invalid Input")
+  }
+
+  
+    if(endpoint == "franchise") {
+    return(FranchiseAPI())
+    
+  } else if(endpoint == "totals") { 
+     return(TeamTotalsAPI()) 
+    
+  } else if(endpoint == "drilldown") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+      return(TeamDDAPI(team1))
+    } else if(is.numeric(team)) {
+      return(TeamDDAPI(team))
+    }
+      
+  } else if(endpoint == "goalie") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+      return(GoalieAPI(team1))
+    } else if(is.numeric(team)) {
+      return(GoalieAPI(team))
+    }
+        
+  } else if(endpoint == "skater") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+      return(SkaterAPI(team1))
+    } else if(is.numeric(team)) {
+      return(SkaterAPI(team))
+    }
+  
+  } else {
+    return(NULL)
+  }
+}
+```
+
+```{r, Stat Wrapper}
+# Stat API Wrapper takes API Modifier (from a list) & team (Team ID or Common Team name (e.g. "Hurricanes)), & Season (for the 'roster & season' endpoint) & returns distinct API data. Note: using 'people' API for analysis but not directly accessible through Wrapper. MultiAPI works directly with multiple 'id' input but not through the Wrapper
+
+ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
+  menu <- FranchiseAPI()
+  modifyer <- c("stats", "roster", "person", "nextgame", "priorgame", "expanded", "season")
+  teamlist <- list(menu[5])
+  teamIDs <- list(menu[4])
+  
+  if((!is.character(mod) & (mod %in% modifyer))) stop("Invalid Input")
+  
+  if(is.character(team)) {
+      if ((team %in% teamlist)) stop("Invalid Input")
+  }
+     
+  if(is.numeric(team)) {
+    if((team %in% teamIDs)) stop("Invalid Input")
+  }
+  
+  if(!length(season) != 8) stop("Invalid Input")
+  
+
+  if(mod == "stats") {
+   return(TeamStatsAPI())
+    
+  } else if(mod == "roster") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(RosterAPI(team1))
+    } else if(is.numeric(team)) {
+      return(RosterAPI(team))
+    }
+      
+  } else if(mod == "person") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(PersonAPI(team1))
+    } else if(is.numeric(team)) {
+      return(PersonAPI(team))
+    }
+        
+  } else if(mod == "nextgame") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(NextGAPI(team1))
+    } else if(is.numeric(team)) {
+      return(NextGAPI(team))
+    }
+ 
+  } else if(mod == "priorgame") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(PriorGAPI(team1))
+    } else if(is.numeric(team)) {
+      return(PriorGAPI(team))
+    }  
+    
+  } else if(mod == "expanded") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(ExpStatsAPI(team1))
+    } else if(is.numeric(team)) {
+      return(ExpStatsAPI(team))
+    }
+  
+  } else if(mod == "season") {
+    if(is.character(team)) { 
+      team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+      return(SeasonAPI(team1))
+    } else if(is.numeric(team, season)) {
+      return(SeasonAPI(team, season))
+    }  
+
+  } else {
+    return(NULL)
+  }
+}
+```
+
 
 # NHL Franchises
 
@@ -41,6 +180,11 @@ return(franchise)
 }
 ```
 
+```{r, fr t}
+fr <- FranchiseAPI()
+head(fr[5])
+```
+
 ```{r TeamTotal API}
 # GET pull for NHL Team Totals
 TeamTotalsAPI<- function() {
@@ -53,6 +197,10 @@ totals <- content(totals, "text")
 totals <- fromJSON(totals, flatten = TRUE)
 return(totals[[1]])
 }
+```
+```{r, testt}
+x <- FR_Wrapper("drilldown", "Stars")
+x
 ```
 
 ```{r, Team DrillDown API}
@@ -81,6 +229,10 @@ goalie <- content(goalie, "text")
 goalie <- fromJSON(goalie, flatten = TRUE)
 return(goalie[[1]])
 }
+```
+```{r}
+g <- GoalieAPI(1)
+g
 ```
 
 ```{r, Skater API}
@@ -121,11 +273,6 @@ return(stats[[2]])
 }
 ```
 
-```{r}
-teams <- TeamStatsAPI()
-teams
-
-```
 
 ```{r, Roster API}
 RosterAPI <- function(id, ...) {
@@ -186,11 +333,6 @@ return(players)
 }
 ```
 
-```{r, test team player}
-TPtest <- TeamPlayer(12)
-kable(head(TPtest), caption = "Player Stats")
-```
-
 
 ```{r, Next Game API}
 NextGAPI <- function(id, ...) {
@@ -233,10 +375,6 @@ expStats <- fromJSON(expStats, flatten = TRUE)
 expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
 return(expStats)
 }
-```
-```{r, expstas test}
-expstatstest <- ExpStatsAPI(12)
-expstatstest
 ```
 
 ```{r, Season Stats API}
@@ -323,50 +461,40 @@ PL_SK_Season <- inner_join(PresLast, PresLast_Skater)
 PL_SK_Season <-as_tibble(PL_SK_Season) %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
 
 
+Season_People <- lapply(PL_SK_Season$person.id, PeopleAPI)
+Season_People <- bind_rows(Season_People) %>% select(id, nationality) %>% mutate("person.id" = id)
+
+PL_SK_Season <- inner_join(PL_SK_Season, Season_People)
+PL_SK_Season <- mutate(PL_SK_Season, country = ifelse((nationality == "USA"), "USA",
+                                               ifelse((nationality == "CAN"), "CAN", "EUR")))
+
 PL_SK_Season <- PL_SK_Season %>% mutate(AveragePM = round((penaltyMinutes/seasons), 2), TotalPoints = (goals+assists), AverageTP = round((goals+assists)/seasons), 2)
 
-
-QuantPM <- quantile(PL_SK_Season$AveragePM, probs = seq(0, 1, 1/3))
-QuantTP <- quantile(PL_SK_Season$AverageTP, probs = seq(0, 1, 1/3))
+PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.fullName, country, position.code, seasons, AveragePM, AverageTP) %>% distinct()
 
 
-PL_SK_Season <- mutate(PL_SK_Season, PMRank = 
-                      ifelse((AveragePM <= 147) & (AveragePM > 26), "High 3rd",
-                      ifelse((AveragePM <= 10), "Low 3rd", "Mid 3rd")),
-                      TPRank = ifelse((AverageTP <= 85) & (AverageTP > 23), "High 3rd",
-                      ifelse((AverageTP <= 6), "Low 3rd", "Mid 3rd")))      
-
-
-PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.fullName, position.code, seasons, AveragePM, PMRank, AverageTP, TPRank) %>% distinct()
-
-
-
-PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = teamName, "Year" = year, "Finish" = rank, "Name" = person.fullName, "Position" = position.code, "Player Seasons" = seasons, "Avg Penalty Min" = AveragePM, "Penalty Min Rank" = PMRank, "Avg Total Pts" = AverageTP, "Total Pts Rank" = TPRank)
+PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = teamName, "Year" = year, "Finish" = rank, "Name" = person.fullName, "Country" = country, "Position" = position.code, "Player Seasons" = seasons, "Avg Penalty Min" = AveragePM, "Avg Total Pts" = AverageTP)
 
 PL_SK_Season$Finish <- as.factor(PL_SK_Season$Finish)
-PL_SK_Season$`Penalty Min Rank` <- as.factor(PL_SK_Season$`Penalty Min Rank`)
-levels(PL_SK_Season$`Penalty Min Rank`) <- c("High PM", "Mid PM", "Low PM")
-PL_SK_Season$`Total Pts Rank` <- as.factor(PL_SK_Season$`Total Pts Rank`)
-levels(PL_SK_Season$`Total Pts Rank`) <- c( "High TP", "Mid TP", "Low TP")
 
-kable(head(PL_SK_Season), n = 30, caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
+kable(PL_SK_Season, caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
 ```
 
 
 ```{r, Team Finish }
-PMR_TPR_table <- table(PL_SK_Season$`Penalty Min Rank`, PL_SK_Season$`Total Pts Rank`)
-kable(PMR_TPR_table, caption = "All Teams Penalty Min & Total Points Rank")
+Pos_Ctry_table <- table(PL_SK_Season$Position, PL_SK_Season$Country)
+kable(Pos_Ctry_table, caption = "Player Position by Country")
 ```
 
 ```{r, Pres PM_TP Rank}
-PMR_TPR_F <- filter(PL_SK_Season, PL_SK_Season$Finish == "First")
-PMR_TPR_F_table<- table(PMR_TPR_F$`Penalty Min Rank`, PMR_TPR_F$`Total Pts Rank`)
-kable(PMR_TPR_F_table, caption = "Presidents Cup Winners")
+First <- filter(PL_SK_Season, PL_SK_Season$Finish == "First")
+Pos_Ctry1_table <- table(First$Position, First$Country)
+kable(Pos_Ctry1_table, caption = "Presidents Cup Winners")
 ```
 ```{r, Last PM_TP Rank}
-PMR_TPR_L <- filter(PL_SK_Season, PL_SK_Season$Finish == "Last")
-PMR_TPR_L_table<- table(PMR_TPR_L$`Penalty Min Rank`, PMR_TPR_L$`Total Pts Rank`)
-kable(PMR_TPR_L_table, caption = "Last Place Teams")
+Last <- filter(PL_SK_Season, PL_SK_Season$Finish == "Last")
+Pos_Ctry2_table <- table(Last$Position, Last$Country)
+kable(Pos_Ctry2_table, caption = "Last Place Players")
 ```
 ## Visuals
 
@@ -374,33 +502,41 @@ kable(PMR_TPR_L_table, caption = "Last Place Teams")
 ```{r, univariate bar graphs}
 # bar plot of Team Finish
 FinPlot <- ggplot(PL_SK_Season, aes(x = Finish), color = "blue") 
-FinPlot + geom_bar() + labs(x = "Team Finish")
+FinPlot + geom_bar() + labs(x = "Player Finish")
+
+# bar plot of Team Finish
+COplot <- ggplot(PL_SK_Season, aes(x = Country), color = "blue") 
+COplot + geom_bar() + labs(x = "Player Country")
+
+# bar plot of Team Finish
+COPlot <- ggplot(PL_SK_Season, aes(x = Position), color = "blue") 
+COPlot + geom_bar() + labs(x = "Player Position")
 ```
 
 ### 2 Factors
 
 ```{r, 2 factor bar graphs}
 # Finish by PM Rank
-FxPMplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(`Penalty Min Rank`)))
-FxPMplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Penalty Minutes Rank") + labs(x = "Team Finish")
+FxCOplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Country)))
+FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationality") + labs(x = "Team Finish")
 
 # Finish by TP Rank
-FxTPplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(`Total Pts Rank`)))
-FxTPplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Total Points Rank") + labs(x = "Team Finish")
+FxPosplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Position)))
+FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Team Finish")
 ```
 
 ### 3 Factors
 ```{r, 3 factor bar graphs}
 # Color by satellite indicator by spine condition
-FxPMxPtplot <- ggplot(PL_SK_Season, aes(`Total Pts Rank`, fill = `Finish`))
-FxPMxPtplot + geom_bar(position = "dodge") + scale_fill_discrete(name = "Team Finish") + labs(x = "Total Points", title = "Team Finish by Player Avg TP Rank & Player Avg PM Rank") + facet_wrap(. ~ `Penalty Min Rank`, labeller = (label_both))
+FxPMxPtplot <- ggplot(PL_SK_Season, aes(Country, fill = Finish))
+FxPMxPtplot + geom_bar(position = "dodge") + scale_fill_discrete(name = "Team Finish") + labs(x = "Player Country", title = "Player Finish by Country and Position") + facet_wrap(. ~ Position, labeller = (label_both))
 ```
 
 ```{r, player summaries}
 # Function to knit 5 number sum + Mean given Species input
 TeamSumm <- function(team, ...) {
-summ <- PL_SK_Season %>% filter(Team == team) %>% select(c(7, 8, 10)) %>% apply(2, summary)
-kable(summ, caption = paste0("Team: ", team))
+summ <- PL_SK_Season %>% filter(Team == team) %>% select(c(8, 9, 10)) %>% apply(2, summary)
+kable(round(summ, 2), caption = paste0("Team: ", team))
 }
 ```
 
@@ -427,50 +563,28 @@ TeamSumm(teams[[6]])
 
 ```
 
-
-```{r, boxplot Avg TP}
-# Base aesthetic wth Team on x & Avg Total Points on Y
-Team <- PL_SK_Season$Team
-Avg_Total_Points <- PL_SK_Season$`Avg Total Pts`
-g <- ggplot(PL_SK_Season, aes(x = Team, y =Avg_Total_Points))
-
-# Boxplot for Player Avg Total Point w Team overlay
-g + geom_boxplot(fill = "white") + geom_jitter(aes(color = Team)) + labs(title = "Boxplot for Player's Career Avg Total Points")
-```
-```{r, boxplot Avg PM}
-# Base aesthetic with Team on x & Avg Total Points on Y
-Avg_Penalty_Min <- PL_SK_Season$`Avg Penalty Min`
-g <- ggplot(PL_SK_Season, aes(x = Team, y =Avg_Penalty_Min))
-
-# Boxplot for Player Average PM w/ Team overlay
-g + geom_boxplot(fill = "white") + geom_jitter(aes(color = Finish)) + labs(title = "Boxplot for Player's Career Avg Penalty Minutes")
-```
-
-```{r, boxplot Years}
-# Base aesthetic with Team on x & Player Years on Y
-PLayer_Seasons <- PL_SK_Season$`Player Seasons`
-g <- ggplot(PL_SK_Season, aes(x = Team, y = PLayer_Seasons))
-
-# Boxplot for Player Seasons w/ Team overlay
-g + geom_boxplot(fill = "white") + geom_jitter(aes(color = Finish)) + labs(title = "Boxplot for Player's Seasons in NHL")
-```
-
-
 ```{r, dotplot by TotalPoints}
 # Base plot aesthetic with Total Points on x axis
 finish <- PL_SK_Season$Finish
 g <- ggplot(PL_SK_Season, aes(x = Avg_Total_Points, y = PLayer_Seasons, color = Finish))
 
 # Avg total points histogram
-g + geom_point() + geom_smooth(aes(group = Team), method = lm, color = "blue") + labs(title =  "Players Average Total Points vs Seasons")
+g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Seasons")
 ```
-
 ```{r, dotplot by Penalty Minutes}
 # Base plot aesthetic with Total Points on x axis
 g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = Finish))
 
 # Avg total points histogram
-g + geom_point() + geom_smooth(aes(group = Team), method = lm, color = "blue") + labs(title =  "Players Average Total Points vs Seasons")
+g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Penalty Minutes vs Average Total Points")
+```
+
+```{r, dotplot by }
+# Base plot aesthetic with Total Points on x axis
+g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color = Finish))
+
+# Avg total points histogram
+g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")
 ```
 
 ```{r, Test Stats API calls}

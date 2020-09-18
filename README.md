@@ -366,47 +366,234 @@ Player Stats
 
 ### Data
 
-| Franchise ID | Team     | Year | Finish | Name            | Position | Player Seasons | Avg Penalty Min | Penalty Min Rank | Avg Total Pts | Total Pts Rank |
-|-------------:|:---------|-----:|:-------|:----------------|:---------|---------------:|----------------:|:-----------------|--------------:|:---------------|
-|           24 | Capitals |   17 | First  | Brooks Orpik    | D        |              5 |           47.60 | High PM          |            12 | Low TP         |
-|           24 | Capitals |   17 | First  | Justin Williams | R        |              2 |           43.00 | High PM          |            50 | High TP        |
-|           24 | Capitals |   17 | First  | Alex Ovechkin   | L        |             15 |           47.93 | High PM          |            85 | High TP        |
-|           24 | Capitals |   17 | First  | Daniel Winnik   | L        |              2 |           35.50 | High PM          |            15 | Low TP         |
-|           24 | Capitals |   17 | First  | T.J. Oshie      | R        |              5 |           32.60 | High PM          |            51 | High TP        |
-|           24 | Capitals |   17 | First  | Matt Niskanen   | D        |              5 |           38.80 | High PM          |            31 | High TP        |
+| Franchise ID | Team      | Year | Finish | Name                | Country | Position | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|-------------:|:----------|-----:|:-------|:--------------------|:--------|:---------|---------------:|----------------:|--------------:|
+|           24 | Capitals  |   17 | First  | Brooks Orpik        | USA     | D        |              5 |           47.60 |            12 |
+|           24 | Capitals  |   17 | First  | Justin Williams     | CAN     | R        |              2 |           43.00 |            50 |
+|           24 | Capitals  |   17 | First  | Alex Ovechkin       | EUR     | L        |             15 |           47.93 |            85 |
+|           24 | Capitals  |   17 | First  | Daniel Winnik       | CAN     | L        |              2 |           35.50 |            15 |
+|           24 | Capitals  |   17 | First  | T.J. Oshie          | USA     | R        |              5 |           32.60 |            51 |
+|           24 | Capitals  |   17 | First  | Matt Niskanen       | USA     | D        |              5 |           38.80 |            31 |
+|           24 | Capitals  |   17 | First  | Taylor Chorney      | CAN     | D        |              3 |           13.33 |             5 |
+|           24 | Capitals  |   17 | First  | Nicklas Backstrom   | EUR     | C        |             13 |           35.54 |            71 |
+|           24 | Capitals  |   17 | First  | Karl Alzner         | CAN     | D        |              9 |           19.67 |            13 |
+|           24 | Capitals  |   17 | First  | Paul Carey          | USA     | C        |              2 |            0.00 |             0 |
+|           24 | Capitals  |   17 | First  | Kevin Shattenkirk   | USA     | D        |              1 |           10.00 |            14 |
+|           24 | Capitals  |   17 | First  | Lars Eller          | EUR     | C        |              4 |           39.75 |            34 |
+|           24 | Capitals  |   17 | First  | Jay Beagle          | CAN     | C        |             10 |           15.90 |            12 |
+|           24 | Capitals  |   17 | First  | John Carlson        | USA     | D        |             11 |           23.45 |            43 |
+|           24 | Capitals  |   17 | First  | Aaron Ness          | USA     | D        |              3 |            3.33 |             1 |
+|           24 | Capitals  |   17 | First  | Marcus Johansson    | EUR     | C        |              7 |            8.86 |            41 |
+|           24 | Capitals  |   17 | First  | Dmitry Orlov        | EUR     | D        |              8 |           25.62 |            22 |
+|           24 | Capitals  |   17 | First  | Garrett Mitchell    | CAN     | R        |              1 |            0.00 |             0 |
+|           24 | Capitals  |   17 | First  | Evgeny Kuznetsov    | EUR     | C        |              7 |           35.14 |            56 |
+|           24 | Capitals  |   17 | First  | Brett Connolly      | CAN     | R        |              3 |           31.33 |            32 |
+|           24 | Capitals  |   17 | First  | Tom Wilson          | CAN     | R        |              7 |          146.71 |            27 |
+|           24 | Capitals  |   17 | First  | Chandler Stephenson | CAN     | C        |              5 |            3.20 |             7 |
+|           24 | Capitals  |   17 | First  | Riley Barber        | USA     | R        |              1 |            0.00 |             0 |
+|           24 | Capitals  |   17 | First  | Liam O’Brien        | CAN     | C        |              3 |            9.33 |             1 |
+|           24 | Capitals  |   17 | First  | Nate Schmidt        | USA     | D        |              4 |           12.00 |            11 |
+|           24 | Capitals  |   17 | First  | Andre Burakovsky    | EUR     | L        |              5 |           15.40 |            29 |
+|           24 | Capitals  |   17 | First  | Zach Sanford        | USA     | L        |              1 |            6.00 |             3 |
+|           24 | Capitals  |   17 | First  | Jakub Vrana         | EUR     | L        |              4 |           14.75 |            33 |
+|           27 | Avalanche |   17 | Last   | Jarome Iginla       | CAN     | R        |              3 |           45.67 |            41 |
+|           27 | Avalanche |   17 | Last   | Francois Beauchemin | CAN     | D        |              2 |           35.00 |            26 |
+|           27 | Avalanche |   17 | Last   | Fedor Tyutin        | EUR     | D        |              1 |           38.00 |            13 |
+|           27 | Avalanche |   17 | Last   | John Mitchell       | CAN     | C        |              5 |           36.60 |            21 |
+|           27 | Avalanche |   17 | Last   | Blake Comeau        | CAN     | L        |              3 |           55.33 |            30 |
+|           27 | Avalanche |   17 | Last   | Carl Soderberg      | EUR     | C        |              4 |           26.50 |            38 |
+|           27 | Avalanche |   17 | Last   | Rene Bourque        | CAN     | R        |              1 |           56.00 |            18 |
+|           27 | Avalanche |   17 | Last   | Cody McLeod         | CAN     | L        |             10 |          135.90 |            12 |
+|           27 | Avalanche |   17 | Last   | Erik Johnson        | USA     | D        |             10 |           33.20 |            21 |
+|           27 | Avalanche |   17 | Last   | Joe Colborne        | CAN     | C        |              1 |           34.00 |             8 |
+|           27 | Avalanche |   17 | Last   | Cody Goloubef       | CAN     | D        |              1 |           25.00 |             5 |
+|           27 | Avalanche |   17 | Last   | Patrick Wiercioch   | CAN     | D        |              1 |           23.00 |            12 |
+|           27 | Avalanche |   17 | Last   | Mark Barberio       | CAN     | D        |              4 |           13.75 |             6 |
+|           27 | Avalanche |   17 | Last   | Ben Smith           | USA     | R        |              1 |            0.00 |             0 |
+|           27 | Avalanche |   17 | Last   | Matt Duchene        | CAN     | C        |              9 |           16.00 |            48 |
+|           27 | Avalanche |   17 | Last   | Tyson Barrie        | CAN     | D        |              8 |           20.38 |            38 |
+|           27 | Avalanche |   17 | Last   | Eric Gelinas        | CAN     | D        |              2 |            6.00 |             0 |
+|           27 | Avalanche |   17 | Last   | Gabriel Bourque     | CAN     | L        |              3 |            7.33 |             6 |
+|           27 | Avalanche |   17 | Last   | Rocco Grimaldi      | USA     | R        |              2 |            1.00 |             2 |
+|           27 | Avalanche |   17 | Last   | Matt Nieto          | USA     | L        |              4 |            8.00 |            20 |
+|           27 | Avalanche |   17 | Last   | Gabriel Landeskog   | EUR     | L        |              9 |           54.33 |            51 |
+|           27 | Avalanche |   17 | Last   | Duncan Siemens      | CAN     | D        |              3 |            8.33 |             1 |
+|           27 | Avalanche |   17 | Last   | Samuel Henley       | CAN     | C        |              1 |            2.00 |             1 |
+|           27 | Avalanche |   17 | Last   | Mikhail Grigorenko  | EUR     | C        |              2 |           13.00 |            25 |
+|           27 | Avalanche |   17 | Last   | Sven Andrighetto    | EUR     | R        |              3 |           10.67 |            18 |
+|           27 | Avalanche |   17 | Last   | J.T. Compher        | USA     | L        |              4 |           18.25 |            23 |
+|           27 | Avalanche |   17 | Last   | Nathan MacKinnon    | CAN     | C        |              7 |           28.14 |            71 |
+|           27 | Avalanche |   17 | Last   | Nikita Zadorov      | EUR     | D        |              5 |           65.60 |            12 |
+|           27 | Avalanche |   17 | Last   | Anton Lindholm      | EUR     | D        |              4 |            4.00 |             1 |
+|           27 | Avalanche |   17 | Last   | Mikko Rantanen      | EUR     | R        |              5 |           25.20 |            50 |
+|           27 | Avalanche |   17 | Last   | A.J. Greer          | CAN     | L        |              3 |           15.67 |             2 |
+|           27 | Avalanche |   17 | Last   | Andreas Martinsen   | EUR     | L        |              2 |           39.50 |             9 |
+|           27 | Avalanche |   17 | Last   | Tyson Jost          | CAN     | C        |              4 |           15.50 |            18 |
+|           34 | Predators |   18 | First  | Mike Fisher         | CAN     | C        |              8 |           32.62 |            30 |
+|           34 | Predators |   18 | First  | Scott Hartnell      | CAN     | L        |              7 |           89.43 |            34 |
+|           34 | Predators |   18 | First  | Alexei Emelin       | EUR     | D        |              1 |           40.00 |             9 |
+|           34 | Predators |   18 | First  | Cody McLeod         | CAN     | L        |              3 |           57.33 |             2 |
+|           34 | Predators |   18 | First  | Nick Bonino         | USA     | C        |              3 |           18.00 |            32 |
+|           34 | Predators |   18 | First  | P.K. Subban         | CAN     | D        |              3 |           62.00 |            43 |
+|           34 | Predators |   18 | First  | Kyle Turris         | CAN     | C        |              3 |           26.33 |            32 |
+|           34 | Predators |   18 | First  | Yannick Weber       | EUR     | D        |              4 |           18.25 |             6 |
+|           34 | Predators |   18 | First  | Roman Josi          | EUR     | D        |              9 |           26.00 |            46 |
+|           34 | Predators |   18 | First  | Ryan Ellis          | CAN     | D        |              9 |           19.89 |            28 |
+|           34 | Predators |   18 | First  | Mattias Ekholm      | EUR     | D        |              9 |           29.44 |            22 |
+|           34 | Predators |   18 | First  | Craig Smith         | USA     | R        |              9 |           29.33 |            37 |
+|           34 | Predators |   18 | First  | Matt Irwin          | CAN     | D        |              4 |           20.75 |             8 |
+|           34 | Predators |   18 | First  | Calle Jarnkrok      | EUR     | C        |              7 |           14.14 |            26 |
+|           34 | Predators |   18 | First  | Austin Watson       | USA     | L        |              6 |           59.67 |            13 |
+|           34 | Predators |   18 | First  | Ryan Johansen       | CAN     | C        |              5 |           52.20 |            50 |
+|           34 | Predators |   18 | First  | Anthony Bitetto     | USA     | D        |              5 |           17.20 |             4 |
+|           34 | Predators |   18 | First  | Miikka Salomaki     | EUR     | R        |              6 |           12.67 |             4 |
+|           34 | Predators |   18 | First  | Pontus Aberg        | EUR     | L        |              2 |            6.00 |             5 |
+|           34 | Predators |   18 | First  | Filip Forsberg      | EUR     | L        |              8 |           25.00 |            44 |
+|           34 | Predators |   18 | First  | Colton Sissons      | CAN     | C        |              6 |           18.83 |            15 |
+|           34 | Predators |   18 | First  | Ryan Hartman        | USA     | R        |              2 |           29.00 |            13 |
+|           34 | Predators |   18 | First  | Frederick Gaudreau  | CAN     | C        |              3 |            1.33 |             3 |
+|           34 | Predators |   18 | First  | Kevin Fiala         | EUR     | L        |              5 |           14.00 |            19 |
+|           34 | Predators |   18 | First  | Viktor Arvidsson    | EUR     | R        |              6 |           25.17 |            36 |
+|           34 | Predators |   18 | First  | Samuel Girard       | CAN     | D        |              1 |            2.00 |             3 |
+|           34 | Predators |   18 | First  | Eeli Tolvanen       | EUR     | R        |              2 |            0.00 |             1 |
+|           19 | Sabres    |   18 | Last   | Jason Pominville    | CAN     | R        |             11 |           14.45 |            47 |
+|           19 | Sabres    |   18 | Last   | Josh Gorges         | CAN     | D        |              4 |           38.75 |             6 |
+|           19 | Sabres    |   18 | Last   | Matt Moulson        | CAN     | L        |              5 |           10.40 |            25 |
+|           19 | Sabres    |   18 | Last   | Benoit Pouliot      | CAN     | L        |              1 |           22.00 |            19 |
+|           19 | Sabres    |   18 | Last   | Kyle Okposo         | USA     | R        |              4 |           33.25 |            34 |
+|           19 | Sabres    |   18 | Last   | Justin Falk         | CAN     | D        |              2 |           28.50 |             5 |
+|           19 | Sabres    |   18 | Last   | Zach Bogosian       | USA     | D        |              6 |           39.00 |            11 |
+|           19 | Sabres    |   18 | Last   | Marco Scandella     | CAN     | D        |              3 |           23.67 |            15 |
+|           19 | Sabres    |   18 | Last   | Zach Redmond        | USA     | D        |              1 |            2.00 |             0 |
+|           19 | Sabres    |   18 | Last   | Ryan O’Reilly       | CAN     | C        |              3 |            6.67 |            59 |
+|           19 | Sabres    |   18 | Last   | Evander Kane        | CAN     | L        |              3 |           87.00 |            39 |
+|           19 | Sabres    |   18 | Last   | Jacob Josefson      | EUR     | C        |              1 |            6.00 |             4 |
+|           19 | Sabres    |   18 | Last   | Jordan Nolan        | CAN     | C        |              1 |           69.00 |             8 |
+|           19 | Sabres    |   18 | Last   | Johan Larsson       | EUR     | C        |              7 |           27.14 |            14 |
+|           19 | Sabres    |   18 | Last   | Taylor Fedun        | CAN     | D        |              2 |            9.00 |             4 |
+|           19 | Sabres    |   18 | Last   | Scott Wilson        | CAN     | L        |              3 |            4.67 |             6 |
+|           19 | Sabres    |   18 | Last   | Nathan Beaulieu     | CAN     | D        |              2 |           34.00 |             8 |
+|           19 | Sabres    |   18 | Last   | Seth Griffith       | CAN     | C        |              1 |            6.00 |             3 |
+|           19 | Sabres    |   18 | Last   | Matt Tennyson       | USA     | D        |              2 |            4.00 |             0 |
+|           19 | Sabres    |   18 | Last   | Zemgus Girgensons   | EUR     | C        |              7 |           18.57 |            20 |
+|           19 | Sabres    |   18 | Last   | Jake McCabe         | USA     | D        |              7 |           27.71 |            11 |
+|           19 | Sabres    |   18 | Last   | Danny O’Regan       | USA     | C        |              2 |            0.00 |             0 |
+|           19 | Sabres    |   18 | Last   | Hudson Fasching     | USA     | R        |              3 |            2.67 |             1 |
+|           19 | Sabres    |   18 | Last   | Justin Bailey       | USA     | R        |              3 |            2.67 |             3 |
+|           19 | Sabres    |   18 | Last   | Nick Baptiste       | CAN     | R        |              2 |           10.00 |             5 |
+|           19 | Sabres    |   18 | Last   | Rasmus Ristolainen  | EUR     | D        |              7 |           36.43 |            32 |
+|           19 | Sabres    |   18 | Last   | Sam Reinhart        | CAN     | C        |              6 |           13.33 |            42 |
+|           19 | Sabres    |   18 | Last   | Jack Eichel         | USA     | C        |              5 |           27.20 |            67 |
+|           19 | Sabres    |   18 | Last   | Brendan Guhle       | CAN     | D        |              3 |            4.00 |             2 |
+|           19 | Sabres    |   18 | Last   | Evan Rodrigues      | CAN     | C        |              5 |           10.60 |            14 |
+|           19 | Sabres    |   18 | Last   | Casey Nelson        | USA     | D        |              4 |            8.25 |             4 |
+|           19 | Sabres    |   18 | Last   | Kyle Criscuolo      | USA     | C        |              1 |            4.00 |             0 |
+|           19 | Sabres    |   18 | Last   | Alex Nylander       | CAN     | L        |              3 |            1.33 |             2 |
+|           19 | Sabres    |   18 | Last   | Victor Antipin      | EUR     | D        |              1 |           18.00 |            10 |
+|           19 | Sabres    |   18 | Last   | Casey Mittelstadt   | USA     | C        |              3 |            4.67 |            13 |
+|           31 | Lightning |   19 | First  | Braydon Coburn      | CAN     | D        |              6 |           33.67 |            11 |
+|           31 | Lightning |   19 | First  | Ryan Callahan       | USA     | R        |              6 |           26.67 |            22 |
+|           31 | Lightning |   19 | First  | Anton Stralman      | EUR     | D        |              5 |           18.40 |            26 |
+|           31 | Lightning |   19 | First  | Dan Girardi         | CAN     | D        |              2 |           19.50 |            17 |
+|           31 | Lightning |   19 | First  | Alex Killorn        | CAN     | L        |              8 |           41.62 |            39 |
+|           31 | Lightning |   19 | First  | Ryan McDonagh       | USA     | D        |              3 |           17.67 |            20 |
+|           31 | Lightning |   19 | First  | Steven Stamkos      | CAN     | C        |             12 |           41.58 |            69 |
+|           31 | Lightning |   19 | First  | Cameron Gaunce      | CAN     | D        |              2 |            5.50 |             2 |
+|           31 | Lightning |   19 | First  | Tyler Johnson       | USA     | C        |              8 |           21.25 |            42 |
+|           31 | Lightning |   19 | First  | Victor Hedman       | EUR     | D        |             11 |           50.91 |            43 |
+|           31 | Lightning |   19 | First  | Cory Conacher       | CAN     | C        |              5 |           10.00 |             8 |
+|           31 | Lightning |   19 | First  | Ondrej Palat        | EUR     | L        |              8 |           18.88 |            41 |
+|           31 | Lightning |   19 | First  | Nikita Kucherov     | EUR     | R        |              7 |           37.29 |            78 |
+|           31 | Lightning |   19 | First  | J.T. Miller         | USA     | C        |              2 |           21.00 |            32 |
+|           31 | Lightning |   19 | First  | Yanni Gourde        | CAN     | C        |              5 |           35.00 |            30 |
+|           31 | Lightning |   19 | First  | Slater Koekkoek     | CAN     | D        |              5 |            6.80 |             3 |
+|           31 | Lightning |   19 | First  | Cedric Paquette     | CAN     | C        |              7 |           49.29 |            12 |
+|           31 | Lightning |   19 | First  | Adam Erne           | USA     | L        |              3 |           20.67 |             9 |
+|           31 | Lightning |   19 | First  | Brayden Point       | CAN     | C        |              4 |           19.25 |            66 |
+|           31 | Lightning |   19 | First  | Danick Martel       | CAN     | L        |              1 |            8.00 |             2 |
+|           31 | Lightning |   19 | First  | Erik Cernak         | EUR     | D        |              2 |           58.50 |            14 |
+|           31 | Lightning |   19 | First  | Mathieu Joseph      | CAN     | R        |              2 |           21.00 |            16 |
+|           31 | Lightning |   19 | First  | Anthony Cirelli     | CAN     | C        |              3 |           23.33 |            31 |
+|           31 | Lightning |   19 | First  | Mikhail Sergachev   | EUR     | D        |              3 |           41.33 |            35 |
+|           31 | Lightning |   19 | First  | Jan Rutta           | EUR     | D        |              2 |            9.00 |             4 |
+|           30 | Senators  |   19 | Last   | Bobby Ryan          | USA     | R        |              7 |           27.43 |            38 |
+|           30 | Senators  |   19 | Last   | Tom Pyatt           | CAN     | L        |              3 |            9.33 |            16 |
+|           30 | Senators  |   19 | Last   | Justin Falk         | CAN     | D        |              1 |           11.00 |             0 |
+|           30 | Senators  |   19 | Last   | Paul Carey          | USA     | C        |              1 |            0.00 |             0 |
+|           30 | Senators  |   19 | Last   | Zack Smith          | CAN     | C        |             11 |           63.00 |            18 |
+|           30 | Senators  |   19 | Last   | Mikkel Boedker      | EUR     | L        |              2 |            3.00 |            20 |
+|           30 | Senators  |   19 | Last   | Cody Goloubef       | CAN     | D        |              2 |            5.00 |             1 |
+|           30 | Senators  |   19 | Last   | Mark Borowiecki     | CAN     | D        |              9 |           71.89 |             6 |
+|           30 | Senators  |   19 | Last   | Matt Duchene        | CAN     | C        |              2 |           10.00 |            54 |
+|           30 | Senators  |   19 | Last   | Magnus Paajarvi     | EUR     | L        |              2 |            5.00 |            14 |
+|           30 | Senators  |   19 | Last   | Stefan Elliott      | CAN     | D        |              1 |            0.00 |             1 |
+|           30 | Senators  |   19 | Last   | Chris Wideman       | USA     | D        |              4 |           24.50 |            11 |
+|           30 | Senators  |   19 | Last   | Darren Archibald    | CAN     | R        |              1 |            0.00 |             0 |
+|           30 | Senators  |   19 | Last   | Oscar Lindberg      | EUR     | L        |              1 |            4.00 |             8 |
+|           30 | Senators  |   19 | Last   | Mark Stone          | CAN     | R        |              7 |           16.43 |            44 |
+|           30 | Senators  |   19 | Last   | Erik Burgdoerfer    | USA     | D        |              2 |            1.00 |             0 |
+|           30 | Senators  |   19 | Last   | Brian Gibbons       | USA     | C        |              1 |            4.00 |            14 |
+|           30 | Senators  |   19 | Last   | Ryan Dzingel        | USA     | C        |              4 |           26.25 |            32 |
+|           30 | Senators  |   19 | Last   | Max McCormick       | USA     | L        |              4 |           19.50 |             2 |
+|           30 | Senators  |   19 | Last   | Dylan DeMelo        | CAN     | D        |              2 |           31.50 |            16 |
+|           30 | Senators  |   19 | Last   | Jean-Gabriel Pageau | CAN     | C        |              8 |           19.12 |            23 |
+|           30 | Senators  |   19 | Last   | Cody Ceci           | CAN     | D        |              6 |           14.67 |            20 |
+|           30 | Senators  |   19 | Last   | Chris Tierney       | CAN     | C        |              2 |           23.00 |            42 |
+|           30 | Senators  |   19 | Last   | Anthony Duclair     | CAN     | L        |              2 |           10.00 |            27 |
+|           30 | Senators  |   19 | Last   | Nick Paul           | CAN     | L        |              5 |            6.80 |             6 |
+|           30 | Senators  |   19 | Last   | Ben Harpur          | CAN     | D        |              4 |           19.75 |             2 |
+|           30 | Senators  |   19 | Last   | Andreas Englund     | EUR     | D        |              4 |            6.00 |             1 |
+|           30 | Senators  |   19 | Last   | Jack Rodewald       | CAN     | R        |              2 |            1.00 |             0 |
+|           30 | Senators  |   19 | Last   | Colin White         | USA     | C        |              4 |           17.75 |            18 |
+|           30 | Senators  |   19 | Last   | Thomas Chabot       | CAN     | D        |              4 |           22.00 |            30 |
+|           30 | Senators  |   19 | Last   | Filip Chlapik       | EUR     | C        |              3 |            6.00 |             4 |
+|           30 | Senators  |   19 | Last   | Christian Wolanin   | CAN     | D        |              3 |            2.00 |             5 |
+|           30 | Senators  |   19 | Last   | Christian Jaros     | EUR     | D        |              3 |           11.00 |             4 |
+|           30 | Senators  |   19 | Last   | Rudolfs Balcers     | EUR     | L        |              2 |            5.00 |             8 |
+|           30 | Senators  |   19 | Last   | Maxime Lajoie       | CAN     | D        |              2 |           10.00 |             8 |
+|           30 | Senators  |   19 | Last   | Logan Brown         | USA     | C        |              3 |            1.33 |             3 |
+|           30 | Senators  |   19 | Last   | Vitaly Abramov      | EUR     | L        |              2 |            1.00 |             0 |
+|           30 | Senators  |   19 | Last   | Alex Formenton      | CAN     | L        |              2 |            3.00 |             0 |
+|           30 | Senators  |   19 | Last   | Erik Brannstrom     | EUR     | D        |              2 |            8.00 |             2 |
+|           30 | Senators  |   19 | Last   | Drake Batherson     | USA     | R        |              2 |            9.50 |            10 |
+|           30 | Senators  |   19 | Last   | Max Veronneau       | CAN     | R        |              2 |            0.00 |             2 |
+|           30 | Senators  |   19 | Last   | Brady Tkachuk       | USA     | L        |              2 |           90.50 |            44 |
 
 Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place
 
-|         | High TP | Mid TP | Low TP |
-|:--------|--------:|-------:|-------:|
-| High PM |      34 |      4 |     25 |
-| Mid PM  |       4 |     50 |     13 |
-| Low PM  |      25 |     11 |     24 |
+|     | CAN | EUR | USA |
+|:----|----:|----:|----:|
+| C   |  29 |  11 |  13 |
+| D   |  33 |  18 |  16 |
+| L   |  18 |  14 |   7 |
+| R   |  13 |   6 |  12 |
 
-All Teams Penalty Min & Total Points Rank
+Player Position by Country
 
-|         | High TP | Mid TP | Low TP |
-|:--------|--------:|-------:|-------:|
-| High PM |      21 |      1 |     10 |
-| Mid PM  |       1 |     14 |      3 |
-| Low PM  |      15 |      4 |     11 |
+|     | CAN | EUR | USA |
+|:----|----:|----:|----:|
+| C   |  14 |   5 |   4 |
+| D   |  10 |  10 |   8 |
+| L   |   5 |   7 |   3 |
+| R   |   5 |   4 |   5 |
 
 Presidents Cup Winners
 
-|         | High TP | Mid TP | Low TP |
-|:--------|--------:|-------:|-------:|
-| High PM |      13 |      3 |     15 |
-| Mid PM  |       3 |     36 |     10 |
-| Low PM  |      10 |      7 |     13 |
+|     | CAN | EUR | USA |
+|:----|----:|----:|----:|
+| C   |  15 |   6 |   9 |
+| D   |  23 |   8 |   8 |
+| L   |  13 |   7 |   4 |
+| R   |   8 |   2 |   7 |
 
-Last Place Teams
+Last Place Players
 
 Visuals
 -------
 
 ### 1 Factor
 
-![](README_files/figure-gfm/univariate%20bar%20graphs-1.png)<!-- -->
+![](README_files/figure-gfm/univariate%20bar%20graphs-1.png)<!-- -->![](README_files/figure-gfm/univariate%20bar%20graphs-2.png)<!-- -->![](README_files/figure-gfm/univariate%20bar%20graphs-3.png)<!-- -->
 
 ### 2 Factors
 
