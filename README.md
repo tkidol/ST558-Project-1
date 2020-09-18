@@ -4,11 +4,14 @@ Todd Idol
 9/8/2020
 
 -   [NHL Franchises](#nhl-franchises)
-    -   [2017 & 2018 PHigh Points Team vs. Low Points Team
-        Analysis](#phigh-points-team-vs.-low-points-team-analysis)
+    -   [2017 - 2019 Presidents Cup Teams vs. Low Points Teams
+        Analysis](#presidents-cup-teams-vs.-low-points-teams-analysis)
         -   [Language](#language)
--   [2020 Player Origin Country vs Penalty Minutes by Conference
-    Analysis](#player-origin-country-vs-penalty-minutes-by-conference-analysis)
+        -   [Data](#data)
+    -   [Visuals](#visuals)
+        -   [1 Factor](#factor)
+        -   [2 Factors](#factors)
+        -   [3 Factors](#factors-1)
 
 NHL Franchises
 ==============
@@ -314,14 +317,14 @@ Franchise All
     ## 30                    28            Coyotes /api/v1/franchises/28
     ## 31                    38     Golden Knights /api/v1/franchises/38
 
-| currentTeam.id |      id | fullName        | birthCountry |
-|:---------------|--------:|:----------------|:-------------|
-| 12             | 8477488 | Brett Pesce     | USA          |
-| 12             | 8468508 | Justin Williams | CAN          |
-| 12             | 8473503 | James Reimer    | CAN          |
-| 12             | 8473533 | Jordan Staal    | CAN          |
-| 12             | 8474581 | Jake Gardiner   | USA          |
-| 12             | 8475222 | Sami Vatanen    | FIN          |
+| currentTeam.id |      id | fullName        | birthCountry | primaryPosition.name |
+|:---------------|--------:|:----------------|:-------------|:---------------------|
+| 12             | 8477488 | Brett Pesce     | USA          | Defenseman           |
+| 12             | 8468508 | Justin Williams | CAN          | Right Wing           |
+| 12             | 8473503 | James Reimer    | CAN          | Goalie               |
+| 12             | 8473533 | Jordan Staal    | CAN          | Center               |
+| 12             | 8474581 | Jake Gardiner   | USA          | Defenseman           |
+| 12             | 8475222 | Sami Vatanen    | FIN          | Defenseman           |
 
 Player Stats
 
@@ -356,350 +359,137 @@ Player Stats
     ## 1 Carolina Hurricanes /api/v1/teams/12
     ## 2 Carolina Hurricanes /api/v1/teams/12
 
-2017 & 2018 PHigh Points Team vs. Low Points Team Analysis
-----------------------------------------------------------
+2017 - 2019 Presidents Cup Teams vs. Low Points Teams Analysis
+--------------------------------------------------------------
 
 ### Language
 
-    ## # A tibble: 6 x 8
-    ##   franchiseId teamName  year rank  person.id person.fullName jerseyNumber
-    ##         <int> <chr>    <dbl> <chr>     <int> <chr>           <chr>       
-    ## 1          24 Capitals  2017 F       8468498 Brooks Orpik    44          
-    ## 2          24 Capitals  2017 F       8468508 Justin Williams 14          
-    ## 3          24 Capitals  2017 F       8471214 Alex Ovechkin   8           
-    ## 4          24 Capitals  2017 F       8471476 Daniel Winnik   26          
-    ## 5          24 Capitals  2017 F       8471698 T.J. Oshie      77          
-    ## 6          24 Capitals  2017 F       8471702 Matt Niskanen   15          
-    ## # ... with 1 more variable: position.code <chr>
+### Data
 
-    ##      id activePlayer assists firstName franchiseId       franchiseName
-    ## 1 16910        FALSE     361     Calle          24 Washington Capitals
-    ## 2 16982         TRUE     572      Alex          24 Washington Capitals
-    ## 3 17011         TRUE     684   Nicklas          24 Washington Capitals
-    ## 4 17021        FALSE     375      Dale          24 Washington Capitals
-    ## 5 17075        FALSE     249    Dennis          24 Washington Capitals
-    ## 6 17106        FALSE      42      Alan          24 Washington Capitals
-    ##   gameTypeId gamesPlayed goals  lastName
-    ## 1          2         983   113 Johansson
-    ## 2          2        1152   706  Ovechkin
-    ## 3          2         956   243 Backstrom
-    ## 4          2         872   181    Hunter
-    ## 5          2         343   182     Maruk
-    ## 6          2         345    27       May
-    ##                                                                                                                             mostAssistsGameDates
-    ## 1 1990-02-04, 1990-10-19, 1991-03-14, 1991-03-16, 1991-11-13, 1992-03-15, 1993-03-16, 1993-12-17, 1995-04-04, 1999-03-02, 1999-11-27, 2000-10-07
-    ## 2                                                                                                                                     2010-01-15
-    ## 3 2008-01-19, 2008-01-21, 2008-11-15, 2009-12-05, 2010-02-04, 2010-11-11, 2013-04-02, 2013-12-10, 2013-12-20, 2017-03-18, 2018-03-24, 2018-12-11
-    ## 4                                                                                                                         1991-10-23, 1993-02-13
-    ## 5                                                                                                             1979-03-10, 1981-12-23, 1982-02-27
-    ## 6                                                                                                                                     1992-11-22
-    ##   mostAssistsOneGame mostAssistsOneSeason mostAssistsSeasonIds
-    ## 1                  3                   42             19911992
-    ## 2                  4                   59             20092010
-    ## 3                  4                   68             20092010
-    ## 4                  4                   59             19921993
-    ## 5                  4                   76             19811982
-    ## 6                  2                   10   19891990, 19921993
-    ##                               mostGoalsGameDates mostGoalsOneGame
-    ## 1 1990-10-20, 1996-02-10, 1998-01-06, 1998-12-04                2
-    ## 2 2007-12-29, 2008-01-31, 2013-12-10, 2017-10-07                4
-    ## 3                         2014-12-13, 2018-11-30                3
-    ## 4                                     1992-03-20                3
-    ## 5                         1979-10-14, 1981-12-04                4
-    ## 6             1989-12-05, 1991-11-02, 1993-01-01                2
-    ##   mostGoalsOneSeason mostGoalsSeasonIds mostPenaltyMinutesOneSeason
-    ## 1                 15           19971998                          59
-    ## 2                 65           20072008                          89
-    ## 3                 33           20092010                          54
-    ## 4                 28           19911992                         240
-    ## 5                 60           19811982                         128
-    ## 6                  7           19891990                         339
-    ##   mostPenaltyMinutesSeasonIds
-    ## 1                    19931994
-    ## 2                    20092010
-    ## 3                    20132014
-    ## 4                    19871988
-    ## 5                    19811982
-    ## 6                    19891990
-    ##                                                      mostPointsGameDates
-    ## 1                                                             1991-03-14
-    ## 2                         2007-12-29, 2008-01-31, 2008-03-03, 2010-01-15
-    ## 3             2008-11-15, 2009-12-05, 2010-02-04, 2013-12-10, 2016-11-16
-    ## 4                                     1991-10-23, 1992-11-22, 1993-02-13
-    ## 5                                     1979-03-10, 1981-11-21, 1981-12-04
-    ## 6 1989-11-29, 1989-12-05, 1991-11-02, 1992-11-22, 1993-01-01, 1994-01-08
-    ##   mostPointsOneGame mostPointsOneSeason mostPointsSeasonIds penaltyMinutes
-    ## 1                 4                  56            19911992            449
-    ## 2                 5                 112            20072008            719
-    ## 3                 5                 101            20092010            462
-    ## 4                 4                  79            19921993           2003
-    ## 5                 6                 136            19811982            365
-    ## 6                 2                  17            19891990           1189
-    ##   person.id points positionCode rookiePoints seasons
-    ## 1   8448287    474            D           NA      15
-    ## 2   8471214   1278            L          106      15
-    ## 3   8473563    927            C           69      13
-    ## 4   8448117    556            C           NA      12
-    ## 5   8449284    431            C           NA       5
-    ## 6   8449297     69            L           17       5
+| Franchise ID | Team     | Year | Finish | Name            | Position | Player Seasons | Avg Penalty Min | Penalty Min Rank | Avg Total Pts | Total Pts Rank |
+|-------------:|:---------|-----:|:-------|:----------------|:---------|---------------:|----------------:|:-----------------|--------------:|:---------------|
+|           24 | Capitals |   17 | First  | Brooks Orpik    | D        |              5 |           47.60 | High PM          |            12 | Low TP         |
+|           24 | Capitals |   17 | First  | Justin Williams | R        |              2 |           43.00 | High PM          |            50 | High TP        |
+|           24 | Capitals |   17 | First  | Alex Ovechkin   | L        |             15 |           47.93 | High PM          |            85 | High TP        |
+|           24 | Capitals |   17 | First  | Daniel Winnik   | L        |              2 |           35.50 | High PM          |            15 | Low TP         |
+|           24 | Capitals |   17 | First  | T.J. Oshie      | R        |              5 |           32.60 | High PM          |            51 | High TP        |
+|           24 | Capitals |   17 | First  | Matt Niskanen   | D        |              5 |           38.80 | High PM          |            31 | High TP        |
 
-    ## # A tibble: 123 x 36
-    ##    franchiseId teamName  year rank  person.id person.fullName jerseyNumber
-    ##          <int> <chr>    <dbl> <chr>     <int> <chr>           <chr>       
-    ##  1          24 Capitals  2017 F       8468498 Brooks Orpik    44          
-    ##  2          24 Capitals  2017 F       8468508 Justin Williams 14          
-    ##  3          24 Capitals  2017 F       8471214 Alex Ovechkin   8           
-    ##  4          24 Capitals  2017 F       8471476 Daniel Winnik   26          
-    ##  5          24 Capitals  2017 F       8471698 T.J. Oshie      77          
-    ##  6          24 Capitals  2017 F       8471702 Matt Niskanen   15          
-    ##  7          24 Capitals  2017 F       8471710 Taylor Chorney  44          
-    ##  8          24 Capitals  2017 F       8473563 Nicklas Backst~ 19          
-    ##  9          24 Capitals  2017 F       8473991 Karl Alzner     27          
-    ## 10          24 Capitals  2017 F       8474008 Paul Carey      34          
-    ## # ... with 113 more rows, and 29 more variables: position.code <chr>, id <int>,
-    ## #   activePlayer <lgl>, assists <int>, firstName <chr>, franchiseName <chr>,
-    ## #   gameTypeId <int>, gamesPlayed <int>, goals <int>, lastName <chr>,
-    ## #   mostAssistsGameDates <chr>, mostAssistsOneGame <int>,
-    ## #   mostAssistsOneSeason <int>, mostAssistsSeasonIds <chr>,
-    ## #   mostGoalsGameDates <chr>, mostGoalsOneGame <int>, mostGoalsOneSeason <int>,
-    ## #   mostGoalsSeasonIds <chr>, mostPenaltyMinutesOneSeason <int>,
-    ## #   mostPenaltyMinutesSeasonIds <chr>, mostPointsGameDates <chr>,
-    ## #   mostPointsOneGame <int>, mostPointsOneSeason <int>,
-    ## #   mostPointsSeasonIds <chr>, penaltyMinutes <int>, points <int>,
-    ## #   positionCode <chr>, rookiePoints <int>, seasons <int>
+Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place
 
-    ## # A tibble: 100 x 13
-    ##    franchiseId teamName  year rank  person.id person.fullName jerseyNumber
-    ##          <int> <chr>    <dbl> <chr>     <int> <chr>           <chr>       
-    ##  1          24 Capitals  2017 F       8468498 Brooks Orpik    44          
-    ##  2          24 Capitals  2017 F       8468508 Justin Williams 14          
-    ##  3          24 Capitals  2017 F       8471214 Alex Ovechkin   8           
-    ##  4          24 Capitals  2017 F       8471476 Daniel Winnik   26          
-    ##  5          24 Capitals  2017 F       8471698 T.J. Oshie      77          
-    ##  6          24 Capitals  2017 F       8471702 Matt Niskanen   15          
-    ##  7          24 Capitals  2017 F       8471710 Taylor Chorney  44          
-    ##  8          24 Capitals  2017 F       8473563 Nicklas Backst~ 19          
-    ##  9          24 Capitals  2017 F       8473991 Karl Alzner     27          
-    ## 10          24 Capitals  2017 F       8474008 Paul Carey      34          
-    ## # ... with 90 more rows, and 6 more variables: position.code <chr>,
-    ## #   seasons <int>, penaltyMinutes <int>, goals <int>, assists <int>,
-    ## #   mostPointsOneSeason <int>
+|         | High TP | Mid TP | Low TP |
+|:--------|--------:|-------:|-------:|
+| High PM |      34 |      4 |     25 |
+| Mid PM  |       4 |     50 |     13 |
+| Low PM  |      25 |     11 |     24 |
 
-2020 Player Origin Country vs Penalty Minutes by Conference Analysis
-====================================================================
+All Teams Penalty Min & Total Points Rank
 
-    ##     continent conference playoffs currentTeam.id      id            fullName
-    ## 1   N.America    Eastern    FALSE              1 8471233        Travis Zajac
-    ## 2   N.America    Eastern    FALSE              1 8471239      Cory Schneider
-    ## 3   N.America    Eastern    FALSE              1 8474056         P.K. Subban
-    ## 4   N.America    Eastern    FALSE              1 8475151       Kyle Palmieri
-    ## 5      Europe    Eastern    FALSE              1 8476368    Fredrik Claesson
-    ## 6   N.America    Eastern    FALSE              1 8476923      Damon Severson
-    ## 7   N.America    Eastern    FALSE              1 8476941      Connor Carrick
-    ## 8      Europe    Eastern    FALSE              1 8477038        Nikita Gusev
-    ## 9   N.America    Eastern    FALSE              1 8477355        Will Butcher
-    ## 10  N.America    Eastern    FALSE              1 8477401         John Hayden
-    ## 11  N.America    Eastern    FALSE              1 8477425          Miles Wood
-    ## 12     Europe    Eastern    FALSE              1 8477509       Mirco Mueller
-    ## 13  N.America    Eastern    FALSE              1 8477541       Dakota Mermis
-    ## 14     Europe    Eastern    FALSE              1 8478401         Pavel Zacha
-    ## 15  N.America    Eastern    FALSE              1 8478406 Mackenzie Blackwood
-    ## 16  N.America    Eastern    FALSE              1 8479291        Kevin Rooney
-    ## 17  N.America    Eastern    FALSE              1 8479315       Joey Anderson
-    ## 18     Europe    Eastern    FALSE              1 8479407        Jesper Bratt
-    ## 19  N.America    Eastern    FALSE              1 8479415      Michael McLeod
-    ## 20     Europe    Eastern    FALSE              1 8480002       Nico Hischier
-    ## 21  N.America    Eastern    FALSE              1 8481559         Jack Hughes
-    ## 22  N.America    Eastern     TRUE              2 8470187      Johnny Boychuk
-    ## 23  N.America    Eastern     TRUE              2 8471217         Andrew Ladd
-    ## 24     Europe    Eastern     TRUE              2 8471306       Thomas Greiss
-    ## 25  N.America    Eastern     TRUE              2 8472382         Andy Greene
-    ## 26     Europe    Eastern     TRUE              2 8473463         Leo Komarov
-    ## 27  N.America    Eastern     TRUE              2 8473504     Cal Clutterbuck
-    ## 28  N.America    Eastern     TRUE              2 8473544     Derick Brassard
-    ## 29     Europe    Eastern     TRUE              2 8473575     Semyon Varlamov
-    ## 30  N.America    Eastern     TRUE              2 8474066       Thomas Hickey
-    ## 31  N.America    Eastern     TRUE              2 8474573         Josh Bailey
-    ## 32  N.America    Eastern     TRUE              2 8474586       Jordan Eberle
-    ## 33  N.America    Eastern     TRUE              2 8474709         Matt Martin
-    ## 34  N.America    Eastern     TRUE              2 8475181          Nick Leddy
-    ## 35  N.America    Eastern     TRUE              2 8475231       Casey Cizikas
-    ## 36  N.America    Eastern     TRUE              2 8475314          Anders Lee
-    ## 37  N.America    Eastern     TRUE              2 8475754        Brock Nelson
-    ## 38     Europe    Eastern     TRUE              2 8475832       Tom Kuhnhackl
-    ## 39  N.America    Eastern     TRUE              2 8476419 Jean-Gabriel Pageau
-    ## 40  N.America    Eastern     TRUE              2 8476429      Scott Mayfield
-    ## 41     Europe    Eastern     TRUE              2 8476444  Christopher Gibson
-    ## 42  N.America    Eastern     TRUE              2 8476917         Adam Pelech
-    ## 43  N.America    Eastern     TRUE              2 8477506         Ryan Pulock
-    ## 44  N.America    Eastern     TRUE              2 8477527       Ross Johnston
-    ## 45  N.America    Eastern     TRUE              2 8477936   Michael Dal Colle
-    ## 46  N.America    Eastern     TRUE              2 8478038         Devon Toews
-    ## 47  N.America    Eastern     TRUE              2 8478445       Mathew Barzal
-    ## 48  N.America    Eastern     TRUE              2 8478463 Anthony Beauvillier
-    ## 49     Europe    Eastern     TRUE              2 8479526        Otto Koivula
-    ## 50     Europe    Eastern     TRUE              2 8480222       Sebastian Aho
-    ## 51  N.America    Eastern     TRUE              2 8480865         Noah Dobson
-    ## 52  N.America    Eastern    FALSE              3 8474230       Micheal Haley
-    ## 53     Europe    Eastern    FALSE              3 8480833     Vitali Kravtsov
-    ## 54     Europe    Eastern    FALSE              3 8468685    Henrik Lundqvist
-    ## 55  N.America    Eastern    FALSE              3 8471686          Marc Staal
-    ## 56  N.America    Eastern    FALSE              3 8474090       Brendan Smith
-    ## 57  N.America    Eastern    FALSE              3 8475184       Chris Kreider
-    ## 58  N.America    Eastern    FALSE              3 8475735         Greg McKegg
-    ## 59     Europe    Eastern    FALSE              3 8475855         Jesper Fast
-    ## 60  N.America    Eastern    FALSE              3 8476396      Steven Fogarty
-    ## 61  N.America    Eastern    FALSE              3 8476458         Ryan Strome
-    ## 62     Europe    Eastern    FALSE              3 8476459      Mika Zibanejad
-    ## 63  N.America    Eastern    FALSE              3 8476858 Phillip Di Giuseppe
-    ## 64  N.America    Eastern    FALSE              3 8476885        Jacob Trouba
-    ## 65  N.America    Eastern    FALSE              3 8476982       Danny O'Regan
-    ## 66     Europe    Eastern    FALSE              3 8477402    Pavel Buchnevich
-    ## 67  N.America    Eastern    FALSE              3 8477950       Tony DeAngelo
-    ## 68  N.America    Eastern    FALSE              3 8477962     Brendan Lemieux
-    ## 69     Europe    Eastern    FALSE              3 8478048     Igor Shesterkin
-    ## 70  N.America    Eastern    FALSE              3 8478178      Darren Raddysh
-    ## 71     Europe    Eastern    FALSE              3 8478550      Artemi Panarin
-    ## 72  N.America    Eastern    FALSE              3 8479027     Brandon Crawley
-    ## 73  N.America    Eastern    FALSE              3 8479323            Adam Fox
-    ## 74  N.America    Eastern    FALSE              3 8479324       Ryan Lindgren
-    ## 75  N.America    Eastern    FALSE              3 8479328     Julien Gauthier
-    ## 76     Europe    Eastern    FALSE              3 8479333         Libor Hajek
-    ## 77  N.America    Eastern    FALSE              3 8479353        Brett Howden
-    ## 78  N.America    Eastern    FALSE              3 8479364       Tim Gettinger
-    ## 79  N.America    Eastern    FALSE              3 8479968      Vinni Lettieri
-    ## 80     Europe    Eastern    FALSE              3 8480078        Filip Chytil
-    ## 81     Europe    Eastern    FALSE              3 8480382  Alexandar Georgiev
-    ## 82     Europe    Eastern    FALSE              3 8481554         Kaapo Kakko
-    ## 83  N.America    Eastern     TRUE              4 8477502        Samuel Morin
-    ## 84  N.America    Eastern     TRUE              4 8473485       Chris Stewart
-    ## 85  N.America    Eastern     TRUE              4 8470775       Nate Thompson
-    ## 86  N.America    Eastern     TRUE              4 8470880       Brian Elliott
-    ## 87  N.America    Eastern     TRUE              4 8471702       Matt Niskanen
-    ## 88  N.America    Eastern     TRUE              4 8473512       Claude Giroux
-    ## 89  N.America    Eastern     TRUE              4 8474027        Justin Braun
-    ## 90  N.America    Eastern     TRUE              4 8474037  James van Riemsdyk
-    ## 91     Europe    Eastern     TRUE              4 8474161       Jakub Voracek
-    ## 92  N.America    Eastern     TRUE              4 8474683         Derek Grant
-    ## 93  N.America    Eastern     TRUE              4 8475752       Tyler Pitlick
-    ## 94  N.America    Eastern     TRUE              4 8475763         Kevin Hayes
-    ## 95  N.America    Eastern     TRUE              4 8476404       Andy Andreoff
-    ## 96  N.America    Eastern     TRUE              4 8476407       Andy Welinski
-    ## 97  N.America    Eastern     TRUE              4 8476461      Sean Couturier
-    ## 98  N.America    Eastern     TRUE              4 8476872      Scott Laughton
-    ## 99  N.America    Eastern     TRUE              4 8476906 Shayne Gostisbehere
-    ## 100    Europe    Eastern     TRUE              4 8477290       Michael Raffl
-    ##     birthCountry
-    ## 1            CAN
-    ## 2            USA
-    ## 3            CAN
-    ## 4            USA
-    ## 5            SWE
-    ## 6            CAN
-    ## 7            USA
-    ## 8            RUS
-    ## 9            USA
-    ## 10           USA
-    ## 11           USA
-    ## 12           CHE
-    ## 13           USA
-    ## 14           CZE
-    ## 15           CAN
-    ## 16           USA
-    ## 17           USA
-    ## 18           SWE
-    ## 19           CAN
-    ## 20           CHE
-    ## 21           USA
-    ## 22           CAN
-    ## 23           CAN
-    ## 24           DEU
-    ## 25           USA
-    ## 26           FIN
-    ## 27           CAN
-    ## 28           CAN
-    ## 29           RUS
-    ## 30           CAN
-    ## 31           CAN
-    ## 32           CAN
-    ## 33           CAN
-    ## 34           USA
-    ## 35           CAN
-    ## 36           USA
-    ## 37           USA
-    ## 38           DEU
-    ## 39           CAN
-    ## 40           USA
-    ## 41           FIN
-    ## 42           CAN
-    ## 43           CAN
-    ## 44           CAN
-    ## 45           CAN
-    ## 46           CAN
-    ## 47           CAN
-    ## 48           CAN
-    ## 49           FIN
-    ## 50           SWE
-    ## 51           CAN
-    ## 52           CAN
-    ## 53           RUS
-    ## 54           SWE
-    ## 55           CAN
-    ## 56           CAN
-    ## 57           USA
-    ## 58           CAN
-    ## 59           SWE
-    ## 60           USA
-    ## 61           CAN
-    ## 62           SWE
-    ## 63           CAN
-    ## 64           USA
-    ## 65           USA
-    ## 66           RUS
-    ## 67           USA
-    ## 68           USA
-    ## 69           RUS
-    ## 70           CAN
-    ## 71           RUS
-    ## 72           USA
-    ## 73           USA
-    ## 74           USA
-    ## 75           CAN
-    ## 76           CZE
-    ## 77           CAN
-    ## 78           USA
-    ## 79           USA
-    ## 80           CZE
-    ## 81           RUS
-    ## 82           FIN
-    ## 83           CAN
-    ## 84           CAN
-    ## 85           USA
-    ## 86           CAN
-    ## 87           USA
-    ## 88           CAN
-    ## 89           USA
-    ## 90           USA
-    ## 91           CZE
-    ## 92           CAN
-    ## 93           USA
-    ## 94           USA
-    ## 95           CAN
-    ## 96           USA
-    ## 97           USA
-    ## 98           CAN
-    ## 99           USA
-    ## 100          AUT
+|         | High TP | Mid TP | Low TP |
+|:--------|--------:|-------:|-------:|
+| High PM |      21 |      1 |     10 |
+| Mid PM  |       1 |     14 |      3 |
+| Low PM  |      15 |      4 |     11 |
 
-    ## Rows: 896
-    ## Columns: 7
-    ## $ continent      <chr> "N.America", "N.America", "N.America", "N.America", ...
-    ## $ conference     <chr> "Eastern", "Eastern", "Eastern", "Eastern", "Eastern...
-    ## $ playoffs       <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL...
-    ## $ currentTeam.id <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
-    ## $ id             <int> 8471233, 8471239, 8474056, 8475151, 8476368, 8476923...
-    ## $ fullName       <chr> "Travis Zajac", "Cory Schneider", "P.K. Subban", "Ky...
-    ## $ birthCountry   <chr> "CAN", "USA", "CAN", "USA", "SWE", "CAN", "USA", "RU...
+Presidents Cup Winners
+
+|         | High TP | Mid TP | Low TP |
+|:--------|--------:|-------:|-------:|
+| High PM |      13 |      3 |     15 |
+| Mid PM  |       3 |     36 |     10 |
+| Low PM  |      10 |      7 |     13 |
+
+Last Place Teams
+
+Visuals
+-------
+
+### 1 Factor
+
+![](README_files/figure-gfm/univariate%20bar%20graphs-1.png)<!-- -->
+
+### 2 Factors
+
+![](README_files/figure-gfm/2%20factor%20bar%20graphs-1.png)<!-- -->![](README_files/figure-gfm/2%20factor%20bar%20graphs-2.png)<!-- -->
+
+### 3 Factors
+
+![](README_files/figure-gfm/3%20factor%20bar%20graphs-1.png)<!-- -->
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |       1.000000 |         0.00000 |       0.00000 |
+| 1st Qu. |       2.750000 |         9.21250 |       6.50000 |
+| Median  |       4.500000 |        17.78500 |      18.50000 |
+| Mean    |       5.214286 |        25.52643 |      24.96429 |
+| 3rd Qu. |       7.000000 |        35.51000 |      35.75000 |
+| Max.    |      15.000000 |       146.71000 |      85.00000 |
+
+Team: Capitals
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |       1.000000 |         0.00000 |       0.00000 |
+| 1st Qu. |       2.000000 |        10.67000 |       6.00000 |
+| Median  |       3.000000 |        23.00000 |      18.00000 |
+| Mean    |       3.848485 |        27.78333 |      19.60606 |
+| 3rd Qu. |       5.000000 |        36.60000 |      26.00000 |
+| Max.    |      10.000000 |       135.90000 |      71.00000 |
+
+Team: Avalanche
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |       1.000000 |         0.00000 |       1.00000 |
+| 1st Qu. |       3.000000 |        15.67000 |       5.50000 |
+| Median  |       5.000000 |        25.00000 |      19.00000 |
+| Mean    |       5.037037 |        27.65111 |      20.92593 |
+| 3rd Qu. |       7.000000 |        31.03000 |      33.00000 |
+| Max.    |       9.000000 |        89.43000 |      50.00000 |
+
+Team: Predators
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |       1.000000 |         0.00000 |       0.00000 |
+| 1st Qu. |       2.000000 |         4.67000 |       3.50000 |
+| Median  |       3.000000 |        10.60000 |       8.00000 |
+| Mean    |       3.542857 |        18.71229 |      15.22857 |
+| 3rd Qu. |       5.000000 |        27.45500 |      19.50000 |
+| Max.    |      11.000000 |        87.00000 |      67.00000 |
+
+Team: Sabres
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |           1.00 |          5.5000 |          2.00 |
+| 1st Qu. |           2.00 |         18.4000 |         11.00 |
+| Median  |           5.00 |         21.0000 |         22.00 |
+| Mean    |           4.88 |         26.2444 |         26.88 |
+| 3rd Qu. |           7.00 |         37.2900 |         39.00 |
+| Max.    |          12.00 |         58.5000 |         78.00 |
+
+Team: Lightning
+
+|         | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|:--------|---------------:|----------------:|--------------:|
+| Min.    |       1.000000 |         0.00000 |       0.00000 |
+| 1st Qu. |       2.000000 |         3.25000 |       2.00000 |
+| Median  |       2.000000 |         9.41500 |       8.00000 |
+| Mean    |       3.238095 |        14.76786 |      13.19048 |
+| 3rd Qu. |       4.000000 |        19.40500 |      19.50000 |
+| Max.    |      11.000000 |        90.50000 |      54.00000 |
+
+Team: Senators
+
+![](README_files/figure-gfm/boxplot%20Avg%20TP-1.png)<!-- -->
+![](README_files/figure-gfm/boxplot%20Avg%20PM-1.png)<!-- -->
+
+![](README_files/figure-gfm/boxplot%20Years-1.png)<!-- -->
+
+![](README_files/figure-gfm/dotplot%20by%20TotalPoints-1.png)<!-- -->
+
+![](README_files/figure-gfm/dotplot%20by%20Penalty%20Minutes-1.png)<!-- -->
 
 |  id | name                  | link             | abbreviation | teamName       | locationName | firstYearOfPlay | shortName    | officialSiteUrl                                                                                 | franchiseId | active | venue.name               | venue.link          | venue.city   | venue.id | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link        |
 |----:|:----------------------|:-----------------|:-------------|:---------------|:-------------|:----------------|:-------------|:------------------------------------------------------------------------------------------------|------------:|:-------|:-------------------------|:--------------------|:-------------|---------:|:---------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:----------------------|
@@ -776,9 +566,3 @@ Player Stats
 |          26 | 3            |   8456547 | Bret Hedican    | /api/v1/people/8456547 | D             | Defenseman    | Defenseman    | D                     | Hurricanes |
 |          26 | 93           |   8458361 | Doug Weight     | /api/v1/people/8458361 | C             | Center        | Forward       | C                     | Hurricanes |
 |          26 | 4            |   8458519 | Aaron Ward      | /api/v1/people/8458519 | D             | Defenseman    | Defenseman    | D                     | Hurricanes |
-
-\#\#{r, user input} t\_id &lt;- FranchiseAPI()\[ , “Team ID”\]
-selectInput(“n”,label = “Choose a Team ID”, choices = t\_id, selected =
-26) renderDT({RosterAPI(input$n)})
-
-down::render(“P1\_TKIdol.Rmd”, output\_file = “README.md”) \`\`\`
