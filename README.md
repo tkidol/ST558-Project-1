@@ -728,7 +728,7 @@ Last groups in the Qantitative Analysis.
 
     # Country by Position
     FxPosplot <- ggplot(PL_SK_Season, aes(Country, fill = as.factor(Position)))
-    FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Nationality")
+    FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Country Region")
 
 ![](README_files/figure-gfm/2%20factor%20bar%20graphs-2.png)<!-- -->
 
@@ -869,7 +869,7 @@ the large CI bands.
 
 ### Penalty Mins by Player Tenure
 
-Mixd results among First & Last Placed teams but generally First Place
+Mixed results among First & Last Placed teams but generally First Place
 teams show fewer PMs by season. Could indicate “maturity” and
 recognition of importance of “staying out of the box” to winning over a
 long season.

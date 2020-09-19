@@ -658,7 +658,7 @@ FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationalit
 
 # Country by Position
 FxPosplot <- ggplot(PL_SK_Season, aes(Country, fill = as.factor(Position)))
-FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Nationality")
+FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Country Region")
 ```
 
 
@@ -728,7 +728,7 @@ g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_cont
 
 ### Penalty Mins by Player Tenure
 
-Mixd results among First & Last Placed teams but generally First Place teams show fewer PMs by season.  Could indicate "maturity" and recognition of importance of "staying out of the box" to winning over a long season.
+Mixed results among First & Last Placed teams but generally First Place teams show fewer PMs by season.  Could indicate "maturity" and recognition of importance of "staying out of the box" to winning over a long season.
 
 ```{r, dotplot by Penalty Minutes}
 # Base plot aesthetic with Total Points on x axis
