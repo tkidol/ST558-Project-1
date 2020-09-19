@@ -10,21 +10,45 @@ output:
 ---
 
 ```{r, setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
 rmarkdown::find_pandoc(version = '2.10.1')
 options(knitr.duplicate.label = "allow")
 library(tidyverse)
-library(tinytex)
 library(jsonlite)
 library(httr)
-library(DT)
 library(rmarkdown)
 library(knitr)
-library(GGally)
 ```
+
+# Link to Project Repo
+
+Link to repo[https://github.com/tkidol/ST558-Project-1]
+
+# Packages
+
+## Tidyverse
+
+The workhorse of this project for 3 main core packages: DPLYR - manipulated all of my data (selects, joins, filter, new variables... ), Tibble for rendering Data Frames more effectively, & () ggplot2 for discrete & continuous data plots
+
+## Rmarkdown 
+
+Key to the project for the Rmd file itself including the knitr:: functions for consumable object output (kable) & README.md github doc output through render()
+
+## JSONLite
+
+PUsed to converting API pulled JSON data into R objects
+
+## HTTR
+
+
+Per R documentation site: Functions for the most important http verbs: GET(), HEAD(), PATCH(), PUT(), DELETE() and POST().
+
+
 # NHL API Wrapper
 
+Created 2 wrapper functions to call APIs.  One for the Franchise endpoints taking in endpoint names, team names & franchise ID's & 1 for the Team stats taking in modifier names, team names & team ID's.
 
+## Franchise Wrapper
 
 ```{r, Franchise API Wrapper}
 # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
@@ -81,6 +105,8 @@ FR_Wrapper <- function(endpoint, team = NULL, ...) {
   }
 }
 ```
+
+## Stats Wrapper
 
 ```{r, Stat Wrapper}
 # Stat API Wrapper takes API Modifier (from a list) & team (Team ID or Common Team name (e.g. "Hurricanes)), & Season (for the 'roster & season' endpoint) & returns distinct API data. Note: using 'people' API for analysis but not directly accessible through Wrapper. MultiAPI works directly with multiple 'id' input but not through the Wrapper
@@ -162,7 +188,11 @@ ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
 ```
 
 
-# NHL Franchises
+# NHL Franchise APIs
+
+Here are the GET chunks to return APIs associated to the Franchise end points.
+
+## Franchise Main API
 
 ```{r, Franchise API}
 # GET pull for NHL franchise
@@ -180,10 +210,14 @@ return(franchise)
 }
 ```
 
-```{r, fr t}
-fr <- FranchiseAPI()
-head(fr[5])
+```{r, Franchise API Head, echo = FALSE}
+# API head
+frhead <- FR_Wrapper("franchise")
+kable(head(frhead))
 ```
+
+
+## Team Totals API
 
 ```{r TeamTotal API}
 # GET pull for NHL Team Totals
@@ -198,10 +232,14 @@ totals <- fromJSON(totals, flatten = TRUE)
 return(totals[[1]])
 }
 ```
-```{r, testt}
-x <- FR_Wrapper("drilldown", "Stars")
-x
+
+```{r, Totals API Head, echo = FALSE}
+# API head
+tothead <- FR_Wrapper("totals")
+kable(head(tothead))
 ```
+
+## Team Drill Down API
 
 ```{r, Team DrillDown API}
 TeamDDAPI <- function(id, ...) {
@@ -217,6 +255,14 @@ return(drill_down[[1]])
 }
 ```
 
+```{r, Drilldown API Head, echo = FALSE}
+# API head
+ddhead <- FR_Wrapper("drilldown", 26)
+kable(head(ddhead))
+```
+
+## Goalie API
+
 ```{r Goalie API}
 GoalieAPI <- function(id, ...) {
 # GET pull for NHL Team Totals
@@ -230,10 +276,8 @@ goalie <- fromJSON(goalie, flatten = TRUE)
 return(goalie[[1]])
 }
 ```
-```{r}
-g <- GoalieAPI(1)
-g
-```
+
+## Skater API
 
 ```{r, Skater API}
 SkaterAPI <- function(id, ...) {
@@ -423,7 +467,11 @@ return(playoff[[2]])
 
 ### Language
 
-### Data
+# Analysis
+
+## Data
+
+The NHL team with the highest regular season points (2 for ea win / 1 for ea overtime loss) is awarded the league's Presidents Cup.  The data used for the analysis is taken for a comparison of the 2017 - 2019 Presidents Cup Winners (Capitals, Predators, Lightning) vs the corresponding "Low Points Teams" (Avalanche, Sabres, Senators).  SeasonAPI was used to pull Player info for each of the six teams for corresponding years.  This was mutated & joined to the PeopleAPI data to get nationalities for each Player (factored into USA, Canada, European groups).  That data was then joined to the SkaterAPI to get career stats on which the Rosters were analyzed. 
 
 ```{r, presidents, cache = TRUE}
 # Roster for last 2 seasons, high points team (presidents cup) low points team
@@ -477,8 +525,16 @@ PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = t
 
 PL_SK_Season$Finish <- as.factor(PL_SK_Season$Finish)
 
-kable(PL_SK_Season, caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
+
+kable(head(PL_SK_Season), caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
 ```
+
+## Categorical Analysis
+
+Categories for Player Countries (regionalized), Positions (by code), & Team Finish.  
+
+### Total Summaries
+
 
 
 ```{r, Team Finish }
@@ -486,11 +542,16 @@ Pos_Ctry_table <- table(PL_SK_Season$Position, PL_SK_Season$Country)
 kable(Pos_Ctry_table, caption = "Player Position by Country")
 ```
 
+### Summaries by First Place Teams
+
 ```{r, Pres PM_TP Rank}
 First <- filter(PL_SK_Season, PL_SK_Season$Finish == "First")
 Pos_Ctry1_table <- table(First$Position, First$Country)
 kable(Pos_Ctry1_table, caption = "Presidents Cup Winners")
 ```
+
+### Summaries by Last Place Teams
+
 ```{r, Last PM_TP Rank}
 Last <- filter(PL_SK_Season, PL_SK_Season$Finish == "Last")
 Pos_Ctry2_table <- table(Last$Position, Last$Country)
@@ -499,6 +560,9 @@ kable(Pos_Ctry2_table, caption = "Last Place Players")
 ## Visuals
 
 ### 1 Factor
+
+The most interesting finding from the single category plot is the smaller roster size of the 3 First Place teams.  This could indicate fewer injuries or the fact that the Last Place teams were juggling lineups and bringing in players from their minor league ranks or through trades.
+
 ```{r, univariate bar graphs}
 # bar plot of Team Finish
 FinPlot <- ggplot(PL_SK_Season, aes(x = Finish), color = "blue") 
@@ -515,22 +579,32 @@ COPlot + geom_bar() + labs(x = "Player Position")
 
 ### 2 Factors
 
+Consistent with univariate analysis we see fewer players on the winning teams.  It's notable that Canadians dominate both rosters (they invented the sport).  Europeans and Americans are approximately the same.  Centers and Defensemen are clearly the most valuable positions to fill - strong stats in these groups could show significant differences between First / Last groups in the Qantitative Analysis. 
+
 ```{r, 2 factor bar graphs}
-# Finish by PM Rank
+# Finish by Nationality
 FxCOplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Country)))
 FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationality") + labs(x = "Team Finish")
 
-# Finish by TP Rank
-FxPosplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Position)))
-FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Team Finish")
+# Country by Position
+FxPosplot <- ggplot(PL_SK_Season, aes(Country, fill = as.factor(Position)))
+FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Nationality")
 ```
 
+
 ### 3 Factors
+
+Basically a breakdown of the previous 2 bivariate plots demonstrating the same conclusions.  The number of Canadian defensemen on Last Place rosters stands out - perhaps a crop of younger players.
+
 ```{r, 3 factor bar graphs}
 # Color by satellite indicator by spine condition
 FxPMxPtplot <- ggplot(PL_SK_Season, aes(Country, fill = Finish))
 FxPMxPtplot + geom_bar(position = "dodge") + scale_fill_discrete(name = "Team Finish") + labs(x = "Player Country", title = "Player Finish by Country and Position") + facet_wrap(. ~ Position, labeller = (label_both))
 ```
+
+## Quantitative Analysis
+
+### Summaries
 
 ```{r, player summaries}
 # Function to knit 5 number sum + Mean given Species input
@@ -563,14 +637,29 @@ TeamSumm(teams[[6]])
 
 ```
 
+## Visuals
+
+### Average Total Points vs Player Tenure
+
+An apparent strong correlation between these variables especially towards the upper right indicating veteran players produce more points (goals + assists) on average over their careers.  This could be the result of their skill leading to longevity vs experience producing more points (interesting topic for deeper analysis).  Wide variance given by the large CI bands.  
+
 ```{r, dotplot by TotalPoints}
 # Base plot aesthetic with Total Points on x axis
-finish <- PL_SK_Season$Finish
+Finish <- PL_SK_Season$Finish
+Avg_Total_Points <- PL_SK_Season$`Avg Total Pts`
+Avg_Penalty_Min <- PL_SK_Season$`Avg Penalty Min`
+PLayer_Seasons <- PL_SK_Season$`Player Seasons`
+
 g <- ggplot(PL_SK_Season, aes(x = Avg_Total_Points, y = PLayer_Seasons, color = Finish))
 
 # Avg total points histogram
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Seasons")
 ```
+
+### Penalty Mins by Player Tenure
+
+Mixd results among First & Last Placed teams but generally First Place teams show fewer PMs by season.  Could indicate "maturity" and recognition of importance of "staying out of the box" to winning over a long season.
+
 ```{r, dotplot by Penalty Minutes}
 # Base plot aesthetic with Total Points on x axis
 g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = Finish))
@@ -579,9 +668,13 @@ g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = F
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Penalty Minutes vs Average Total Points")
 ```
 
+### Average Total Points vs Average Penalty Minutes
+
+Breaking out colors by team to show another degree of team detail.  Tamapa Bay jumps out here for the steep Beta 1 - players getting the most points out of their penalty minutes & shortness of line indicate fewer penalty minute outliers (consistent blend of aggression & discipline across roster).  Capitals are next highest in Career points per PM but w less discipline (aggressive play leading to positive results). The 3 Last Place teams stand out for the shallowness (low points per penalty mins) of their lines & clustering in the lower left (fewer points/fewer penalty minutes) - teams appear to be less aggressive/offensively minded
+
 ```{r, dotplot by }
 # Base plot aesthetic with Total Points on x axis
-g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color = Finish))
+g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color = Team))
 
 # Avg total points histogram
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")

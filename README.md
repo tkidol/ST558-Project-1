@@ -3,236 +3,333 @@ NHL
 Todd Idol
 9/8/2020
 
+-   [Link to Project Repo](#link-to-project-repo)
+-   [Packages](#packages)
+    -   [Tidyverse](#tidyverse)
+    -   [Rmarkdown](#rmarkdown)
+    -   [JSONLite](#jsonlite)
+    -   [HTTR](#httr)
 -   [NHL API Wrapper](#nhl-api-wrapper)
--   [NHL Franchises](#nhl-franchises)
+    -   [Franchise Wrapper](#franchise-wrapper)
+    -   [Stats Wrapper](#stats-wrapper)
+-   [NHL Franchise APIs](#nhl-franchise-apis)
+    -   [Franchise Main API](#franchise-main-api)
+    -   [Team Totals API](#team-totals-api)
+    -   [Team Drill Down API](#team-drill-down-api)
+    -   [Goalie API](#goalie-api)
+    -   [Skater API](#skater-api)
     -   [2017 - 2019 Presidents Cup Teams vs. Low Points Teams
         Analysis](#presidents-cup-teams-vs.-low-points-teams-analysis)
         -   [Language](#language)
-        -   [Data](#data)
+-   [Analysis](#analysis)
+    -   [Data](#data)
+    -   [Categorical Analysis](#categorical-analysis)
+        -   [Total Summaries](#total-summaries)
+        -   [Summaries by First Place
+            Teams](#summaries-by-first-place-teams)
+        -   [Summaries by Last Place
+            Teams](#summaries-by-last-place-teams)
     -   [Visuals](#visuals)
         -   [1 Factor](#factor)
         -   [2 Factors](#factors)
         -   [3 Factors](#factors-1)
+    -   [Quantitative Analysis](#quantitative-analysis)
+        -   [Summaries](#summaries)
+    -   [Visuals](#visuals-1)
+        -   [Average Total Points vs Player
+            Tenure](#average-total-points-vs-player-tenure)
+        -   [Penalty Mins by Player
+            Tenure](#penalty-mins-by-player-tenure)
+        -   [Average Total Points vs Average Penalty
+            Minutes](#average-total-points-vs-average-penalty-minutes)
+
+Link to Project Repo
+====================
+
+Link to
+repo\[<a href="https://github.com/tkidol/ST558-Project-1" class="uri">https://github.com/tkidol/ST558-Project-1</a>\]
+
+Packages
+========
+
+Tidyverse
+---------
+
+The workhorse of this project for 3 main core packages: DPLYR -
+manipulated all of my data (selects, joins, filter, new variables… ),
+Tibble for rendering Data Frames more effectively, & () ggplot2 for
+discrete & continuous data plots
+
+Rmarkdown
+---------
+
+Key to the project for the Rmd file itself including the knitr::
+functions for consumable object output (kable) & README.md github doc
+output through render()
+
+JSONLite
+--------
+
+PUsed to converting API pulled JSON data into R objects
+
+HTTR
+----
+
+Per R documentation site: Functions for the most important http verbs:
+GET(), HEAD(), PATCH(), PUT(), DELETE() and POST().
 
 NHL API Wrapper
 ===============
 
-NHL Franchises
-==============
+Created 2 wrapper functions to call APIs. One for the Franchise
+endpoints taking in endpoint names, team names & franchise ID’s & 1 for
+the Team stats taking in modifier names, team names & team ID’s.
 
-    ##          Name
-    ## 1   Canadiens
-    ## 2   Wanderers
-    ## 3      Eagles
-    ## 4      Tigers
-    ## 5 Maple Leafs
-    ## 6      Bruins
+Franchise Wrapper
+-----------------
 
-    ##   id fewestGoals fewestGoalsAgainst fewestGoalsAgainstSeasons fewestGoalsSeasons fewestLosses
-    ## 1 25         189                167              1997-98 (82)       1968-69 (76)           17
-    ##   fewestLossesSeasons fewestPoints fewestPointsSeasons fewestTies fewestTiesSeasons fewestWins
-    ## 1        2002-03 (82)           45        1977-78 (80)          4      1989-90 (80)         18
-    ##            fewestWinsSeasons franchiseId franchiseName homeLossStreak
-    ## 1 1968-69 (76), 1977-78 (80)          15  Dallas Stars              6
-    ##                                    homeLossStreakDates homePointStreak      homePointStreakDates homeWinStreak
-    ## 1 Jan 17 1970 - Feb 04 1970, Feb 21 2009 - Mar 08 2009              17 Jan 23 2004 - Mar 20 2004            11
-    ##          homeWinStreakDates homeWinlessStreak    homeWinlessStreakDates lossStreak           lossStreakDates
-    ## 1 Nov 04 1972 - Dec 27 1972                12 Jan 17 1970 - Feb 25 1970         10 Feb 01 1976 - Feb 20 1976
-    ##   mostGameGoals           mostGameGoalsDates mostGoals mostGoalsAgainst mostGoalsAgainstSeasons
-    ## 1            15 Nov 11 1981 - WIN 2 @ MNS 15       346              349            1987-88 (80)
-    ##   mostGoalsSeasons mostLosses          mostLossesSeasons mostPenaltyMinutes mostPenaltyMinutesSeasons
-    ## 1     1981-82 (80)         53 1975-76 (80), 1977-78 (80)               2317              1987-88 (80)
-    ##   mostPoints mostPointsSeasons mostShutouts        mostShutoutsSeasons mostTies mostTiesSeasons mostWins
-    ## 1        114      1998-99 (82)           11 2000-01 (82), 2002-03 (82)       22    1969-70 (76)       53
-    ##   mostWinsSeasons pointStreak          pointStreakDates roadLossStreak
-    ## 1    2005-06 (82)          15 Dec 06 1998 - Jan 06 1999              8
-    ##                                                               roadLossStreakDates roadPointStreak
-    ## 1 Oct 19 1975 - Nov 13 1975, Jan 28 1988 - Mar 03 1988, Feb 27 1993 - Apr 01 1993              11
-    ##        roadPointStreakDates roadWinStreak        roadWinStreakDates roadWinlessStreak
-    ## 1 Dec 27 2002 - Feb 27 2003             8 Dec 13 2010 - Jan 20 2011                23
-    ##      roadWinlessStreakDates winStreak
-    ## 1 Oct 25 1974 - Jan 28 1975         7
-    ##                                                                                                                          winStreakDates
-    ## 1 Mar 16 1980 - Mar 28 1980, Mar 16 1997 - Apr 02 1997, Nov 22 1997 - Dec 05 1997, Jan 29 2008 - Feb 11 2008, Nov 13 2019 - Nov 25 2019
-    ##   winlessStreak        winlessStreakDates
-    ## 1             6 Feb 27 2020 - Mar 10 2020
+    # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
 
-    ##      id activePlayer firstName franchiseId      franchiseName gameTypeId gamesPlayed   lastName losses
-    ## 1   261        FALSE   Patrick           1 Montréal Canadiens          2         551        Roy    175
-    ## 2   294         TRUE     Carey           1 Montréal Canadiens          2         682      Price    250
-    ## 3   296        FALSE   Jacques           1 Montréal Canadiens          2         556     Plante    133
-    ## 4   327        FALSE    George           1 Montréal Canadiens          2         318 Hainsworth     96
-    ## 5   414        FALSE  Stephane           1 Montréal Canadiens          2           2      Fiset      1
-    ## 6   437        FALSE      Jeff           1 Montréal Canadiens          2         161    Hackett     68
-    ## 7   450        FALSE     Brian           1 Montréal Canadiens          2         141    Hayward     48
-    ## 8   457        FALSE     Denis           1 Montréal Canadiens          2          86     Herron     18
-    ## 9   469        FALSE       Pat           1 Montréal Canadiens          2          40  Jablonski     15
-    ## 10  511        FALSE    Roland           1 Montréal Canadiens          2           9   Melanson      3
-    ## 11  527        FALSE      Andy           1 Montréal Canadiens          2          42       Moog     17
-    ## 12  549        FALSE     Lorne           1 Montréal Canadiens          2          47     Chabot     20
-    ## 13  559        FALSE     Abbie           1 Montréal Canadiens          2           1        Cox      0
-    ## 14  565        FALSE      Wilf           1 Montréal Canadiens          2         220       Cude    101
-    ## 15  569        FALSE     Denis           1 Montréal Canadiens          2           7    DeJordy      2
-    ## 16  585        FALSE      Bert           1 Montréal Canadiens          2          52   Gardiner     31
-    ## 17  612        FALSE      Mike           1 Montréal Canadiens          2           5    Karakas      4
-    ## 18  623        FALSE     Gerry           1 Montréal Canadiens          2         276     McNeil    105
-    ## 19  654        FALSE      Gump           1 Montréal Canadiens          2         172    Worsley     41
-    ## 20  656        FALSE       Roy           1 Montréal Canadiens          2           1    Worters      0
-    ## 21  681        FALSE   Vincent           1 Montréal Canadiens          2           1   Riendeau      0
-    ## 22  710        FALSE      Doug           1 Montréal Canadiens          2          51   Soetaert     16
-    ## 23  724        FALSE       Ron           1 Montréal Canadiens          2          15    Tugnutt      6
-    ## 24  863        FALSE   Jocelyn           1 Montréal Canadiens          2         158   Thibault     56
-    ## 25  880        FALSE      Eric           1 Montréal Canadiens          2           2    Fichaud      2
-    ## 26  924        FALSE      Marc           1 Montréal Canadiens          2           1      Denis      0
-    ## 27  954        FALSE     David           1 Montréal Canadiens          2          39  Aebischer     15
-    ## 28  975        FALSE      Alex           1 Montréal Canadiens          2          16       Auld      2
-    ## 29 1017        FALSE     Peter           1 Montréal Canadiens          2          54      Budaj     16
-    ## 30 1028        FALSE Cristobal           1 Montréal Canadiens          2         117       Huet     39
-    ## 31 1068        FALSE        Al           1 Montréal Canadiens          2          23    Montoya      7
-    ## 32 1124        FALSE     Antti           1 Montréal Canadiens          2          36      Niemi     11
-    ## 33 1160        FALSE       Ben           1 Montréal Canadiens          2          15   Scrivens      8
-    ## 34 1182        FALSE       Ken           1 Montréal Canadiens          2         397     Dryden     57
-    ##                             mostGoalsAgainstDates mostGoalsAgainstOneGame                     mostSavesDates
-    ## 1                                      1995-12-02                       9                         1991-03-06
-    ## 2                          2019-03-08, 2011-02-09                       8                         2009-11-14
-    ## 3              1960-10-25, 1960-01-03, 1959-10-11                       8                         1955-11-13
-    ## 4                                      1933-02-21                      10                               <NA>
-    ## 5                                      2002-04-12                       5                         2002-04-12
-    ## 6  2001-12-29, 2000-04-02, 2000-01-04, 1999-03-06                       6                         2000-12-16
-    ## 7              1990-03-24, 1988-11-13, 1987-01-22                       7 1990-03-01, 1988-12-08, 1988-02-29
-    ## 8                                      1980-01-26                       7                         1981-12-09
-    ## 9                          1996-02-23, 1995-12-07                       6                         1996-10-16
-    ## 10                                     1991-11-21                       5                         1991-12-05
-    ## 11                         1998-03-26, 1997-10-11                       5                         1998-01-25
-    ## 12                                     1933-12-05                       5                               <NA>
-    ## 13                                     1936-02-16                       1                               <NA>
-    ## 14                                     1938-01-11                      11                               <NA>
-    ## 15                         1972-04-02, 1972-01-09                       5                         1972-04-02
-    ## 16                                     1941-12-04                       9                               <NA>
-    ## 17                                     1940-02-25                       6                               <NA>
-    ## 18             1956-11-18, 1954-01-24, 1950-12-28                       8                         1956-11-08
-    ## 19                                     1965-03-07                       7                         1969-01-26
-    ## 20                                     1930-02-27                       2                               <NA>
-    ## 21                                     1987-12-28                       5                         1987-12-28
-    ## 22                                     1985-12-05                       7             1986-02-10, 1986-01-20
-    ## 23                         1995-03-16, 1994-04-13                       6             1995-03-16, 1995-02-16
-    ## 24                                     1996-01-06                       7                         1996-02-03
-    ## 25                                     2000-11-18                       3                         2000-11-17
-    ## 26                                     2009-01-02                       1                         2009-01-02
-    ## 27                                     2007-03-02                       7                         2006-10-28
-    ## 28                                     2011-01-17                       4                         2010-11-26
-    ## 29             2014-03-06, 2014-02-27, 2013-01-30                       5                         2014-04-04
-    ## 30                         2007-04-07, 2007-01-13                       6 2007-11-21, 2007-01-18, 2006-11-30
-    ## 31                                     2016-11-04                      10                         2017-01-04
-    ## 32                                     2018-12-11                       7                         2019-01-15
-    ## 33                                     2016-03-19                       5                         2016-03-16
-    ## 34                         1974-11-13, 1972-01-22                       8                         1971-03-21
-    ##    mostSavesOneGame  mostShotsAgainstDates mostShotsAgainstOneGame mostShutoutsOneSeason
-    ## 1                49             1995-02-27                      53                     7
-    ## 2                53             2009-11-14                      55                     9
-    ## 3                52             1955-11-13                      52                     9
-    ## 4                NA                   <NA>                      NA                    22
-    ## 5                36             2002-04-12                      41                     0
-    ## 6                49             2000-12-16                      53                     5
-    ## 7                39             1990-03-01                      44                     2
-    ## 8                39             1981-12-09                      45                     3
-    ## 9                42             1996-10-16                      44                     0
-    ## 10               28             1991-12-05                      32                     2
-    ## 11               38             1998-01-25                      40                     3
-    ## 12               NA                   <NA>                      NA                     8
-    ## 13               NA                   <NA>                      NA                     0
-    ## 14               NA                   <NA>                      NA                     6
-    ## 15               41             1972-04-02                      46                     0
-    ## 16               NA                   <NA>                      NA                     1
-    ## 17               NA                   <NA>                      NA                     0
-    ## 18               33             1956-11-18                      37                    10
-    ## 19               42             1969-01-26                      45                     6
-    ## 20               NA                   <NA>                      NA                     0
-    ## 21               17             1987-12-28                      22                     0
-    ## 22               35             1986-02-10                      39                     3
-    ## 23               32             1995-03-16                      38                     0
-    ## 24               49 1997-02-01, 1996-02-03                      50                     3
-    ## 25               18             2000-11-17                      19                     0
-    ## 26                6             2009-01-02                       7                     0
-    ## 27               47             2006-10-28                      51                     0
-    ## 28               44             2010-11-26                      47                     0
-    ## 29               39             2014-04-04                      43                     1
-    ## 30               44             2006-11-30                      48                     7
-    ## 31               39 2017-10-18, 2017-01-04                      42                     2
-    ## 32               52             2019-01-15                      53                     1
-    ## 33               41             2016-03-19                      44                     0
-    ## 34               47             1971-03-21                      49                    10
-    ##           mostShutoutsSeasonIds mostWinsOneSeason  mostWinsSeasonIds overtimeLosses playerId positionCode
-    ## 1                      19931994                36           19911992             NA  8451033            G
-    ## 2                      20142015                44           20142015             74  8471679            G
-    ## 3  19561957, 19571958, 19581959                42 19551956, 19611962             NA  8450066            G
-    ## 4                      19281929                28           19261927             NA  8449987            G
-    ## 5                      20012002                 0           20012002             NA  8446831            G
-    ## 6                      19981999                24           19981999             NA  8447449            G
-    ## 7                      19871988                22           19871988             NA  8447701            G
-    ## 8                      19811982                25           19791980             NA  8447755            G
-    ## 9            19951996, 19961997                 5           19951996             NA  8448207            G
-    ## 10                     19911992                 5           19911992             NA  8449547            G
-    ## 11                     19971998                18           19971998             NA  8449681            G
-    ## 12                     19331934                21           19331934             NA  8449850            G
-    ## 13                     19351936                 0           19351936             NA  8449858            G
-    ## 14                     19351936                22           19361937             NA  8449861            G
-    ## 15                     19711972                 3           19711972             NA  8449866            G
-    ## 16                     19401941                13           19401941             NA  8449960            G
-    ## 17                     19391940                 0           19391940             NA  8450007            G
-    ## 18                     19521953                34           19511952             NA  8450041            G
-    ## 19                     19671968                28           19651966             NA  8450152            G
-    ## 20                     19291930                 1           19291930             NA  8450153            G
-    ## 21                     19871988                 0           19871988             NA  8450834            G
-    ## 22                     19851986                14           19841985             NA  8451595            G
-    ## 23           19931994, 19941995                 2           19931994             NA  8451837            G
-    ## 24                     19951996                23           19951996             NA  8459432            G
-    ## 25           20002001, 20022003                 0 20002001, 20022003             NA  8460506            G
-    ## 26                     20082009                 0           20082009              0  8462055            G
-    ## 27           20052006, 20062007                13           20062007              3  8466290            G
-    ## 28                     20102011                 6           20102011              2  8467913            G
-    ## 29           20122013, 20132014                10           20132014              9  8469514            G
-    ## 30                     20052006                21           20072008             13  8469658            G
-    ## 31                     20162017                 8           20162017              4  8471219            G
-    ## 32                     20172018                 8           20182019              6  8474550            G
-    ## 33                     20152016                 5           20152016              0  8475681            G
-    ## 34                     19761977                42           19751976             NA  8446490            G
-    ##    rookieGamesPlayed rookieShutouts rookieWins seasons shutouts ties wins
-    ## 1                 47              1         23      12       29   66  289
-    ## 2                 41              3         24      13       48    0  348
-    ## 3                 52              5         33      11       58  107  314
-    ## 4                 44             14         28       8       75   54  167
-    ## 5                 NA             NA         NA       1        0    0    0
-    ## 6                 NA             NA         NA       5        8   22   63
-    ## 7                 NA             NA         NA       4        5   17   71
-    ## 8                 NA             NA         NA       3        4   17   43
-    ## 9                 NA             NA         NA       2        0    8    9
-    ## 10                NA             NA         NA       1        2    0    5
-    ## 11                NA             NA         NA       1        3    5   18
-    ## 12                NA             NA         NA       1        8    6   21
-    ## 13                NA             NA         NA       1        0    1    0
-    ## 14                NA             NA         NA       8       18   39   80
-    ## 15                NA             NA         NA       1        0    1    3
-    ## 16                NA             NA         NA       2        1    7   14
-    ## 17                NA             NA         NA       1        0    1    0
-    ## 18                70              6         25       7       28   52  119
-    ## 19                NA             NA         NA       7       16   24   90
-    ## 20                NA             NA         NA       1        0    0    1
-    ## 21                NA             NA         NA       1        0    0    0
-    ## 22                NA             NA         NA       2        3    6   25
-    ## 23                NA             NA         NA       2        0    2    3
-    ## 24                NA             NA         NA       4        7   24   67
-    ## 25                NA             NA         NA       2        0    0    0
-    ## 26                NA             NA         NA       1        0   NA    0
-    ## 27                NA             NA         NA       2        0   NA   17
-    ## 28                NA             NA         NA       1        0   NA    6
-    ## 29                NA             NA         NA       3        2   NA   23
-    ## 30                NA             NA         NA       3       11   NA   58
-    ## 31                NA             NA         NA       2        2    0   10
-    ## 32                NA             NA         NA       2        1    0   15
-    ## 33                NA             NA         NA       1        0   NA    5
-    ## 34                64              8         39       8       46   74  258
-    ##  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]
+    FR_Wrapper <- function(endpoint, team = NULL, ...) {
+      menu <- FranchiseAPI()
+      records <- c("franchise", "totals", "drilldown", "goalie", "skater")
+      teamlist <- list(menu[5])
+      frIDs <- list(menu[1])
+      
+      if(!(is.character(endpoint))) stop("Invalid Input")
+      
+      if(is.character(team)) {
+        if ((team %in% teamlist)) stop ("Invalid Input")
+      }
+     
+      if(is.numeric(team)) {
+        if((team %in% frIDs)) stop ("Invalid Input")
+      }
+
+      
+        if(endpoint == "franchise") {
+        return(FranchiseAPI())
+        
+      } else if(endpoint == "totals") { 
+         return(TeamTotalsAPI()) 
+        
+      } else if(endpoint == "drilldown") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+          return(TeamDDAPI(team1))
+        } else if(is.numeric(team)) {
+          return(TeamDDAPI(team))
+        }
+          
+      } else if(endpoint == "goalie") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+          return(GoalieAPI(team1))
+        } else if(is.numeric(team)) {
+          return(GoalieAPI(team))
+        }
+            
+      } else if(endpoint == "skater") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Franchise ID`)
+          return(SkaterAPI(team1))
+        } else if(is.numeric(team)) {
+          return(SkaterAPI(team))
+        }
+      
+      } else {
+        return(NULL)
+      }
+    }
+
+Stats Wrapper
+-------------
+
+    # Stat API Wrapper takes API Modifier (from a list) & team (Team ID or Common Team name (e.g. "Hurricanes)), & Season (for the 'roster & season' endpoint) & returns distinct API data. Note: using 'people' API for analysis but not directly accessible through Wrapper. MultiAPI works directly with multiple 'id' input but not through the Wrapper
+
+    ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
+      menu <- FranchiseAPI()
+      modifyer <- c("stats", "roster", "person", "nextgame", "priorgame", "expanded", "season")
+      teamlist <- list(menu[5])
+      teamIDs <- list(menu[4])
+      
+      if((!is.character(mod) & (mod %in% modifyer))) stop("Invalid Input")
+      
+      if(is.character(team)) {
+          if ((team %in% teamlist)) stop("Invalid Input")
+      }
+         
+      if(is.numeric(team)) {
+        if((team %in% teamIDs)) stop("Invalid Input")
+      }
+      
+      if(!length(season) != 8) stop("Invalid Input")
+      
+
+      if(mod == "stats") {
+       return(TeamStatsAPI())
+        
+      } else if(mod == "roster") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(RosterAPI(team1))
+        } else if(is.numeric(team)) {
+          return(RosterAPI(team))
+        }
+          
+      } else if(mod == "person") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(PersonAPI(team1))
+        } else if(is.numeric(team)) {
+          return(PersonAPI(team))
+        }
+            
+      } else if(mod == "nextgame") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(NextGAPI(team1))
+        } else if(is.numeric(team)) {
+          return(NextGAPI(team))
+        }
+     
+      } else if(mod == "priorgame") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(PriorGAPI(team1))
+        } else if(is.numeric(team)) {
+          return(PriorGAPI(team))
+        }  
+        
+      } else if(mod == "expanded") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(ExpStatsAPI(team1))
+        } else if(is.numeric(team)) {
+          return(ExpStatsAPI(team))
+        }
+      
+      } else if(mod == "season") {
+        if(is.character(team)) { 
+          team1 <- filter(menu,`Name` == team) %>% select(`Team ID`)
+          return(SeasonAPI(team1))
+        } else if(is.numeric(team, season)) {
+          return(SeasonAPI(team, season))
+        }  
+
+      } else {
+        return(NULL)
+      }
+    }
+
+NHL Franchise APIs
+==================
+
+Here are the GET chunks to return APIs associated to the Franchise end
+points.
+
+Franchise Main API
+------------------
+
+    # GET pull for NHL franchise
+    FranchiseAPI <- function() {
+    franchise <- GET("https://records.nhl.com/site/api/franchise")
+
+    ## As JSON text
+    franchise <- content(franchise, "text")
+
+    ## As JSON List
+    franchise <- fromJSON(franchise, flatten = TRUE)
+
+    franchise <- franchise[[1]] %>% rename("Franchise ID" = id, "First Season" = firstSeasonId, "Last Season" = lastSeasonId, "Team ID" = mostRecentTeamId, "Name" = teamCommonName, "Location" = teamPlaceName)
+    return(franchise)
+    }
+
+| Franchise ID | First Season | Last Season | Team ID | Name        | Location  |
+|-------------:|-------------:|------------:|--------:|:------------|:----------|
+|            1 |     19171918 |          NA |       8 | Canadiens   | Montréal  |
+|            2 |     19171918 |    19171918 |      41 | Wanderers   | Montreal  |
+|            3 |     19171918 |    19341935 |      45 | Eagles      | St. Louis |
+|            4 |     19191920 |    19241925 |      37 | Tigers      | Hamilton  |
+|            5 |     19171918 |          NA |      10 | Maple Leafs | Toronto   |
+|            6 |     19241925 |          NA |       6 | Bruins      | Boston    |
+
+Team Totals API
+---------------
+
+    # GET pull for NHL Team Totals
+    TeamTotalsAPI<- function() {
+    totals <- GET("https://records.nhl.com/site/api/franchise-team-totals")
+
+    ## As JSON text
+    totals <- content(totals, "text")
+
+    ## As JSON List
+    totals <- fromJSON(totals, flatten = TRUE)
+    return(totals[[1]])
+    }
+
+|  id | activeFranchise | firstSeasonId | franchiseId | gameTypeId | gamesPlayed | goalsAgainst | goalsFor | homeLosses | homeOvertimeLosses | homeTies | homeWins | lastSeasonId | losses | overtimeLosses | penaltyMinutes | pointPctg | points | roadLosses | roadOvertimeLosses | roadTies | roadWins | shootoutLosses | shootoutWins | shutouts | teamId | teamName           | ties | triCode | wins |
+|----:|----------------:|--------------:|------------:|-----------:|------------:|-------------:|---------:|-----------:|-------------------:|---------:|---------:|-------------:|-------:|---------------:|---------------:|----------:|-------:|-----------:|-------------------:|---------:|---------:|---------------:|-------------:|---------:|-------:|:-------------------|-----:|:--------|-----:|
+|   1 |               1 |      19821983 |          23 |          2 |        2937 |         8708 |     8647 |        507 |                 82 |       96 |      783 |           NA |   1181 |            162 |          44397 |    0.5330 |   3131 |        674 |                 80 |      123 |      592 |             79 |           78 |      193 |      1 | New Jersey Devils  |  219 | NJD     | 1375 |
+|   2 |               1 |      19821983 |          23 |          3 |         257 |          634 |      697 |         53 |                  0 |       NA |       74 |           NA |    120 |              0 |           4266 |    0.0039 |      2 |         67 |                  0 |       NA |       63 |              0 |            0 |       25 |      1 | New Jersey Devils  |   NA | NJD     |  137 |
+|   3 |               1 |      19721973 |          22 |          2 |        3732 |        11779 |    11889 |        674 |                 81 |      170 |      942 |           NA |   1570 |            159 |          57422 |    0.5115 |   3818 |        896 |                 78 |      177 |      714 |             67 |           82 |      167 |      2 | New York Islanders |  347 | NYI     | 1656 |
+|   4 |               1 |      19721973 |          22 |          3 |         294 |          857 |      935 |         50 |                  3 |       NA |       90 |           NA |    133 |              0 |           5564 |    0.0136 |      8 |         83 |                  2 |       NA |       71 |              0 |            0 |       12 |      2 | New York Islanders |   NA | NYI     |  161 |
+|   5 |               1 |      19261927 |          10 |          2 |        6504 |        19863 |    19864 |       1132 |                 73 |      448 |     1600 |           NA |   2693 |            147 |          85564 |    0.5125 |   6667 |       1561 |                 74 |      360 |     1256 |             66 |           78 |      403 |      3 | New York Rangers   |  808 | NYR     | 2856 |
+|   6 |               1 |      19261927 |          10 |          3 |         518 |         1447 |     1404 |        104 |                  0 |        1 |      137 |           NA |    266 |              0 |           8181 |    0.0000 |      0 |        162 |                  0 |        7 |      107 |              0 |            0 |       44 |      3 | New York Rangers   |    8 | NYR     |  244 |
+
+Team Drill Down API
+-------------------
+
+    TeamDDAPI <- function(id, ...) {
+    # GET pull for NHL Team Totals
+    drill_down <- GET(paste0("https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=", id))
+
+    ## As JSON text
+    drill_down <- content(drill_down, "text")
+
+    ## As JSON List
+    drill_down <- fromJSON(drill_down, flatten = TRUE)
+    return(drill_down[[1]])
+    }
+
+|  id | fewestGoals | fewestGoalsAgainst | fewestGoalsAgainstSeasons | fewestGoalsSeasons | fewestLosses | fewestLossesSeasons | fewestPoints | fewestPointsSeasons | fewestTies | fewestTiesSeasons | fewestWins | fewestWinsSeasons | franchiseId | franchiseName       | homeLossStreak | homeLossStreakDates       | homePointStreak | homePointStreakDates      | homeWinStreak | homeWinStreakDates        | homeWinlessStreak | homeWinlessStreakDates    | lossStreak | lossStreakDates           | mostGameGoals | mostGameGoalsDates                                                                                                     | mostGoals | mostGoalsAgainst | mostGoalsAgainstSeasons | mostGoalsSeasons | mostLosses | mostLossesSeasons | mostPenaltyMinutes | mostPenaltyMinutesSeasons | mostPoints | mostPointsSeasons | mostShutouts | mostShutoutsSeasons | mostTies | mostTiesSeasons | mostWins | mostWinsSeasons | pointStreak | pointStreakDates          | roadLossStreak | roadLossStreakDates       | roadPointStreak | roadPointStreakDates      | roadWinStreak | roadWinStreakDates        | roadWinlessStreak | roadWinlessStreakDates                               | winStreak | winStreakDates                                                                  | winlessStreak | winlessStreakDates |
+|----:|------------:|-------------------:|:--------------------------|:-------------------|-------------:|:--------------------|-------------:|:--------------------|-----------:|:------------------|-----------:|:------------------|------------:|:--------------------|---------------:|:--------------------------|----------------:|:--------------------------|--------------:|:--------------------------|------------------:|:--------------------------|-----------:|:--------------------------|--------------:|:-----------------------------------------------------------------------------------------------------------------------|----------:|-----------------:|:------------------------|:-----------------|-----------:|:------------------|-------------------:|:--------------------------|-----------:|:------------------|-------------:|:--------------------|---------:|:----------------|---------:|:----------------|------------:|:--------------------------|---------------:|:--------------------------|----------------:|:--------------------------|--------------:|:--------------------------|------------------:|:-----------------------------------------------------|----------:|:--------------------------------------------------------------------------------|:--------------|:-------------------|
+|  12 |         171 |                202 | 1998-99 (82)              | 2002-03 (82)       |           22 | 2005-06 (82)        |           45 | 1982-83 (80)        |          4 | 1985-86 (80)      |         19 | 1982-83 (80)      |          26 | Carolina Hurricanes |              8 | Mar 14 2013 - Apr 09 2013 |              15 | Dec 13 2005 - Jan 28 2006 |            12 | Feb 20 2009 - Apr 07 2009 |                13 | Jan 15 1985 - Mar 10 1985 |          9 | Feb 19 1983 - Mar 08 1983 |            11 | Feb 12 1984 - EDM 0 @ HFD 11, Oct 19 1985 - MTL 6 @ HFD 11, Jan 17 1986 - QUE 6 @ HFD 11, Mar 15 1986 - CHI 4 @ HFD 11 |       332 |              403 | 1982-83 (80)            | 1985-86 (80)     |         54 | 1982-83 (80)      |               2354 | 1992-93 (84)              |        112 | 2005-06 (82)      |            8 | 1998-99 (82)        |       19 | 1979-80 (80)    |       52 | 2005-06 (82)    |          13 | Mar 09 2017 - Mar 30 2017 |             13 | Dec 18 1982 - Feb 05 1983 |              12 | Feb 23 2004 - Mar 27 2004 |             6 | Nov 10 1990 - Dec 07 1990 |                15 | Nov 11 1979 - Jan 09 1980, Jan 07 2003 - Mar 02 2003 |         9 | Oct 22 2005 - Nov 11 2005, Dec 31 2005 - Jan 19 2006, Mar 18 2009 - Apr 07 2009 | NA            | NA                 |
+
+Goalie API
+----------
+
+    GoalieAPI <- function(id, ...) {
+    # GET pull for NHL Team Totals
+    goalie <- GET(paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=", id))
+
+    ## As JSON text
+    goalie <- content(goalie, "text")
+
+    ## As JSON List
+    goalie <- fromJSON(goalie, flatten = TRUE)
+    return(goalie[[1]])
+    }
+
+Skater API
+----------
+
+    SkaterAPI <- function(id, ...) {
+    # GET pull for NHL Team Totals
+    skater <- GET(paste0("https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=", id))
+
+    ## As JSON text
+    skater <- content(skater, "text")
+
+    ## As JSON List
+    skater <- fromJSON(skater, flatten = TRUE)
+    return(skater[[1]])
+    }
+
+    Franchise <- FranchiseAPI()
+    Franchise <- arrange(Franchise, (Franchise[[4]]))
+    kable((Franchise), caption = "Franchise All")
 
 | Franchise ID | First Season | Last Season | Team ID | Name           | Location     |
 |-------------:|-------------:|------------:|--------:|:---------------|:-------------|
@@ -277,6 +374,9 @@ NHL Franchises
 
 Franchise All
 
+    SkaterAPI_Call <- head(SkaterAPI(1))
+    glimpse(SkaterAPI_Call)
+
     ## Rows: 6
     ## Columns: 30
     ## $ id                          <int> 16891, 16911, 16990, 17000, 17025, 17054
@@ -310,207 +410,237 @@ Franchise All
     ## $ rookiePoints                <int> 34, 40, 11, 64, 15, 16
     ## $ seasons                     <int> 20, 20, 18, 14, 10, 13
 
+    TeamStatsAPI <- function() {
+    stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
+
+    ## As JSON text
+    stats <- content(stats, "text")
+
+    ## As JSON List
+    stats <- fromJSON(stats, flatten = TRUE)
+    return(stats[[2]])
+    }
+
+    RosterAPI <- function(id, ...) {
+    roster <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=team.roster"))
+
+    ## As JSON text
+    roster <- content(roster, "text")
+
+    ## As JSON List
+    roster <- fromJSON(roster, flatten = TRUE)
+    franchiseId <- roster$teams$franchiseId
+    roster <- as_tibble(roster[[2]]$roster.roster[[1]]) %>% mutate("franchiseId" = franchiseId) %>% 
+    select(franchiseId, everything())
+    return(roster)
+    }
+
+    PersonAPI <- function(id, ...) {
+    person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=person.names"))
+
+    ## As JSON text
+    person <- content(person, "text")
+
+    ## As JSON List
+    person <- fromJSON(person, flatten = TRUE)
+    return(person[[2]])
+    }
+
+    # Detailed substitue for PersonAPI
+    PeopleAPI <- function(id, ...) {
+    people <- GET(paste0("https://statsapi.web.nhl.com/api/v1/people/", id))
+
+    ## As JSON text
+    people <- content(people, "text")
+
+    ## As JSON List
+    people <- fromJSON(people, flatten = TRUE)
+    return(people[[2]])
+    }
+
+    ## New DF combining People with Roster
+    TeamPlayer <- function (id, ...) {
+    playerId <- pull(RosterAPI(id), person.id)
+    players <- as.data.frame(PeopleAPI(playerId[1]))
+      for (i in 2:length(playerId)) {
+        players[i, ] <- (PeopleAPI(playerId[i]))
+      }
+    players <- players %>% select(currentTeam.id, id, fullName, birthCountry, primaryPosition.name)
+    if(length(players$currentTeam.id) > 2) {
+      players$currentTeam.id = players$currentTeam.id[[1]]
+    }
+    return(players) 
+    }
+
+    NextGAPI <- function(id, ...) {
+    nextG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.next"))
+
+    ## As JSON text
+    nextG <- content(nextG, "text")
+
+    ## As JSON List
+    nextG <- fromJSON(nextG, flatten = TRUE)
+    nextG <- nextG[[2]]$nextGameSchedule.dates[[1]]$games[[1]]
+    return(nextG)
+    }
+
+    PriorGAPI <- function(id, ...) {
+    priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.previous"))
+
+    ## As JSON text
+    priorG <- content(priorG, "text")
+
+    ## As JSON List
+    priorG <- fromJSON(priorG, flatten = TRUE)
+    priorG <- priorG[[2]]$previousGameSchedule.dates
+    return(priorG)
+    }
+
+    ExpStatsAPI <- function(id, ...) {
+    expStats <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.stats"))
+
+    ## As JSON text
+    expStats <- content(expStats, "text")
+
+    ## As JSON List
+    expStats <- fromJSON(expStats, flatten = TRUE)
+    expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
+    return(expStats)
+    }
+
+    SeasonAPI <- function(id, season, ...) {
+    season <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.roster&season=", season))
+
+    ## As JSON text
+    season <- content(season, "text")
+
+    ## As JSON List
+    season <- fromJSON(season, flatten = TRUE)
+    franchiseId <- season$teams$franchiseId
+    teamName <- season$teams$teamName
+    season <- as_tibble((season[[2]]$roster.roster[[1]])) %>% mutate("franchiseId" = franchiseId, "teamName" = teamName) %>% select(franchiseId, everything())
+    return(season)
+    }
+
+    MultiAPI <- function(id, ...) {
+    multi <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", "?teamId=", id))
+
+    ## As JSON text
+    multi <- content(multi, "text")
+
+    ## As JSON List
+    multi <- fromJSON(multi, flatten = TRUE)
+    return(multi[[2]])
+    }
+
+    PlayoffAPI <- function(id, ...) {
+    playoff <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?stats=statsSingleSeasonPlayoffs"))
+
+    ## As JSON text
+    playoff <- content(playoff, "text")
+
+    ## As JSON List
+    playoff <- fromJSON(playoff, flatten = TRUE)
+    return(playoff[[2]])
+    }
+
 2017 - 2019 Presidents Cup Teams vs. Low Points Teams Analysis
 --------------------------------------------------------------
 
 ### Language
 
-### Data
+Analysis
+========
 
-| Franchise ID | Team      | Year | Finish | Name                | Country | Position | Player Seasons | Avg Penalty Min | Avg Total Pts |
-|-------------:|:----------|-----:|:-------|:--------------------|:--------|:---------|---------------:|----------------:|--------------:|
-|           24 | Capitals  |   17 | First  | Brooks Orpik        | USA     | D        |              5 |           47.60 |            12 |
-|           24 | Capitals  |   17 | First  | Justin Williams     | CAN     | R        |              2 |           43.00 |            50 |
-|           24 | Capitals  |   17 | First  | Alex Ovechkin       | EUR     | L        |             15 |           47.93 |            85 |
-|           24 | Capitals  |   17 | First  | Daniel Winnik       | CAN     | L        |              2 |           35.50 |            15 |
-|           24 | Capitals  |   17 | First  | T.J. Oshie          | USA     | R        |              5 |           32.60 |            51 |
-|           24 | Capitals  |   17 | First  | Matt Niskanen       | USA     | D        |              5 |           38.80 |            31 |
-|           24 | Capitals  |   17 | First  | Taylor Chorney      | CAN     | D        |              3 |           13.33 |             5 |
-|           24 | Capitals  |   17 | First  | Nicklas Backstrom   | EUR     | C        |             13 |           35.54 |            71 |
-|           24 | Capitals  |   17 | First  | Karl Alzner         | CAN     | D        |              9 |           19.67 |            13 |
-|           24 | Capitals  |   17 | First  | Paul Carey          | USA     | C        |              2 |            0.00 |             0 |
-|           24 | Capitals  |   17 | First  | Kevin Shattenkirk   | USA     | D        |              1 |           10.00 |            14 |
-|           24 | Capitals  |   17 | First  | Lars Eller          | EUR     | C        |              4 |           39.75 |            34 |
-|           24 | Capitals  |   17 | First  | Jay Beagle          | CAN     | C        |             10 |           15.90 |            12 |
-|           24 | Capitals  |   17 | First  | John Carlson        | USA     | D        |             11 |           23.45 |            43 |
-|           24 | Capitals  |   17 | First  | Aaron Ness          | USA     | D        |              3 |            3.33 |             1 |
-|           24 | Capitals  |   17 | First  | Marcus Johansson    | EUR     | C        |              7 |            8.86 |            41 |
-|           24 | Capitals  |   17 | First  | Dmitry Orlov        | EUR     | D        |              8 |           25.62 |            22 |
-|           24 | Capitals  |   17 | First  | Garrett Mitchell    | CAN     | R        |              1 |            0.00 |             0 |
-|           24 | Capitals  |   17 | First  | Evgeny Kuznetsov    | EUR     | C        |              7 |           35.14 |            56 |
-|           24 | Capitals  |   17 | First  | Brett Connolly      | CAN     | R        |              3 |           31.33 |            32 |
-|           24 | Capitals  |   17 | First  | Tom Wilson          | CAN     | R        |              7 |          146.71 |            27 |
-|           24 | Capitals  |   17 | First  | Chandler Stephenson | CAN     | C        |              5 |            3.20 |             7 |
-|           24 | Capitals  |   17 | First  | Riley Barber        | USA     | R        |              1 |            0.00 |             0 |
-|           24 | Capitals  |   17 | First  | Liam O’Brien        | CAN     | C        |              3 |            9.33 |             1 |
-|           24 | Capitals  |   17 | First  | Nate Schmidt        | USA     | D        |              4 |           12.00 |            11 |
-|           24 | Capitals  |   17 | First  | Andre Burakovsky    | EUR     | L        |              5 |           15.40 |            29 |
-|           24 | Capitals  |   17 | First  | Zach Sanford        | USA     | L        |              1 |            6.00 |             3 |
-|           24 | Capitals  |   17 | First  | Jakub Vrana         | EUR     | L        |              4 |           14.75 |            33 |
-|           27 | Avalanche |   17 | Last   | Jarome Iginla       | CAN     | R        |              3 |           45.67 |            41 |
-|           27 | Avalanche |   17 | Last   | Francois Beauchemin | CAN     | D        |              2 |           35.00 |            26 |
-|           27 | Avalanche |   17 | Last   | Fedor Tyutin        | EUR     | D        |              1 |           38.00 |            13 |
-|           27 | Avalanche |   17 | Last   | John Mitchell       | CAN     | C        |              5 |           36.60 |            21 |
-|           27 | Avalanche |   17 | Last   | Blake Comeau        | CAN     | L        |              3 |           55.33 |            30 |
-|           27 | Avalanche |   17 | Last   | Carl Soderberg      | EUR     | C        |              4 |           26.50 |            38 |
-|           27 | Avalanche |   17 | Last   | Rene Bourque        | CAN     | R        |              1 |           56.00 |            18 |
-|           27 | Avalanche |   17 | Last   | Cody McLeod         | CAN     | L        |             10 |          135.90 |            12 |
-|           27 | Avalanche |   17 | Last   | Erik Johnson        | USA     | D        |             10 |           33.20 |            21 |
-|           27 | Avalanche |   17 | Last   | Joe Colborne        | CAN     | C        |              1 |           34.00 |             8 |
-|           27 | Avalanche |   17 | Last   | Cody Goloubef       | CAN     | D        |              1 |           25.00 |             5 |
-|           27 | Avalanche |   17 | Last   | Patrick Wiercioch   | CAN     | D        |              1 |           23.00 |            12 |
-|           27 | Avalanche |   17 | Last   | Mark Barberio       | CAN     | D        |              4 |           13.75 |             6 |
-|           27 | Avalanche |   17 | Last   | Ben Smith           | USA     | R        |              1 |            0.00 |             0 |
-|           27 | Avalanche |   17 | Last   | Matt Duchene        | CAN     | C        |              9 |           16.00 |            48 |
-|           27 | Avalanche |   17 | Last   | Tyson Barrie        | CAN     | D        |              8 |           20.38 |            38 |
-|           27 | Avalanche |   17 | Last   | Eric Gelinas        | CAN     | D        |              2 |            6.00 |             0 |
-|           27 | Avalanche |   17 | Last   | Gabriel Bourque     | CAN     | L        |              3 |            7.33 |             6 |
-|           27 | Avalanche |   17 | Last   | Rocco Grimaldi      | USA     | R        |              2 |            1.00 |             2 |
-|           27 | Avalanche |   17 | Last   | Matt Nieto          | USA     | L        |              4 |            8.00 |            20 |
-|           27 | Avalanche |   17 | Last   | Gabriel Landeskog   | EUR     | L        |              9 |           54.33 |            51 |
-|           27 | Avalanche |   17 | Last   | Duncan Siemens      | CAN     | D        |              3 |            8.33 |             1 |
-|           27 | Avalanche |   17 | Last   | Samuel Henley       | CAN     | C        |              1 |            2.00 |             1 |
-|           27 | Avalanche |   17 | Last   | Mikhail Grigorenko  | EUR     | C        |              2 |           13.00 |            25 |
-|           27 | Avalanche |   17 | Last   | Sven Andrighetto    | EUR     | R        |              3 |           10.67 |            18 |
-|           27 | Avalanche |   17 | Last   | J.T. Compher        | USA     | L        |              4 |           18.25 |            23 |
-|           27 | Avalanche |   17 | Last   | Nathan MacKinnon    | CAN     | C        |              7 |           28.14 |            71 |
-|           27 | Avalanche |   17 | Last   | Nikita Zadorov      | EUR     | D        |              5 |           65.60 |            12 |
-|           27 | Avalanche |   17 | Last   | Anton Lindholm      | EUR     | D        |              4 |            4.00 |             1 |
-|           27 | Avalanche |   17 | Last   | Mikko Rantanen      | EUR     | R        |              5 |           25.20 |            50 |
-|           27 | Avalanche |   17 | Last   | A.J. Greer          | CAN     | L        |              3 |           15.67 |             2 |
-|           27 | Avalanche |   17 | Last   | Andreas Martinsen   | EUR     | L        |              2 |           39.50 |             9 |
-|           27 | Avalanche |   17 | Last   | Tyson Jost          | CAN     | C        |              4 |           15.50 |            18 |
-|           34 | Predators |   18 | First  | Mike Fisher         | CAN     | C        |              8 |           32.62 |            30 |
-|           34 | Predators |   18 | First  | Scott Hartnell      | CAN     | L        |              7 |           89.43 |            34 |
-|           34 | Predators |   18 | First  | Alexei Emelin       | EUR     | D        |              1 |           40.00 |             9 |
-|           34 | Predators |   18 | First  | Cody McLeod         | CAN     | L        |              3 |           57.33 |             2 |
-|           34 | Predators |   18 | First  | Nick Bonino         | USA     | C        |              3 |           18.00 |            32 |
-|           34 | Predators |   18 | First  | P.K. Subban         | CAN     | D        |              3 |           62.00 |            43 |
-|           34 | Predators |   18 | First  | Kyle Turris         | CAN     | C        |              3 |           26.33 |            32 |
-|           34 | Predators |   18 | First  | Yannick Weber       | EUR     | D        |              4 |           18.25 |             6 |
-|           34 | Predators |   18 | First  | Roman Josi          | EUR     | D        |              9 |           26.00 |            46 |
-|           34 | Predators |   18 | First  | Ryan Ellis          | CAN     | D        |              9 |           19.89 |            28 |
-|           34 | Predators |   18 | First  | Mattias Ekholm      | EUR     | D        |              9 |           29.44 |            22 |
-|           34 | Predators |   18 | First  | Craig Smith         | USA     | R        |              9 |           29.33 |            37 |
-|           34 | Predators |   18 | First  | Matt Irwin          | CAN     | D        |              4 |           20.75 |             8 |
-|           34 | Predators |   18 | First  | Calle Jarnkrok      | EUR     | C        |              7 |           14.14 |            26 |
-|           34 | Predators |   18 | First  | Austin Watson       | USA     | L        |              6 |           59.67 |            13 |
-|           34 | Predators |   18 | First  | Ryan Johansen       | CAN     | C        |              5 |           52.20 |            50 |
-|           34 | Predators |   18 | First  | Anthony Bitetto     | USA     | D        |              5 |           17.20 |             4 |
-|           34 | Predators |   18 | First  | Miikka Salomaki     | EUR     | R        |              6 |           12.67 |             4 |
-|           34 | Predators |   18 | First  | Pontus Aberg        | EUR     | L        |              2 |            6.00 |             5 |
-|           34 | Predators |   18 | First  | Filip Forsberg      | EUR     | L        |              8 |           25.00 |            44 |
-|           34 | Predators |   18 | First  | Colton Sissons      | CAN     | C        |              6 |           18.83 |            15 |
-|           34 | Predators |   18 | First  | Ryan Hartman        | USA     | R        |              2 |           29.00 |            13 |
-|           34 | Predators |   18 | First  | Frederick Gaudreau  | CAN     | C        |              3 |            1.33 |             3 |
-|           34 | Predators |   18 | First  | Kevin Fiala         | EUR     | L        |              5 |           14.00 |            19 |
-|           34 | Predators |   18 | First  | Viktor Arvidsson    | EUR     | R        |              6 |           25.17 |            36 |
-|           34 | Predators |   18 | First  | Samuel Girard       | CAN     | D        |              1 |            2.00 |             3 |
-|           34 | Predators |   18 | First  | Eeli Tolvanen       | EUR     | R        |              2 |            0.00 |             1 |
-|           19 | Sabres    |   18 | Last   | Jason Pominville    | CAN     | R        |             11 |           14.45 |            47 |
-|           19 | Sabres    |   18 | Last   | Josh Gorges         | CAN     | D        |              4 |           38.75 |             6 |
-|           19 | Sabres    |   18 | Last   | Matt Moulson        | CAN     | L        |              5 |           10.40 |            25 |
-|           19 | Sabres    |   18 | Last   | Benoit Pouliot      | CAN     | L        |              1 |           22.00 |            19 |
-|           19 | Sabres    |   18 | Last   | Kyle Okposo         | USA     | R        |              4 |           33.25 |            34 |
-|           19 | Sabres    |   18 | Last   | Justin Falk         | CAN     | D        |              2 |           28.50 |             5 |
-|           19 | Sabres    |   18 | Last   | Zach Bogosian       | USA     | D        |              6 |           39.00 |            11 |
-|           19 | Sabres    |   18 | Last   | Marco Scandella     | CAN     | D        |              3 |           23.67 |            15 |
-|           19 | Sabres    |   18 | Last   | Zach Redmond        | USA     | D        |              1 |            2.00 |             0 |
-|           19 | Sabres    |   18 | Last   | Ryan O’Reilly       | CAN     | C        |              3 |            6.67 |            59 |
-|           19 | Sabres    |   18 | Last   | Evander Kane        | CAN     | L        |              3 |           87.00 |            39 |
-|           19 | Sabres    |   18 | Last   | Jacob Josefson      | EUR     | C        |              1 |            6.00 |             4 |
-|           19 | Sabres    |   18 | Last   | Jordan Nolan        | CAN     | C        |              1 |           69.00 |             8 |
-|           19 | Sabres    |   18 | Last   | Johan Larsson       | EUR     | C        |              7 |           27.14 |            14 |
-|           19 | Sabres    |   18 | Last   | Taylor Fedun        | CAN     | D        |              2 |            9.00 |             4 |
-|           19 | Sabres    |   18 | Last   | Scott Wilson        | CAN     | L        |              3 |            4.67 |             6 |
-|           19 | Sabres    |   18 | Last   | Nathan Beaulieu     | CAN     | D        |              2 |           34.00 |             8 |
-|           19 | Sabres    |   18 | Last   | Seth Griffith       | CAN     | C        |              1 |            6.00 |             3 |
-|           19 | Sabres    |   18 | Last   | Matt Tennyson       | USA     | D        |              2 |            4.00 |             0 |
-|           19 | Sabres    |   18 | Last   | Zemgus Girgensons   | EUR     | C        |              7 |           18.57 |            20 |
-|           19 | Sabres    |   18 | Last   | Jake McCabe         | USA     | D        |              7 |           27.71 |            11 |
-|           19 | Sabres    |   18 | Last   | Danny O’Regan       | USA     | C        |              2 |            0.00 |             0 |
-|           19 | Sabres    |   18 | Last   | Hudson Fasching     | USA     | R        |              3 |            2.67 |             1 |
-|           19 | Sabres    |   18 | Last   | Justin Bailey       | USA     | R        |              3 |            2.67 |             3 |
-|           19 | Sabres    |   18 | Last   | Nick Baptiste       | CAN     | R        |              2 |           10.00 |             5 |
-|           19 | Sabres    |   18 | Last   | Rasmus Ristolainen  | EUR     | D        |              7 |           36.43 |            32 |
-|           19 | Sabres    |   18 | Last   | Sam Reinhart        | CAN     | C        |              6 |           13.33 |            42 |
-|           19 | Sabres    |   18 | Last   | Jack Eichel         | USA     | C        |              5 |           27.20 |            67 |
-|           19 | Sabres    |   18 | Last   | Brendan Guhle       | CAN     | D        |              3 |            4.00 |             2 |
-|           19 | Sabres    |   18 | Last   | Evan Rodrigues      | CAN     | C        |              5 |           10.60 |            14 |
-|           19 | Sabres    |   18 | Last   | Casey Nelson        | USA     | D        |              4 |            8.25 |             4 |
-|           19 | Sabres    |   18 | Last   | Kyle Criscuolo      | USA     | C        |              1 |            4.00 |             0 |
-|           19 | Sabres    |   18 | Last   | Alex Nylander       | CAN     | L        |              3 |            1.33 |             2 |
-|           19 | Sabres    |   18 | Last   | Victor Antipin      | EUR     | D        |              1 |           18.00 |            10 |
-|           19 | Sabres    |   18 | Last   | Casey Mittelstadt   | USA     | C        |              3 |            4.67 |            13 |
-|           31 | Lightning |   19 | First  | Braydon Coburn      | CAN     | D        |              6 |           33.67 |            11 |
-|           31 | Lightning |   19 | First  | Ryan Callahan       | USA     | R        |              6 |           26.67 |            22 |
-|           31 | Lightning |   19 | First  | Anton Stralman      | EUR     | D        |              5 |           18.40 |            26 |
-|           31 | Lightning |   19 | First  | Dan Girardi         | CAN     | D        |              2 |           19.50 |            17 |
-|           31 | Lightning |   19 | First  | Alex Killorn        | CAN     | L        |              8 |           41.62 |            39 |
-|           31 | Lightning |   19 | First  | Ryan McDonagh       | USA     | D        |              3 |           17.67 |            20 |
-|           31 | Lightning |   19 | First  | Steven Stamkos      | CAN     | C        |             12 |           41.58 |            69 |
-|           31 | Lightning |   19 | First  | Cameron Gaunce      | CAN     | D        |              2 |            5.50 |             2 |
-|           31 | Lightning |   19 | First  | Tyler Johnson       | USA     | C        |              8 |           21.25 |            42 |
-|           31 | Lightning |   19 | First  | Victor Hedman       | EUR     | D        |             11 |           50.91 |            43 |
-|           31 | Lightning |   19 | First  | Cory Conacher       | CAN     | C        |              5 |           10.00 |             8 |
-|           31 | Lightning |   19 | First  | Ondrej Palat        | EUR     | L        |              8 |           18.88 |            41 |
-|           31 | Lightning |   19 | First  | Nikita Kucherov     | EUR     | R        |              7 |           37.29 |            78 |
-|           31 | Lightning |   19 | First  | J.T. Miller         | USA     | C        |              2 |           21.00 |            32 |
-|           31 | Lightning |   19 | First  | Yanni Gourde        | CAN     | C        |              5 |           35.00 |            30 |
-|           31 | Lightning |   19 | First  | Slater Koekkoek     | CAN     | D        |              5 |            6.80 |             3 |
-|           31 | Lightning |   19 | First  | Cedric Paquette     | CAN     | C        |              7 |           49.29 |            12 |
-|           31 | Lightning |   19 | First  | Adam Erne           | USA     | L        |              3 |           20.67 |             9 |
-|           31 | Lightning |   19 | First  | Brayden Point       | CAN     | C        |              4 |           19.25 |            66 |
-|           31 | Lightning |   19 | First  | Danick Martel       | CAN     | L        |              1 |            8.00 |             2 |
-|           31 | Lightning |   19 | First  | Erik Cernak         | EUR     | D        |              2 |           58.50 |            14 |
-|           31 | Lightning |   19 | First  | Mathieu Joseph      | CAN     | R        |              2 |           21.00 |            16 |
-|           31 | Lightning |   19 | First  | Anthony Cirelli     | CAN     | C        |              3 |           23.33 |            31 |
-|           31 | Lightning |   19 | First  | Mikhail Sergachev   | EUR     | D        |              3 |           41.33 |            35 |
-|           31 | Lightning |   19 | First  | Jan Rutta           | EUR     | D        |              2 |            9.00 |             4 |
-|           30 | Senators  |   19 | Last   | Bobby Ryan          | USA     | R        |              7 |           27.43 |            38 |
-|           30 | Senators  |   19 | Last   | Tom Pyatt           | CAN     | L        |              3 |            9.33 |            16 |
-|           30 | Senators  |   19 | Last   | Justin Falk         | CAN     | D        |              1 |           11.00 |             0 |
-|           30 | Senators  |   19 | Last   | Paul Carey          | USA     | C        |              1 |            0.00 |             0 |
-|           30 | Senators  |   19 | Last   | Zack Smith          | CAN     | C        |             11 |           63.00 |            18 |
-|           30 | Senators  |   19 | Last   | Mikkel Boedker      | EUR     | L        |              2 |            3.00 |            20 |
-|           30 | Senators  |   19 | Last   | Cody Goloubef       | CAN     | D        |              2 |            5.00 |             1 |
-|           30 | Senators  |   19 | Last   | Mark Borowiecki     | CAN     | D        |              9 |           71.89 |             6 |
-|           30 | Senators  |   19 | Last   | Matt Duchene        | CAN     | C        |              2 |           10.00 |            54 |
-|           30 | Senators  |   19 | Last   | Magnus Paajarvi     | EUR     | L        |              2 |            5.00 |            14 |
-|           30 | Senators  |   19 | Last   | Stefan Elliott      | CAN     | D        |              1 |            0.00 |             1 |
-|           30 | Senators  |   19 | Last   | Chris Wideman       | USA     | D        |              4 |           24.50 |            11 |
-|           30 | Senators  |   19 | Last   | Darren Archibald    | CAN     | R        |              1 |            0.00 |             0 |
-|           30 | Senators  |   19 | Last   | Oscar Lindberg      | EUR     | L        |              1 |            4.00 |             8 |
-|           30 | Senators  |   19 | Last   | Mark Stone          | CAN     | R        |              7 |           16.43 |            44 |
-|           30 | Senators  |   19 | Last   | Erik Burgdoerfer    | USA     | D        |              2 |            1.00 |             0 |
-|           30 | Senators  |   19 | Last   | Brian Gibbons       | USA     | C        |              1 |            4.00 |            14 |
-|           30 | Senators  |   19 | Last   | Ryan Dzingel        | USA     | C        |              4 |           26.25 |            32 |
-|           30 | Senators  |   19 | Last   | Max McCormick       | USA     | L        |              4 |           19.50 |             2 |
-|           30 | Senators  |   19 | Last   | Dylan DeMelo        | CAN     | D        |              2 |           31.50 |            16 |
-|           30 | Senators  |   19 | Last   | Jean-Gabriel Pageau | CAN     | C        |              8 |           19.12 |            23 |
-|           30 | Senators  |   19 | Last   | Cody Ceci           | CAN     | D        |              6 |           14.67 |            20 |
-|           30 | Senators  |   19 | Last   | Chris Tierney       | CAN     | C        |              2 |           23.00 |            42 |
-|           30 | Senators  |   19 | Last   | Anthony Duclair     | CAN     | L        |              2 |           10.00 |            27 |
-|           30 | Senators  |   19 | Last   | Nick Paul           | CAN     | L        |              5 |            6.80 |             6 |
-|           30 | Senators  |   19 | Last   | Ben Harpur          | CAN     | D        |              4 |           19.75 |             2 |
-|           30 | Senators  |   19 | Last   | Andreas Englund     | EUR     | D        |              4 |            6.00 |             1 |
-|           30 | Senators  |   19 | Last   | Jack Rodewald       | CAN     | R        |              2 |            1.00 |             0 |
-|           30 | Senators  |   19 | Last   | Colin White         | USA     | C        |              4 |           17.75 |            18 |
-|           30 | Senators  |   19 | Last   | Thomas Chabot       | CAN     | D        |              4 |           22.00 |            30 |
-|           30 | Senators  |   19 | Last   | Filip Chlapik       | EUR     | C        |              3 |            6.00 |             4 |
-|           30 | Senators  |   19 | Last   | Christian Wolanin   | CAN     | D        |              3 |            2.00 |             5 |
-|           30 | Senators  |   19 | Last   | Christian Jaros     | EUR     | D        |              3 |           11.00 |             4 |
-|           30 | Senators  |   19 | Last   | Rudolfs Balcers     | EUR     | L        |              2 |            5.00 |             8 |
-|           30 | Senators  |   19 | Last   | Maxime Lajoie       | CAN     | D        |              2 |           10.00 |             8 |
-|           30 | Senators  |   19 | Last   | Logan Brown         | USA     | C        |              3 |            1.33 |             3 |
-|           30 | Senators  |   19 | Last   | Vitaly Abramov      | EUR     | L        |              2 |            1.00 |             0 |
-|           30 | Senators  |   19 | Last   | Alex Formenton      | CAN     | L        |              2 |            3.00 |             0 |
-|           30 | Senators  |   19 | Last   | Erik Brannstrom     | EUR     | D        |              2 |            8.00 |             2 |
-|           30 | Senators  |   19 | Last   | Drake Batherson     | USA     | R        |              2 |            9.50 |            10 |
-|           30 | Senators  |   19 | Last   | Max Veronneau       | CAN     | R        |              2 |            0.00 |             2 |
-|           30 | Senators  |   19 | Last   | Brady Tkachuk       | USA     | L        |              2 |           90.50 |            44 |
+Data
+----
+
+The NHL team with the highest regular season points (2 for ea win / 1
+for ea overtime loss) is awarded the league’s Presidents Cup. The data
+used for the analysis is taken for a comparison of the 2017 - 2019
+Presidents Cup Winners (Capitals, Predators, Lightning) vs the
+corresponding “Low Points Teams” (Avalanche, Sabres, Senators).
+SeasonAPI was used to pull Player info for each of the six teams for
+corresponding years. This was mutated & joined to the PeopleAPI data to
+get nationalities for each Player (factored into USA, Canada, European
+groups). That data was then joined to the SkaterAPI to get career stats
+on which the Rosters were analyzed.
+
+    # Roster for last 2 seasons, high points team (presidents cup) low points team
+    pres17 <- SeasonAPI(15, 20162017)
+    last17 <- SeasonAPI(21, 20162017)
+    pres18 <- SeasonAPI(18, 20172018)
+    last18 <- SeasonAPI(7, 20172018)
+    pres19 <- SeasonAPI(14, 20182019)
+    last19 <- SeasonAPI(9, 20182019)
+
+    # Combine results into single DS & add year & rank
+    PresLast <- bind_rows(pres17, last17, pres18, last18, pres19, last19)
+    PresLast <- mutate(PresLast, year = 
+                      ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Avalanche"), 17,
+                      ifelse((PresLast$teamName == "Predators") | (PresLast$teamName == "Sabres"), 18, 19)))
+    PresLast <- mutate(PresLast, rank = ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Predators") | (PresLast$teamName == "Lightning"), "First", "Last"))
+    PresLast <- PresLast %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code)
+
+    # Skater for detailed stats
+
+    # Franchise ID's for SkaterAPI argument
+
+    frIdList <- c(pres17$franchiseId[1], last17$franchiseId[1], pres18$franchiseId[1],last18$franchiseId[1], pres19$franchiseId[1], last19$franchiseId[1])
+
+    # Skater for detailed stats
+    PresLast_Skater <- lapply(frIdList, SkaterAPI)
+    PresLast_Skater <- bind_rows(PresLast_Skater)
+
+    # Combine results into single DS
+    PresLast_Skater <- PresLast_Skater %>% rename("person.id" = playerId) 
+
+    # Join Preslast & Preslast_Skater fo Skaters on Pres-last Teams / Seasons for analysis
+
+    PL_SK_Season <- inner_join(PresLast, PresLast_Skater) 
+    PL_SK_Season <-as_tibble(PL_SK_Season) %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
+
+
+    Season_People <- lapply(PL_SK_Season$person.id, PeopleAPI)
+    Season_People <- bind_rows(Season_People) %>% select(id, nationality) %>% mutate("person.id" = id)
+
+    PL_SK_Season <- inner_join(PL_SK_Season, Season_People)
+    PL_SK_Season <- mutate(PL_SK_Season, country = ifelse((nationality == "USA"), "USA",
+                                                   ifelse((nationality == "CAN"), "CAN", "EUR")))
+
+    PL_SK_Season <- PL_SK_Season %>% mutate(AveragePM = round((penaltyMinutes/seasons), 2), TotalPoints = (goals+assists), AverageTP = round((goals+assists)/seasons), 2)
+
+    PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.fullName, country, position.code, seasons, AveragePM, AverageTP) %>% distinct()
+
+
+    PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = teamName, "Year" = year, "Finish" = rank, "Name" = person.fullName, "Country" = country, "Position" = position.code, "Player Seasons" = seasons, "Avg Penalty Min" = AveragePM, "Avg Total Pts" = AverageTP)
+
+    PL_SK_Season$Finish <- as.factor(PL_SK_Season$Finish)
+
+
+    kable(head(PL_SK_Season), caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
+
+| Franchise ID | Team     | Year | Finish | Name            | Country | Position | Player Seasons | Avg Penalty Min | Avg Total Pts |
+|-------------:|:---------|-----:|:-------|:----------------|:--------|:---------|---------------:|----------------:|--------------:|
+|           24 | Capitals |   17 | First  | Brooks Orpik    | USA     | D        |              5 |           47.60 |            12 |
+|           24 | Capitals |   17 | First  | Justin Williams | CAN     | R        |              2 |           43.00 |            50 |
+|           24 | Capitals |   17 | First  | Alex Ovechkin   | EUR     | L        |             15 |           47.93 |            85 |
+|           24 | Capitals |   17 | First  | Daniel Winnik   | CAN     | L        |              2 |           35.50 |            15 |
+|           24 | Capitals |   17 | First  | T.J. Oshie      | USA     | R        |              5 |           32.60 |            51 |
+|           24 | Capitals |   17 | First  | Matt Niskanen   | USA     | D        |              5 |           38.80 |            31 |
 
 Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place
+
+Categorical Analysis
+--------------------
+
+Categories for Player Countries (regionalized), Positions (by code), &
+Team Finish.
+
+### Total Summaries
+
+    Pos_Ctry_table <- table(PL_SK_Season$Position, PL_SK_Season$Country)
+    kable(Pos_Ctry_table, caption = "Player Position by Country")
 
 |     | CAN | EUR | USA |
 |:----|----:|----:|----:|
@@ -521,6 +651,12 @@ Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place
 
 Player Position by Country
 
+### Summaries by First Place Teams
+
+    First <- filter(PL_SK_Season, PL_SK_Season$Finish == "First")
+    Pos_Ctry1_table <- table(First$Position, First$Country)
+    kable(Pos_Ctry1_table, caption = "Presidents Cup Winners")
+
 |     | CAN | EUR | USA |
 |:----|----:|----:|----:|
 | C   |  14 |   5 |   4 |
@@ -529,6 +665,12 @@ Player Position by Country
 | R   |   5 |   4 |   5 |
 
 Presidents Cup Winners
+
+### Summaries by Last Place Teams
+
+    Last <- filter(PL_SK_Season, PL_SK_Season$Finish == "Last")
+    Pos_Ctry2_table <- table(Last$Position, Last$Country)
+    kable(Pos_Ctry2_table, caption = "Last Place Players")
 
 |     | CAN | EUR | USA |
 |:----|----:|----:|----:|
@@ -544,15 +686,78 @@ Visuals
 
 ### 1 Factor
 
-![](README_files/figure-gfm/univariate%20bar%20graphs-1.png)<!-- -->![](README_files/figure-gfm/univariate%20bar%20graphs-2.png)<!-- -->![](README_files/figure-gfm/univariate%20bar%20graphs-3.png)<!-- -->
+The most interesting finding from the single category plot is the
+smaller roster size of the 3 First Place teams. This could indicate
+fewer injuries or the fact that the Last Place teams were juggling
+lineups and bringing in players from their minor league ranks or through
+trades.
+
+    # bar plot of Team Finish
+    FinPlot <- ggplot(PL_SK_Season, aes(x = Finish), color = "blue") 
+    FinPlot + geom_bar() + labs(x = "Player Finish")
+
+![](README_files/figure-gfm/univariate%20bar%20graphs-1.png)<!-- -->
+
+    # bar plot of Team Finish
+    COplot <- ggplot(PL_SK_Season, aes(x = Country), color = "blue") 
+    COplot + geom_bar() + labs(x = "Player Country")
+
+![](README_files/figure-gfm/univariate%20bar%20graphs-2.png)<!-- -->
+
+    # bar plot of Team Finish
+    COPlot <- ggplot(PL_SK_Season, aes(x = Position), color = "blue") 
+    COPlot + geom_bar() + labs(x = "Player Position")
+
+![](README_files/figure-gfm/univariate%20bar%20graphs-3.png)<!-- -->
 
 ### 2 Factors
 
-![](README_files/figure-gfm/2%20factor%20bar%20graphs-1.png)<!-- -->![](README_files/figure-gfm/2%20factor%20bar%20graphs-2.png)<!-- -->
+Consistent with univariate analysis we see fewer players on the winning
+teams. It’s notable that Canadians dominate both rosters (they invented
+the sport). Europeans and Americans are approximately the same. Centers
+and Defensemen are clearly the most valuable positions to fill - strong
+stats in these groups could show significant differences between First /
+Last groups in the Qantitative Analysis.
+
+    # Finish by Nationality
+    FxCOplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Country)))
+    FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationality") + labs(x = "Team Finish")
+
+![](README_files/figure-gfm/2%20factor%20bar%20graphs-1.png)<!-- -->
+
+    # Country by Position
+    FxPosplot <- ggplot(PL_SK_Season, aes(Country, fill = as.factor(Position)))
+    FxPosplot + geom_bar(position = "dodge") +  scale_fill_discrete(name = "Position") + labs(x = "Nationality")
+
+![](README_files/figure-gfm/2%20factor%20bar%20graphs-2.png)<!-- -->
 
 ### 3 Factors
 
+Basically a breakdown of the previous 2 bivariate plots demonstrating
+the same conclusions. The number of Canadian defensemen on Last Place
+rosters stands out - perhaps a crop of younger players.
+
+    # Color by satellite indicator by spine condition
+    FxPMxPtplot <- ggplot(PL_SK_Season, aes(Country, fill = Finish))
+    FxPMxPtplot + geom_bar(position = "dodge") + scale_fill_discrete(name = "Team Finish") + labs(x = "Player Country", title = "Player Finish by Country and Position") + facet_wrap(. ~ Position, labeller = (label_both))
+
 ![](README_files/figure-gfm/3%20factor%20bar%20graphs-1.png)<!-- -->
+
+Quantitative Analysis
+---------------------
+
+### Summaries
+
+    # Function to knit 5 number sum + Mean given Species input
+    TeamSumm <- function(team, ...) {
+    summ <- PL_SK_Season %>% filter(Team == team) %>% select(c(8, 9, 10)) %>% apply(2, summary)
+    kable(round(summ, 2), caption = paste0("Team: ", team))
+    }
+
+    teams <- (c("Capitals", "Avalanche", "Predators", "Sabres", "Lightning", "Senators"))
+
+    # Capitals summary
+    TeamSumm(teams[[1]])
 
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
@@ -565,6 +770,9 @@ Visuals
 
 Team: Capitals
 
+    # Avalanche summary
+    TeamSumm(teams[[2]])
+
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
 | Min.    |           1.00 |            0.00 |          0.00 |
@@ -575,6 +783,9 @@ Team: Capitals
 | Max.    |          10.00 |          135.90 |         71.00 |
 
 Team: Avalanche
+
+    # Predators summary
+    TeamSumm(teams[[3]])
 
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
@@ -587,6 +798,9 @@ Team: Avalanche
 
 Team: Predators
 
+    # Sabres summary
+    TeamSumm(teams[[4]])
+
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
 | Min.    |           1.00 |            0.00 |          0.00 |
@@ -597,6 +811,9 @@ Team: Predators
 | Max.    |          11.00 |           87.00 |         67.00 |
 
 Team: Sabres
+
+    # lightning summary
+    TeamSumm(teams[[5]])
 
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
@@ -609,6 +826,9 @@ Team: Sabres
 
 Team: Lightning
 
+    # Senators summary
+    TeamSumm(teams[[6]])
+
 |         | Player Seasons | Avg Penalty Min | Avg Total Pts |
 |:--------|---------------:|----------------:|--------------:|
 | Min.    |           1.00 |            0.00 |          0.00 |
@@ -620,10 +840,69 @@ Team: Lightning
 
 Team: Senators
 
+Visuals
+-------
+
+### Average Total Points vs Player Tenure
+
+An apparent strong correlation between these variables especially
+towards the upper right indicating veteran players produce more points
+(goals + assists) on average over their careers. This could be the
+result of their skill leading to longevity vs experience producing more
+points (interesting topic for deeper analysis). Wide variance given by
+the large CI bands.
+
+    # Base plot aesthetic with Total Points on x axis
+    Finish <- PL_SK_Season$Finish
+    Avg_Total_Points <- PL_SK_Season$`Avg Total Pts`
+    Avg_Penalty_Min <- PL_SK_Season$`Avg Penalty Min`
+    PLayer_Seasons <- PL_SK_Season$`Player Seasons`
+
+    g <- ggplot(PL_SK_Season, aes(x = Avg_Total_Points, y = PLayer_Seasons, color = Finish))
+
+    # Avg total points histogram
+    g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Seasons")
+
 ![](README_files/figure-gfm/dotplot%20by%20TotalPoints-1.png)<!-- -->
+
+### Penalty Mins by Player Tenure
+
+Mixd results among First & Last Placed teams but generally First Place
+teams show fewer PMs by season. Could indicate “maturity” and
+recognition of importance of “staying out of the box” to winning over a
+long season.
+
+    # Base plot aesthetic with Total Points on x axis
+    g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = Finish))
+
+    # Avg total points histogram
+    g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Penalty Minutes vs Average Total Points")
+
 ![](README_files/figure-gfm/dotplot%20by%20Penalty%20Minutes-1.png)<!-- -->
 
+### Average Total Points vs Average Penalty Minutes
+
+Breaking out colors by team to show another degree of team detail.
+Tamapa Bay jumps out here for the steep Beta 1 - players getting the
+most points out of their penalty minutes & shortness of line indicate
+fewer penalty minute outliers (consistent blend of aggression &
+discipline across roster). Capitals are next highest in Career points
+per PM but w less discipline (aggressive play leading to positive
+results). The 3 Last Place teams stand out for the shallowness (low
+points per penalty mins) of their lines & clustering in the lower left
+(fewer points/fewer penalty minutes) - teams appear to be less
+aggressive/offensively minded
+
+    # Base plot aesthetic with Total Points on x axis
+    g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color = Team))
+
+    # Avg total points histogram
+    g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")
+
 ![](README_files/figure-gfm/dotplot%20by-1.png)<!-- -->
+
+    TeamStatsAPI_Call <- (TeamStatsAPI())
+    knitr::kable(TeamStatsAPI_Call)
 
 |  id | name                  | link             | abbreviation | teamName       | locationName | firstYearOfPlay | shortName    | officialSiteUrl                                                                                 | franchiseId | active | venue.name               | venue.link          | venue.city   | venue.id | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link        |
 |----:|:----------------------|:-----------------|:-------------|:---------------|:-------------|:----------------|:-------------|:------------------------------------------------------------------------------------------------|------------:|:-------|:-------------------------|:--------------------|:-------------|---------:|:---------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:----------------------|
@@ -659,6 +938,9 @@ Team: Senators
 |  53 | Arizona Coyotes       | /api/v1/teams/53 | ARI          | Coyotes        | Arizona      | 1979            | Arizona      | <a href="http://www.arizonacoyotes.com/" class="uri">http://www.arizonacoyotes.com/</a>         |          28 | TRUE   | Gila River Arena         | /api/v1/venues/5043 | Glendale     |     5043 | America/Phoenix      |                    -7 | MST               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    28 | Coyotes            | /api/v1/franchises/28 |
 |  54 | Vegas Golden Knights  | /api/v1/teams/54 | VGK          | Golden Knights | Vegas        | 2016            | Vegas        | <a href="http://www.vegasgoldenknights.com/" class="uri">http://www.vegasgoldenknights.com/</a> |          38 | TRUE   | T-Mobile Arena           | /api/v1/venues/5178 | Las Vegas    |     5178 | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    38 | Golden Knights     | /api/v1/franchises/38 |
 
+    RosterAPI_Call <- head(RosterAPI(10))
+    knitr::kable(RosterAPI_Call)
+
 | franchiseId | jerseyNumber | person.id | person.fullName | person.link            | position.code | position.name | position.type | position.abbreviation |
 |------------:|:-------------|----------:|:----------------|:-----------------------|:--------------|:--------------|:--------------|:----------------------|
 |           5 | 19           |   8469455 | Jason Spezza    | /api/v1/people/8469455 | C             | Center        | Forward       | C                     |
@@ -668,15 +950,27 @@ Team: Senators
 |           5 | 94           |   8475197 | Tyson Barrie    | /api/v1/people/8475197 | D             | Defenseman    | Defenseman    | D                     |
 |           5 | 52           |   8475716 | Martin Marincin | /api/v1/people/8475716 | D             | Defenseman    | Defenseman    | D                     |
 
+    PersonAPI_Call <- head(PersonAPI(10))
+    knitr::kable(PersonAPI_Call)
+
 |  id | name                | link             | abbreviation | teamName    | locationName | firstYearOfPlay | shortName | officialSiteUrl                                                                 | franchiseId | active | venue.name       | venue.link          | venue.city | venue.timeZone.id | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link       |
 |----:|:--------------------|:-----------------|:-------------|:------------|:-------------|:----------------|:----------|:--------------------------------------------------------------------------------|------------:|:-------|:-----------------|:--------------------|:-----------|:------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:---------------------|
 |  10 | Toronto Maple Leafs | /api/v1/teams/10 | TOR          | Maple Leafs | Toronto      | 1917            | Toronto   | <a href="http://www.mapleleafs.com/" class="uri">http://www.mapleleafs.com/</a> |           5 | TRUE   | Scotiabank Arena | /api/v1/venues/null | Toronto    | America/Toronto   |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     5 | Maple Leafs        | /api/v1/franchises/5 |
+
+    PeopleAPI_Call <- head(PeopleAPI(8468508))
+    knitr::kable(PeopleAPI_Call)
 
 |      id | fullName        | link                   | firstName | lastName | primaryNumber | birthDate  | currentAge | birthCity | birthStateProvince | birthCountry | nationality | height | weight | active | alternateCaptain | captain | rookie | shootsCatches | rosterStatus | currentTeam.id | currentTeam.name    | currentTeam.link | primaryPosition.code | primaryPosition.name | primaryPosition.type | primaryPosition.abbreviation |
 |--------:|:----------------|:-----------------------|:----------|:---------|:--------------|:-----------|-----------:|:----------|:-------------------|:-------------|:------------|:-------|-------:|:-------|:-----------------|:--------|:-------|:--------------|:-------------|---------------:|:--------------------|:-----------------|:---------------------|:---------------------|:---------------------|:-----------------------------|
 | 8468508 | Justin Williams | /api/v1/people/8468508 | Justin    | Williams | 14            | 1981-10-04 |         38 | Cobourg   | ON                 | CAN          | CAN         | 6’ 1"  |    184 | TRUE   | FALSE            | FALSE   | FALSE  | R             | Y            |             12 | Carolina Hurricanes | /api/v1/teams/12 | R                    | Right Wing           | Forward              | RW                           |
 
+    NextGAPI_Call <- head(NextGAPI(1))
+    knitr::kable(NextGAPI_Call)
+
 \|\| \|\| \|\| \|\|
+
+    PriorGAPI_Call <- head(PriorGAPI(12))
+    knitr::kable(PriorGAPI_Call)
 
 <table class="kable_wrapper">
 <tbody>
@@ -691,6 +985,9 @@ Team: Senators
 </tr>
 </tbody>
 </table>
+
+    SeasonAPI_Call <- head(SeasonAPI(12, 20052006))
+    knitr::kable(SeasonAPI_Call)
 
 | franchiseId | jerseyNumber | person.id | person.fullName | person.link            | position.code | position.name | position.type | position.abbreviation | teamName   |
 |------------:|:-------------|----------:|:----------------|:-----------------------|:--------------|:--------------|:--------------|:----------------------|:-----------|
