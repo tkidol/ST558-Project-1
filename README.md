@@ -13,35 +13,15 @@ Todd Idol
     -   [Franchise Wrapper](#franchise-wrapper)
     -   [Stats Wrapper](#stats-wrapper)
 -   [NHL Franchise APIs](#nhl-franchise-apis)
-    -   [Franchise Main API](#franchise-main-api)
-    -   [Team Totals API](#team-totals-api)
-    -   [Team Drill Down API](#team-drill-down-api)
-    -   [Goalie API](#goalie-api)
-    -   [Skater API](#skater-api)
-    -   [2017 - 2019 Presidents Cup Teams vs. Low Points Teams
-        Analysis](#presidents-cup-teams-vs.-low-points-teams-analysis)
-        -   [Language](#language)
--   [Analysis](#analysis)
+-   [2017 - 2019 Presidents Cup Teams vs. Low Points Teams
+    Analysis](#presidents-cup-teams-vs.-low-points-teams-analysis)
     -   [Data](#data)
-    -   [Categorical Analysis](#categorical-analysis)
-        -   [Total Summaries](#total-summaries)
-        -   [Summaries by First Place
-            Teams](#summaries-by-first-place-teams)
-        -   [Summaries by Last Place
-            Teams](#summaries-by-last-place-teams)
+-   [Categorical Analysis](#categorical-analysis)
+    -   [Total Summaries](#total-summaries)
+    -   [Categorical Visuals](#categorical-visuals)
+-   [Quantitative Analysis](#quantitative-analysis)
+    -   [Summaries](#summaries)
     -   [Visuals](#visuals)
-        -   [1 Factor](#factor)
-        -   [2 Factors](#factors)
-        -   [3 Factors](#factors-1)
-    -   [Quantitative Analysis](#quantitative-analysis)
-        -   [Summaries](#summaries)
-    -   [Visuals](#visuals-1)
-        -   [Average Total Points vs Player
-            Tenure](#average-total-points-vs-player-tenure)
-        -   [Penalty Mins by Player
-            Tenure](#penalty-mins-by-player-tenure)
-        -   [Average Total Points vs Average Penalty
-            Minutes](#average-total-points-vs-average-penalty-minutes)
 
 Link to Project Repo
 ====================
@@ -90,23 +70,23 @@ Franchise Wrapper
 
     # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
 
+    # Lists to validate incoming arguments
     FR_Wrapper <- function(endpoint, team = NULL, ...) {
       menu <- FranchiseAPI()
       records <- c("franchise", "totals", "drilldown", "goalie", "skater")
       teamlist <- list(menu[5])
       frIDs <- list(menu[1])
       
+    # Validation tests
       if(!(is.character(endpoint))) stop("Invalid Input")
-      
       if(is.character(team)) {
         if ((team %in% teamlist)) stop ("Invalid Input")
       }
-     
-      if(is.numeric(team)) {
+       if(is.numeric(team)) {
         if((team %in% frIDs)) stop ("Invalid Input")
       }
 
-      
+      # Conditional logic to pull correct API data
         if(endpoint == "franchise") {
         return(FranchiseAPI())
         
@@ -147,25 +127,24 @@ Stats Wrapper
 
     # Stat API Wrapper takes API Modifier (from a list) & team (Team ID or Common Team name (e.g. "Hurricanes)), & Season (for the 'roster & season' endpoint) & returns distinct API data. Note: using 'people' API for analysis but not directly accessible through Wrapper. MultiAPI works directly with multiple 'id' input but not through the Wrapper
 
+    # Lists for comparison to validate incoming arguments
     ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
       menu <- FranchiseAPI()
       modifyer <- c("stats", "roster", "person", "nextgame", "priorgame", "expanded", "season")
       teamlist <- list(menu[5])
       teamIDs <- list(menu[4])
-      
+     
+    # Validation tests 
       if((!is.character(mod) & (mod %in% modifyer))) stop("Invalid Input")
-      
       if(is.character(team)) {
           if ((team %in% teamlist)) stop("Invalid Input")
       }
-         
       if(is.numeric(team)) {
         if((team %in% teamIDs)) stop("Invalid Input")
       }
-      
       if(!length(season) != 8) stop("Invalid Input")
       
-
+    # Conitional logic to pull correct API data
       if(mod == "stats") {
        return(TeamStatsAPI())
         
@@ -228,8 +207,7 @@ NHL Franchise APIs
 Here are the GET chunks to return APIs associated to the Franchise end
 points.
 
-Franchise Main API
-------------------
+### Main API
 
     # GET pull for NHL franchise
     FranchiseAPI <- function() {
@@ -245,6 +223,8 @@ Franchise Main API
     return(franchise)
     }
 
+### Wrapper Test
+
 | Franchise ID | First Season | Last Season | Team ID | Name        | Location  |
 |-------------:|-------------:|------------:|--------:|:------------|:----------|
 |            1 |     19171918 |          NA |       8 | Canadiens   | Montréal  |
@@ -254,8 +234,7 @@ Franchise Main API
 |            5 |     19171918 |          NA |      10 | Maple Leafs | Toronto   |
 |            6 |     19241925 |          NA |       6 | Bruins      | Boston    |
 
-Team Totals API
----------------
+### Team Totals API
 
     # GET pull for NHL Team Totals
     TeamTotalsAPI<- function() {
@@ -278,8 +257,7 @@ Team Totals API
 |   5 |               1 |      19261927 |          10 |          2 |        6504 |        19863 |    19864 |       1132 |                 73 |      448 |     1600 |           NA |   2693 |            147 |          85564 |    0.5125 |   6667 |       1561 |                 74 |      360 |     1256 |             66 |           78 |      403 |      3 | New York Rangers   |  808 | NYR     | 2856 |
 |   6 |               1 |      19261927 |          10 |          3 |         518 |         1447 |     1404 |        104 |                  0 |        1 |      137 |           NA |    266 |              0 |           8181 |    0.0000 |      0 |        162 |                  0 |        7 |      107 |              0 |            0 |       44 |      3 | New York Rangers   |    8 | NYR     |  244 |
 
-Team Drill Down API
--------------------
+### Team Drill Down API
 
     TeamDDAPI <- function(id, ...) {
     # GET pull for NHL Team Totals
@@ -293,12 +271,13 @@ Team Drill Down API
     return(drill_down[[1]])
     }
 
+### Wrapper test
+
 |  id | fewestGoals | fewestGoalsAgainst | fewestGoalsAgainstSeasons | fewestGoalsSeasons | fewestLosses | fewestLossesSeasons | fewestPoints | fewestPointsSeasons | fewestTies | fewestTiesSeasons | fewestWins | fewestWinsSeasons | franchiseId | franchiseName       | homeLossStreak | homeLossStreakDates       | homePointStreak | homePointStreakDates      | homeWinStreak | homeWinStreakDates        | homeWinlessStreak | homeWinlessStreakDates    | lossStreak | lossStreakDates           | mostGameGoals | mostGameGoalsDates                                                                                                     | mostGoals | mostGoalsAgainst | mostGoalsAgainstSeasons | mostGoalsSeasons | mostLosses | mostLossesSeasons | mostPenaltyMinutes | mostPenaltyMinutesSeasons | mostPoints | mostPointsSeasons | mostShutouts | mostShutoutsSeasons | mostTies | mostTiesSeasons | mostWins | mostWinsSeasons | pointStreak | pointStreakDates          | roadLossStreak | roadLossStreakDates       | roadPointStreak | roadPointStreakDates      | roadWinStreak | roadWinStreakDates        | roadWinlessStreak | roadWinlessStreakDates                               | winStreak | winStreakDates                                                                  | winlessStreak | winlessStreakDates |
 |----:|------------:|-------------------:|:--------------------------|:-------------------|-------------:|:--------------------|-------------:|:--------------------|-----------:|:------------------|-----------:|:------------------|------------:|:--------------------|---------------:|:--------------------------|----------------:|:--------------------------|--------------:|:--------------------------|------------------:|:--------------------------|-----------:|:--------------------------|--------------:|:-----------------------------------------------------------------------------------------------------------------------|----------:|-----------------:|:------------------------|:-----------------|-----------:|:------------------|-------------------:|:--------------------------|-----------:|:------------------|-------------:|:--------------------|---------:|:----------------|---------:|:----------------|------------:|:--------------------------|---------------:|:--------------------------|----------------:|:--------------------------|--------------:|:--------------------------|------------------:|:-----------------------------------------------------|----------:|:--------------------------------------------------------------------------------|:--------------|:-------------------|
 |  12 |         171 |                202 | 1998-99 (82)              | 2002-03 (82)       |           22 | 2005-06 (82)        |           45 | 1982-83 (80)        |          4 | 1985-86 (80)      |         19 | 1982-83 (80)      |          26 | Carolina Hurricanes |              8 | Mar 14 2013 - Apr 09 2013 |              15 | Dec 13 2005 - Jan 28 2006 |            12 | Feb 20 2009 - Apr 07 2009 |                13 | Jan 15 1985 - Mar 10 1985 |          9 | Feb 19 1983 - Mar 08 1983 |            11 | Feb 12 1984 - EDM 0 @ HFD 11, Oct 19 1985 - MTL 6 @ HFD 11, Jan 17 1986 - QUE 6 @ HFD 11, Mar 15 1986 - CHI 4 @ HFD 11 |       332 |              403 | 1982-83 (80)            | 1985-86 (80)     |         54 | 1982-83 (80)      |               2354 | 1992-93 (84)              |        112 | 2005-06 (82)      |            8 | 1998-99 (82)        |       19 | 1979-80 (80)    |       52 | 2005-06 (82)    |          13 | Mar 09 2017 - Mar 30 2017 |             13 | Dec 18 1982 - Feb 05 1983 |              12 | Feb 23 2004 - Mar 27 2004 |             6 | Nov 10 1990 - Dec 07 1990 |                15 | Nov 11 1979 - Jan 09 1980, Jan 07 2003 - Mar 02 2003 |         9 | Oct 22 2005 - Nov 11 2005, Dec 31 2005 - Jan 19 2006, Mar 18 2009 - Apr 07 2009 | NA            | NA                 |
 
-Goalie API
-----------
+### Goalie API
 
     GoalieAPI <- function(id, ...) {
     # GET pull for NHL Team Totals
@@ -312,8 +291,18 @@ Goalie API
     return(goalie[[1]])
     }
 
-Skater API
-----------
+### Wrapper Test
+
+|  id | activePlayer | firstName | franchiseId | franchiseName      | gameTypeId | gamesPlayed | lastName   | losses | mostGoalsAgainstDates  | mostGoalsAgainstOneGame | mostSavesDates         | mostSavesOneGame | mostShotsAgainstDates | mostShotsAgainstOneGame | mostShutoutsOneSeason | mostShutoutsSeasonIds                  | mostWinsOneSeason | mostWinsSeasonIds  | overtimeLosses | playerId | positionCode | rookieGamesPlayed | rookieShutouts | rookieWins | seasons | shutouts | ties | wins |
+|----:|:-------------|:----------|------------:|:-------------------|-----------:|------------:|:-----------|-------:|:-----------------------|------------------------:|:-----------------------|-----------------:|:----------------------|------------------------:|----------------------:|:---------------------------------------|------------------:|:-------------------|---------------:|---------:|:-------------|------------------:|---------------:|-----------:|--------:|---------:|-----:|-----:|
+| 262 | FALSE        | Patrick   |          27 | Colorado Avalanche |          2 |         478 | Roy        |    140 | 1999-11-26             |                       7 | 1997-12-10             |               51 | 1997-12-10            |                      53 |                     9 | 20012002                               |                40 | 20002001           |             NA |  8451033 | G            |                NA |             NA |         NA |       8 |       37 |   65 |  262 |
+| 325 | TRUE         | Semyon    |          27 | Colorado Avalanche |          2 |         389 | Varlamov   |    156 | 2013-12-05             |                       8 | 2017-11-02             |               57 | 2017-11-02            |                      60 |                     5 | 20142015                               |                41 | 20132014           |             38 |  8473575 | G            |                NA |             NA |         NA |       8 |       21 |    0 |  183 |
+| 358 | FALSE        | Craig     |          27 | Colorado Avalanche |          2 |          67 | Billington |     23 | 1997-04-04             |                       7 | 1998-01-15, 1996-10-28 |               40 | 1998-01-15            |                      42 |                     1 | 19961997, 19971998                     |                11 | 19961997, 19981999 |             NA |  8445470 | G            |                NA |             NA |         NA |       3 |        2 |    7 |   30 |
+| 360 | FALSE        | Dan       |          27 | Colorado Avalanche |          2 |         226 | Bouchard   |     80 | 1983-03-08             |                      11 | 1982-01-16             |               47 | 1982-01-16            |                      51 |                     2 | 19801981                               |                29 | 19831984           |             NA |  8445609 | G            |                NA |             NA |         NA |       5 |        5 |   36 |  107 |
+| 383 | FALSE        | Jacques   |          27 | Colorado Avalanche |          2 |          58 | Cloutier   |     26 | 1991-02-23             |                      10 | 1991-02-23             |               49 | 1991-02-23            |                      59 |                     0 | 19901991, 19911992, 19921993, 19931994 |                 6 | 19911992           |             NA |  8446089 | G            |                NA |             NA |         NA |       4 |        0 |    7 |   12 |
+| 390 | FALSE        | Michel    |          27 | Colorado Avalanche |          2 |          62 | Dion       |     33 | 1980-10-12, 1980-04-03 |                       8 | 1980-01-19             |               48 | 1980-01-19            |                      50 |                     2 | 19791980                               |                15 | 19791980           |             NA |  8446429 | G            |                NA |             NA |         NA |       2 |        2 |    9 |   15 |
+
+### Skater API
 
     SkaterAPI <- function(id, ...) {
     # GET pull for NHL Team Totals
@@ -327,88 +316,18 @@ Skater API
     return(skater[[1]])
     }
 
-    Franchise <- FranchiseAPI()
-    Franchise <- arrange(Franchise, (Franchise[[4]]))
-    kable((Franchise), caption = "Franchise All")
+### Wrapper Test
 
-| Franchise ID | First Season | Last Season | Team ID | Name           | Location     |
-|-------------:|-------------:|------------:|--------:|:---------------|:-------------|
-|           23 |     19741975 |          NA |       1 | Devils         | New Jersey   |
-|           22 |     19721973 |          NA |       2 | Islanders      | New York     |
-|           10 |     19261927 |          NA |       3 | Rangers        | New York     |
-|           16 |     19671968 |          NA |       4 | Flyers         | Philadelphia |
-|           17 |     19671968 |          NA |       5 | Penguins       | Pittsburgh   |
-|            6 |     19241925 |          NA |       6 | Bruins         | Boston       |
-|           19 |     19701971 |          NA |       7 | Sabres         | Buffalo      |
-|            1 |     19171918 |          NA |       8 | Canadiens      | Montréal     |
-|           30 |     19921993 |          NA |       9 | Senators       | Ottawa       |
-|            5 |     19171918 |          NA |      10 | Maple Leafs    | Toronto      |
-|           26 |     19791980 |          NA |      12 | Hurricanes     | Carolina     |
-|           33 |     19931994 |          NA |      13 | Panthers       | Florida      |
-|           31 |     19921993 |          NA |      14 | Lightning      | Tampa Bay    |
-|           24 |     19741975 |          NA |      15 | Capitals       | Washington   |
-|           11 |     19261927 |          NA |      16 | Blackhawks     | Chicago      |
-|           12 |     19261927 |          NA |      17 | Red Wings      | Detroit      |
-|           34 |     19981999 |          NA |      18 | Predators      | Nashville    |
-|           18 |     19671968 |          NA |      19 | Blues          | St. Louis    |
-|           21 |     19721973 |          NA |      20 | Flames         | Calgary      |
-|           27 |     19791980 |          NA |      21 | Avalanche      | Colorado     |
-|           25 |     19791980 |          NA |      22 | Oilers         | Edmonton     |
-|           20 |     19701971 |          NA |      23 | Canucks        | Vancouver    |
-|           32 |     19931994 |          NA |      24 | Ducks          | Anaheim      |
-|           15 |     19671968 |          NA |      25 | Stars          | Dallas       |
-|           14 |     19671968 |          NA |      26 | Kings          | Los Angeles  |
-|           29 |     19911992 |          NA |      28 | Sharks         | San Jose     |
-|           36 |     20002001 |          NA |      29 | Blue Jackets   | Columbus     |
-|           37 |     20002001 |          NA |      30 | Wild           | Minnesota    |
-|            4 |     19191920 |    19241925 |      37 | Tigers         | Hamilton     |
-|            9 |     19251926 |    19301931 |      39 | Quakers        | Philadelphia |
-|            2 |     19171918 |    19171918 |      41 | Wanderers      | Montreal     |
-|            7 |     19241925 |    19371938 |      43 | Maroons        | Montreal     |
-|            3 |     19171918 |    19341935 |      45 | Eagles         | St. Louis    |
-|           13 |     19671968 |    19771978 |      49 | Barons         | Cleveland    |
-|            8 |     19251926 |    19411942 |      51 | Americans      | Brooklyn     |
-|           35 |     19992000 |          NA |      52 | Jets           | Winnipeg     |
-|           28 |     19791980 |          NA |      53 | Coyotes        | Arizona      |
-|           38 |     20172018 |          NA |      54 | Golden Knights | Vegas        |
+|    id | activePlayer | assists | firstName | franchiseId | franchiseName      | gameTypeId | gamesPlayed | goals | lastName | mostAssistsGameDates                           | mostAssistsOneGame | mostAssistsOneSeason | mostAssistsSeasonIds | mostGoalsGameDates                             | mostGoalsOneGame | mostGoalsOneSeason | mostGoalsSeasonIds | mostPenaltyMinutesOneSeason | mostPenaltyMinutesSeasonIds | mostPointsGameDates                            | mostPointsOneGame | mostPointsOneSeason | mostPointsSeasonIds | penaltyMinutes | playerId | points | positionCode | rookiePoints | seasons |
+|------:|:-------------|--------:|:----------|------------:|:-------------------|-----------:|------------:|------:|:---------|:-----------------------------------------------|-------------------:|---------------------:|:---------------------|:-----------------------------------------------|-----------------:|-------------------:|:-------------------|----------------------------:|:----------------------------|:-----------------------------------------------|------------------:|--------------------:|:--------------------|---------------:|---------:|-------:|:-------------|-------------:|--------:|
+| 16889 | FALSE        |       0 | Billy     |           2 | Montreal Wanderers |          2 |           2 |     1 | Bell     | 1917-12-19, 1917-12-29                         |                  0 |                    0 | 19171918             | 1917-12-19                                     |                1 |                  1 | 19171918           |                           0 | 19171918                    | 1917-12-19                                     |                 1 |                   1 | 19171918            |              0 |  8445044 |      1 | C            |            1 |       1 |
+| 16897 | FALSE        |       0 | Gerry     |           2 | Montreal Wanderers |          2 |           4 |     0 | Geran    | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                  0 |                    0 | 19171918             | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                0 |                  0 | 19171918           |                           0 | 19171918                    | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                 0 |                   0 | 19171918            |              0 |  8446580 |      0 | C            |            0 |       1 |
+| 16901 | FALSE        |       1 | Harry     |           2 | Montreal Wanderers |          2 |           4 |     6 | Hyland   | 1917-12-29                                     |                  1 |                    1 | 19171918             | 1917-12-19                                     |                5 |                  6 | 19171918           |                           6 | 19171918                    | 1917-12-19                                     |                 5 |                   7 | 19171918            |              6 |  8447013 |      7 | R            |            7 |       1 |
+| 16903 | FALSE        |       0 | Jack      |           2 | Montreal Wanderers |          2 |           1 |     0 | Marks    | 1917-12-29                                     |                  0 |                    0 | 19171918             | 1917-12-29                                     |                0 |                  0 | 19171918           |                           0 | 19171918                    | 1917-12-29                                     |                 0 |                   0 | 19171918            |              0 |  8447616 |      0 | L            |            0 |       1 |
+| 16904 | FALSE        |       1 | Jack      |           2 | Montreal Wanderers |          2 |           4 |     3 | McDonald | 1917-12-29                                     |                  1 |                    1 | 19171918             | 1917-12-19, 1917-12-22, 1917-12-26             |                1 |                  3 | 19171918           |                           3 | 19171918                    | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                 1 |                   4 | 19171918            |              3 |  8447761 |      4 | L            |            4 |       1 |
+| 16908 | FALSE        |       0 | George    |           2 | Montreal Wanderers |          2 |           4 |     0 | O’Grady  | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                  0 |                    0 | 19171918             | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                0 |                  0 | 19171918           |                           0 | 19171918                    | 1917-12-19, 1917-12-22, 1917-12-26, 1917-12-29 |                 0 |                   0 | 19171918            |              0 |  8448052 |      0 | D            |            0 |       1 |
 
-Franchise All
-
-    SkaterAPI_Call <- head(SkaterAPI(1))
-    glimpse(SkaterAPI_Call)
-
-    ## Rows: 6
-    ## Columns: 30
-    ## $ id                          <int> 16891, 16911, 16990, 17000, 17025, 17054
-    ## $ activePlayer                <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
-    ## $ assists                     <int> 712, 688, 422, 728, 87, 368
-    ## $ firstName                   <chr> "Jean", "Henri", "Maurice", "Guy", "Chris", "Steve"
-    ## $ franchiseId                 <int> 1, 1, 1, 1, 1, 1
-    ## $ franchiseName               <chr> "Montréal Canadiens", "Montréal Canadiens", "Montréal Canadiens", "Mon...
-    ## $ gameTypeId                  <int> 2, 2, 2, 2, 2, 2
-    ## $ gamesPlayed                 <int> 1125, 1258, 978, 961, 523, 871
-    ## $ goals                       <int> 507, 358, 544, 518, 88, 408
-    ## $ lastName                    <chr> "Beliveau", "Richard", "Richard", "Lafleur", "Nilan", "Shutt"
-    ## $ mostAssistsGameDates        <chr> "1955-02-19, 1956-12-01, 1962-11-24, 1965-11-20, 1967-12-28", "1963-01...
-    ## $ mostAssistsOneGame          <int> 4, 5, 5, 4, 2, 4
-    ## $ mostAssistsOneSeason        <int> 58, 52, 36, 80, 16, 45
-    ## $ mostAssistsSeasonIds        <chr> "19601961", "19571958", "19541955", "19761977", "19841985, 19861987", ...
-    ## $ mostGoalsGameDates          <chr> "1955-11-05, 1959-03-07, 1969-02-11", "1957-10-17, 1959-03-14, 1961-03...
-    ## $ mostGoalsOneGame            <int> 4, 3, 5, 4, 2, 4
-    ## $ mostGoalsOneSeason          <int> 47, 30, 50, 60, 21, 60
-    ## $ mostGoalsSeasonIds          <chr> "19551956", "19591960", "19441945", "19771978", "19841985", "19761977"
-    ## $ mostPenaltyMinutesOneSeason <int> 143, 91, 125, 51, 358, 51
-    ## $ mostPenaltyMinutesSeasonIds <chr> "19551956", "19601961", "19541955", "19721973", "19841985", "19801981"
-    ## $ mostPointsGameDates         <chr> "1959-03-07", "1957-10-17", "1944-12-28", "1975-01-04, 1978-02-28, 197...
-    ## $ mostPointsOneGame           <int> 7, 6, 8, 6, 3, 5
-    ## $ mostPointsOneSeason         <int> 91, 80, 74, 136, 37, 105
-    ## $ mostPointsSeasonIds         <chr> "19581959", "19571958", "19541955", "19761977", "19841985", "19761977"
-    ## $ penaltyMinutes              <int> 1033, 932, 1287, 381, 2248, 400
-    ## $ playerId                    <int> 8445408, 8448320, 8448321, 8448624, 8449883, 8451354
-    ## $ points                      <int> 1219, 1046, 966, 1246, 175, 776
-    ## $ positionCode                <chr> "C", "C", "R", "R", "R", "L"
-    ## $ rookiePoints                <int> 34, 40, 11, 64, 15, 16
-    ## $ seasons                     <int> 20, 20, 18, 14, 10, 13
+### Complete Team Stats
 
     TeamStatsAPI <- function() {
     stats <- GET("https://statsapi.web.nhl.com/api/v1/teams")
@@ -420,6 +339,19 @@ Franchise All
     stats <- fromJSON(stats, flatten = TRUE)
     return(stats[[2]])
     }
+
+### Wrapper Test
+
+|  id | name                | link            | abbreviation | teamName  | locationName | firstYearOfPlay | shortName    | officialSiteUrl                                                                                 | franchiseId | active | venue.name            | venue.link          | venue.city   | venue.id | venue.timeZone.id | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link        |
+|----:|:--------------------|:----------------|:-------------|:----------|:-------------|:----------------|:-------------|:------------------------------------------------------------------------------------------------|------------:|:-------|:----------------------|:--------------------|:-------------|---------:|:------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:----------------------|
+|   1 | New Jersey Devils   | /api/v1/teams/1 | NJD          | Devils    | New Jersey   | 1982            | New Jersey   | <a href="http://www.newjerseydevils.com/" class="uri">http://www.newjerseydevils.com/</a>       |          23 | TRUE   | Prudential Center     | /api/v1/venues/null | Newark       |       NA | America/New\_York |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    23 | Devils             | /api/v1/franchises/23 |
+|   2 | New York Islanders  | /api/v1/teams/2 | NYI          | Islanders | New York     | 1972            | NY Islanders | <a href="http://www.newyorkislanders.com/" class="uri">http://www.newyorkislanders.com/</a>     |          22 | TRUE   | Barclays Center       | /api/v1/venues/5026 | Brooklyn     |     5026 | America/New\_York |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    22 | Islanders          | /api/v1/franchises/22 |
+|   3 | New York Rangers    | /api/v1/teams/3 | NYR          | Rangers   | New York     | 1926            | NY Rangers   | <a href="http://www.newyorkrangers.com/" class="uri">http://www.newyorkrangers.com/</a>         |          10 | TRUE   | Madison Square Garden | /api/v1/venues/5054 | New York     |     5054 | America/New\_York |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    10 | Rangers            | /api/v1/franchises/10 |
+|   4 | Philadelphia Flyers | /api/v1/teams/4 | PHI          | Flyers    | Philadelphia | 1967            | Philadelphia | <a href="http://www.philadelphiaflyers.com/" class="uri">http://www.philadelphiaflyers.com/</a> |          16 | TRUE   | Wells Fargo Center    | /api/v1/venues/5096 | Philadelphia |     5096 | America/New\_York |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    16 | Flyers             | /api/v1/franchises/16 |
+|   5 | Pittsburgh Penguins | /api/v1/teams/5 | PIT          | Penguins  | Pittsburgh   | 1967            | Pittsburgh   | <a href="http://pittsburghpenguins.com/" class="uri">http://pittsburghpenguins.com/</a>         |          17 | TRUE   | PPG Paints Arena      | /api/v1/venues/5034 | Pittsburgh   |     5034 | America/New\_York |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    17 | Penguins           | /api/v1/franchises/17 |
+|   6 | Boston Bruins       | /api/v1/teams/6 | BOS          | Bruins    | Boston       | 1924            | Boston       | <a href="http://www.bostonbruins.com/" class="uri">http://www.bostonbruins.com/</a>             |           6 | TRUE   | TD Garden             | /api/v1/venues/5085 | Boston       |     5085 | America/New\_York |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     6 | Bruins             | /api/v1/franchises/6  |
+
+### Roster API
 
     RosterAPI <- function(id, ...) {
     roster <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=team.roster"))
@@ -435,6 +367,19 @@ Franchise All
     return(roster)
     }
 
+### Wrapper Test
+
+| franchiseId | jerseyNumber | person.id | person.fullName    | person.link            | position.code | position.name | position.type | position.abbreviation |
+|------------:|:-------------|----------:|:-------------------|:-----------------------|:--------------|:--------------|:--------------|:----------------------|
+|          24 | 63           |   8478063 | Shane Gersich      | /api/v1/people/8478063 | L             | Left Wing     | Forward       | LW                    |
+|          24 | 30           |   8478492 | Ilya Samsonov      | /api/v1/people/8478492 | G             | Goalie        | Goalie        | G                     |
+|          24 | 40           |   8479516 | Garrett Pilon      | /api/v1/people/8479516 | C             | Center        | Forward       | C                     |
+|          24 | 27           |   8480823 | Alexander Alexeyev | /api/v1/people/8480823 | D             | Defenseman    | Defenseman    | D                     |
+|          24 | 17           |   8469454 | Ilya Kovalchuk     | /api/v1/people/8469454 | L             | Left Wing     | Forward       | LW                    |
+|          24 | 8            |   8471214 | Alex Ovechkin      | /api/v1/people/8471214 | L             | Left Wing     | Forward       | LW                    |
+
+### Person API
+
     PersonAPI <- function(id, ...) {
     person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=person.names"))
 
@@ -445,6 +390,14 @@ Franchise All
     person <- fromJSON(person, flatten = TRUE)
     return(person[[2]])
     }
+
+### Wrapper Test
+
+|  id | name            | link             | abbreviation | teamName | locationName | firstYearOfPlay | shortName | officialSiteUrl                                                             | franchiseId | active | venue.name             | venue.link          | venue.city | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link        |
+|----:|:----------------|:-----------------|:-------------|:---------|:-------------|:----------------|:----------|:----------------------------------------------------------------------------|------------:|:-------|:-----------------------|:--------------------|:-----------|:---------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:----------------------|
+|  28 | San Jose Sharks | /api/v1/teams/28 | SJS          | Sharks   | San Jose     | 1990            | San Jose  | <a href="http://www.sjsharks.com/" class="uri">http://www.sjsharks.com/</a> |          29 | TRUE   | SAP Center at San Jose | /api/v1/venues/null | San Jose   | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    29 | Sharks             | /api/v1/franchises/29 |
+
+### People API (not in wrapper - internal use)
 
     # Detailed substitue for PersonAPI
     PeopleAPI <- function(id, ...) {
@@ -458,19 +411,31 @@ Franchise All
     return(people[[2]])
     }
 
-    ## New DF combining People with Roster
+### Team Player Function (for internal analysis use)
+
+    ## New DF combining People with Roster for additional player stats
     TeamPlayer <- function (id, ...) {
+      
+    # Get player ID from Roster
     playerId <- pull(RosterAPI(id), person.id)
+
+    # Seed data frame
     players <- as.data.frame(PeopleAPI(playerId[1]))
+
+    # Iterate player IDs over People API to build data frame 
       for (i in 2:length(playerId)) {
         players[i, ] <- (PeopleAPI(playerId[i]))
       }
+
+    # Trim for relevant data for analysis
     players <- players %>% select(currentTeam.id, id, fullName, birthCountry, primaryPosition.name)
     if(length(players$currentTeam.id) > 2) {
       players$currentTeam.id = players$currentTeam.id[[1]]
     }
     return(players) 
     }
+
+### Next Game API
 
     NextGAPI <- function(id, ...) {
     nextG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.next"))
@@ -484,6 +449,14 @@ Franchise All
     return(nextG)
     }
 
+### Wrapper Test
+
+|     gamePk | link                              | gameType | season   | gameDate             | status.abstractGameState | status.codedGameState | status.detailedState | status.statusCode | status.startTimeTBD | teams.away.score | teams.away.leagueRecord.wins | teams.away.leagueRecord.losses | teams.away.leagueRecord.ot | teams.away.leagueRecord.type | teams.away.team.id | teams.away.team.name | teams.away.team.link | teams.home.score | teams.home.leagueRecord.wins | teams.home.leagueRecord.losses | teams.home.leagueRecord.ot | teams.home.leagueRecord.type | teams.home.team.id | teams.home.team.name | teams.home.team.link | venue.id | venue.name   | venue.link          | content.link                    |
+|-----------:|:----------------------------------|:---------|:---------|:---------------------|:-------------------------|:----------------------|:---------------------|:------------------|:--------------------|-----------------:|-----------------------------:|-------------------------------:|---------------------------:|:-----------------------------|-------------------:|:---------------------|:---------------------|-----------------:|-----------------------------:|-------------------------------:|---------------------------:|:-----------------------------|-------------------:|:---------------------|:---------------------|---------:|:-------------|:--------------------|:--------------------------------|
+| 2019030411 | /api/v1/game/2019030411/feed/live | P        | 20192020 | 2020-09-19T23:30:00Z | Preview                  | 1                     | Scheduled            | 1                 | FALSE               |                0 |                           13 |                              8 |                          0 | league                       |                 25 | Dallas Stars         | /api/v1/teams/25     |                0 |                           14 |                              5 |                          0 | league                       |                 14 | Tampa Bay Lightning  | /api/v1/teams/14     |     5100 | Rogers Place | /api/v1/venues/5100 | /api/v1/game/2019030411/content |
+
+### Prior Game API
+
     PriorGAPI <- function(id, ...) {
     priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.previous"))
 
@@ -496,6 +469,24 @@ Franchise All
     return(priorG)
     }
 
+### Wrapper Test
+
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+
+| date       | totalItems | totalEvents | totalGames | totalMatches | games                                                                                                                                                                                                                                                                                                                                           | events | matches |
+|:-----------|-----------:|------------:|-----------:|-------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------|:--------|
+| 2020-03-11 |          1 |           0 |          1 |            0 | 2019021079 , /api/v1/game/2019021079/feed/live, R , 20192020 , 2020-03-12T00:00:00Z , Final , 7 , Final , 7 , FALSE , 2 , 29 , 36 , 5 , league , 28 , San Jose Sharks , /api/v1/teams/28 , 6 , 32 , 30 , 8 , league , 16 , Chicago Blackhawks , /api/v1/teams/16 , 5092 , United Center , /api/v1/venues/5092 , /api/v1/game/2019021079/content | NULL   | NULL    |
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### Expanded Stats API
+
     ExpStatsAPI <- function(id, ...) {
     expStats <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.stats"))
 
@@ -507,6 +498,15 @@ Franchise All
     expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
     return(expStats)
     }
+
+### Wrapper Test
+
+| stat.gamesPlayed | stat.wins | stat.losses | stat.ot | stat.pts | stat.ptPctg | stat.goalsPerGame | stat.goalsAgainstPerGame | stat.evGGARatio | stat.powerPlayPercentage | stat.powerPlayGoals | stat.powerPlayGoalsAgainst | stat.powerPlayOpportunities | stat.penaltyKillPercentage | stat.shotsPerGame | stat.shotsAllowed | stat.winScoreFirst | stat.winOppScoreFirst | stat.winLeadFirstPer | stat.winLeadSecondPer | stat.winOutshootOpp | stat.winOutshotByOpp | stat.faceOffsTaken | stat.faceOffsWon | stat.faceOffsLost | stat.faceOffWinPercentage | stat.shootingPctg | stat.savePctg | stat.penaltyKillOpportunities | stat.savePctRank | stat.shootingPctRank | team.id | team.name       | team.link        |
+|-----------------:|:----------|:------------|:--------|:---------|:------------|:------------------|:-------------------------|:----------------|:-------------------------|:--------------------|:---------------------------|:----------------------------|:---------------------------|:------------------|:------------------|:-------------------|:----------------------|:---------------------|:----------------------|:--------------------|:---------------------|:-------------------|:-----------------|:------------------|:--------------------------|------------------:|--------------:|:------------------------------|:-----------------|:---------------------|--------:|:----------------|:-----------------|
+|               70 | 29        | 36          | 5       | 63       | 45.0        | 2.571             | 3.214                    | 0.7593          | 17.5                     | 33                  | 32                         | 189                         | 85.7                       | 30.0143           | 30.5714           | 0.625              | 0.237                 | 0.737                | 0.87                  | 0.417               | 0.419                | 3817               | 1868             | 1949              | 48.9                      |               8.6 |         0.895 | NA                            | NA               | NA                   |      28 | San Jose Sharks | /api/v1/teams/28 |
+|               NA | 28th      | 30th        | 30th    | 29th     | 29th        | 28th              | 27th                     | 30th            | 23rd                     | 26th                | 3rd                        | 28th                        | 1st                        | 26th              | 10th              | 28th               | 25th                  | 18th                 | 13th                  | 25th                | 25th                 | 29th               | 28th             | 9th               | 24th                      |                NA |            NA | 25th                          | 30th             | 27th                 |      28 | San Jose Sharks | /api/v1/teams/28 |
+
+### Season API (tested in Data Collection)
 
     SeasonAPI <- function(id, season, ...) {
     season <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.roster&season=", season))
@@ -522,6 +522,8 @@ Franchise All
     return(season)
     }
 
+### Multi Team API (no wrapper but functions directly)
+
     MultiAPI <- function(id, ...) {
     multi <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", "?teamId=", id))
 
@@ -532,6 +534,8 @@ Franchise All
     multi <- fromJSON(multi, flatten = TRUE)
     return(multi[[2]])
     }
+
+### Playoff API (void of valuable info)
 
     PlayoffAPI <- function(id, ...) {
     playoff <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?stats=statsSingleSeasonPlayoffs"))
@@ -545,12 +549,7 @@ Franchise All
     }
 
 2017 - 2019 Presidents Cup Teams vs. Low Points Teams Analysis
---------------------------------------------------------------
-
-### Language
-
-Analysis
-========
+==============================================================
 
 Data
 ----
@@ -574,7 +573,7 @@ on which the Rosters were analyzed.
     pres19 <- SeasonAPI(14, 20182019)
     last19 <- SeasonAPI(9, 20182019)
 
-    # Combine results into single DS & add year & rank
+    # Combine results into single DS & add year & finish
     PresLast <- bind_rows(pres17, last17, pres18, last18, pres19, last19)
     PresLast <- mutate(PresLast, year = 
                       ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Avalanche"), 17,
@@ -582,10 +581,8 @@ on which the Rosters were analyzed.
     PresLast <- mutate(PresLast, rank = ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Predators") | (PresLast$teamName == "Lightning"), "First", "Last"))
     PresLast <- PresLast %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code)
 
-    # Skater for detailed stats
 
     # Franchise ID's for SkaterAPI argument
-
     frIdList <- c(pres17$franchiseId[1], last17$franchiseId[1], pres18$franchiseId[1],last18$franchiseId[1], pres19$franchiseId[1], last19$franchiseId[1])
 
     # Skater for detailed stats
@@ -596,28 +593,31 @@ on which the Rosters were analyzed.
     PresLast_Skater <- PresLast_Skater %>% rename("person.id" = playerId) 
 
     # Join Preslast & Preslast_Skater fo Skaters on Pres-last Teams / Seasons for analysis
-
     PL_SK_Season <- inner_join(PresLast, PresLast_Skater) 
     PL_SK_Season <-as_tibble(PL_SK_Season) %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
 
-
+    # Get additional categorical stats for Players
     Season_People <- lapply(PL_SK_Season$person.id, PeopleAPI)
     Season_People <- bind_rows(Season_People) %>% select(id, nationality) %>% mutate("person.id" = id)
 
+    # Create regions for categorical analysis
     PL_SK_Season <- inner_join(PL_SK_Season, Season_People)
     PL_SK_Season <- mutate(PL_SK_Season, country = ifelse((nationality == "USA"), "USA",
                                                    ifelse((nationality == "CAN"), "CAN", "EUR")))
 
+    # Create Average PM & Points stats for Players
     PL_SK_Season <- PL_SK_Season %>% mutate(AveragePM = round((penaltyMinutes/seasons), 2), TotalPoints = (goals+assists), AverageTP = round((goals+assists)/seasons), 2)
 
+    # Select relevant variables for analysis
     PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.fullName, country, position.code, seasons, AveragePM, AverageTP) %>% distinct()
 
-
+    # Rename for Graphical & Table prentation
     PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = teamName, "Year" = year, "Finish" = rank, "Name" = person.fullName, "Country" = country, "Position" = position.code, "Player Seasons" = seasons, "Avg Penalty Min" = AveragePM, "Avg Total Pts" = AverageTP)
 
+    # Create factor for Team Finish
     PL_SK_Season$Finish <- as.factor(PL_SK_Season$Finish)
 
-
+    # Print sample table for report
     kable(head(PL_SK_Season), caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
 
 | Franchise ID | Team     | Year | Finish | Name            | Country | Position | Player Seasons | Avg Penalty Min | Avg Total Pts |
@@ -632,12 +632,13 @@ on which the Rosters were analyzed.
 Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place
 
 Categorical Analysis
---------------------
+====================
 
 Categories for Player Countries (regionalized), Positions (by code), &
 Team Finish.
 
-### Total Summaries
+Total Summaries
+---------------
 
     Pos_Ctry_table <- table(PL_SK_Season$Position, PL_SK_Season$Country)
     kable(Pos_Ctry_table, caption = "Player Position by Country")
@@ -681,8 +682,8 @@ Presidents Cup Winners
 
 Last Place Players
 
-Visuals
--------
+Categorical Visuals
+-------------------
 
 ### 1 Factor
 
@@ -744,9 +745,10 @@ rosters stands out - perhaps a crop of younger players.
 ![](README_files/figure-gfm/3%20factor%20bar%20graphs-1.png)<!-- -->
 
 Quantitative Analysis
----------------------
+=====================
 
-### Summaries
+Summaries
+---------
 
     # Function to knit 5 number sum + Mean given Species input
     TeamSumm <- function(team, ...) {
@@ -891,7 +893,11 @@ per PM but w less discipline (aggressive play leading to positive
 results). The 3 Last Place teams stand out for the shallowness (low
 points per penalty mins) of their lines & clustering in the lower left
 (fewer points/fewer penalty minutes) - teams appear to be less
-aggressive/offensively minded
+aggressive/offensively minded - could be Experience related. The 3 Last
+Place teams have man tenures under 4 years while the First Place teams
+are over 5 as a group. Capitals have the max tenured player at 15 years
+- The Great 8, Alex Ovechkin - you’ll see him at the top of all charts.
+He’s pretty good.
 
     # Base plot aesthetic with Total Points on x axis
     g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color = Team))
@@ -900,100 +906,3 @@ aggressive/offensively minded
     g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")
 
 ![](README_files/figure-gfm/dotplot%20by-1.png)<!-- -->
-
-    TeamStatsAPI_Call <- (TeamStatsAPI())
-    knitr::kable(TeamStatsAPI_Call)
-
-|  id | name                  | link             | abbreviation | teamName       | locationName | firstYearOfPlay | shortName    | officialSiteUrl                                                                                 | franchiseId | active | venue.name               | venue.link          | venue.city   | venue.id | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link        |
-|----:|:----------------------|:-----------------|:-------------|:---------------|:-------------|:----------------|:-------------|:------------------------------------------------------------------------------------------------|------------:|:-------|:-------------------------|:--------------------|:-------------|---------:|:---------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:----------------------|
-|   1 | New Jersey Devils     | /api/v1/teams/1  | NJD          | Devils         | New Jersey   | 1982            | New Jersey   | <a href="http://www.newjerseydevils.com/" class="uri">http://www.newjerseydevils.com/</a>       |          23 | TRUE   | Prudential Center        | /api/v1/venues/null | Newark       |       NA | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    23 | Devils             | /api/v1/franchises/23 |
-|   2 | New York Islanders    | /api/v1/teams/2  | NYI          | Islanders      | New York     | 1972            | NY Islanders | <a href="http://www.newyorkislanders.com/" class="uri">http://www.newyorkislanders.com/</a>     |          22 | TRUE   | Barclays Center          | /api/v1/venues/5026 | Brooklyn     |     5026 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    22 | Islanders          | /api/v1/franchises/22 |
-|   3 | New York Rangers      | /api/v1/teams/3  | NYR          | Rangers        | New York     | 1926            | NY Rangers   | <a href="http://www.newyorkrangers.com/" class="uri">http://www.newyorkrangers.com/</a>         |          10 | TRUE   | Madison Square Garden    | /api/v1/venues/5054 | New York     |     5054 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    10 | Rangers            | /api/v1/franchises/10 |
-|   4 | Philadelphia Flyers   | /api/v1/teams/4  | PHI          | Flyers         | Philadelphia | 1967            | Philadelphia | <a href="http://www.philadelphiaflyers.com/" class="uri">http://www.philadelphiaflyers.com/</a> |          16 | TRUE   | Wells Fargo Center       | /api/v1/venues/5096 | Philadelphia |     5096 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    16 | Flyers             | /api/v1/franchises/16 |
-|   5 | Pittsburgh Penguins   | /api/v1/teams/5  | PIT          | Penguins       | Pittsburgh   | 1967            | Pittsburgh   | <a href="http://pittsburghpenguins.com/" class="uri">http://pittsburghpenguins.com/</a>         |          17 | TRUE   | PPG Paints Arena         | /api/v1/venues/5034 | Pittsburgh   |     5034 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    17 | Penguins           | /api/v1/franchises/17 |
-|   6 | Boston Bruins         | /api/v1/teams/6  | BOS          | Bruins         | Boston       | 1924            | Boston       | <a href="http://www.bostonbruins.com/" class="uri">http://www.bostonbruins.com/</a>             |           6 | TRUE   | TD Garden                | /api/v1/venues/5085 | Boston       |     5085 | America/New\_York    |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     6 | Bruins             | /api/v1/franchises/6  |
-|   7 | Buffalo Sabres        | /api/v1/teams/7  | BUF          | Sabres         | Buffalo      | 1970            | Buffalo      | <a href="http://www.sabres.com/" class="uri">http://www.sabres.com/</a>                         |          19 | TRUE   | KeyBank Center           | /api/v1/venues/5039 | Buffalo      |     5039 | America/New\_York    |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                    19 | Sabres             | /api/v1/franchises/19 |
-|   8 | Montréal Canadiens    | /api/v1/teams/8  | MTL          | Canadiens      | Montréal     | 1909            | Montréal     | <a href="http://www.canadiens.com/" class="uri">http://www.canadiens.com/</a>                   |           1 | TRUE   | Bell Centre              | /api/v1/venues/5028 | Montréal     |     5028 | America/Montreal     |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     1 | Canadiens          | /api/v1/franchises/1  |
-|   9 | Ottawa Senators       | /api/v1/teams/9  | OTT          | Senators       | Ottawa       | 1990            | Ottawa       | <a href="http://www.ottawasenators.com/" class="uri">http://www.ottawasenators.com/</a>         |          30 | TRUE   | Canadian Tire Centre     | /api/v1/venues/5031 | Ottawa       |     5031 | America/New\_York    |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                    30 | Senators           | /api/v1/franchises/30 |
-|  10 | Toronto Maple Leafs   | /api/v1/teams/10 | TOR          | Maple Leafs    | Toronto      | 1917            | Toronto      | <a href="http://www.mapleleafs.com/" class="uri">http://www.mapleleafs.com/</a>                 |           5 | TRUE   | Scotiabank Arena         | /api/v1/venues/null | Toronto      |       NA | America/Toronto      |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     5 | Maple Leafs        | /api/v1/franchises/5  |
-|  12 | Carolina Hurricanes   | /api/v1/teams/12 | CAR          | Hurricanes     | Carolina     | 1979            | Carolina     | <a href="http://www.carolinahurricanes.com/" class="uri">http://www.carolinahurricanes.com/</a> |          26 | TRUE   | PNC Arena                | /api/v1/venues/5066 | Raleigh      |     5066 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    26 | Hurricanes         | /api/v1/franchises/26 |
-|  13 | Florida Panthers      | /api/v1/teams/13 | FLA          | Panthers       | Florida      | 1993            | Florida      | <a href="http://www.floridapanthers.com/" class="uri">http://www.floridapanthers.com/</a>       |          33 | TRUE   | BB&T Center              | /api/v1/venues/5027 | Sunrise      |     5027 | America/New\_York    |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                    33 | Panthers           | /api/v1/franchises/33 |
-|  14 | Tampa Bay Lightning   | /api/v1/teams/14 | TBL          | Lightning      | Tampa Bay    | 1991            | Tampa Bay    | <a href="http://www.tampabaylightning.com/" class="uri">http://www.tampabaylightning.com/</a>   |          31 | TRUE   | AMALIE Arena             | /api/v1/venues/null | Tampa        |       NA | America/New\_York    |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                    31 | Lightning          | /api/v1/franchises/31 |
-|  15 | Washington Capitals   | /api/v1/teams/15 | WSH          | Capitals       | Washington   | 1974            | Washington   | <a href="http://www.washingtoncapitals.com/" class="uri">http://www.washingtoncapitals.com/</a> |          24 | TRUE   | Capital One Arena        | /api/v1/venues/5094 | Washington   |     5094 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    24 | Capitals           | /api/v1/franchises/24 |
-|  16 | Chicago Blackhawks    | /api/v1/teams/16 | CHI          | Blackhawks     | Chicago      | 1926            | Chicago      | <a href="http://www.chicagoblackhawks.com/" class="uri">http://www.chicagoblackhawks.com/</a>   |          11 | TRUE   | United Center            | /api/v1/venues/5092 | Chicago      |     5092 | America/Chicago      |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    11 | Blackhawks         | /api/v1/franchises/11 |
-|  17 | Detroit Red Wings     | /api/v1/teams/17 | DET          | Red Wings      | Detroit      | 1926            | Detroit      | <a href="http://www.detroitredwings.com/" class="uri">http://www.detroitredwings.com/</a>       |          12 | TRUE   | Little Caesars Arena     | /api/v1/venues/5145 | Detroit      |     5145 | America/Detroit      |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                    12 | Red Wings          | /api/v1/franchises/12 |
-|  18 | Nashville Predators   | /api/v1/teams/18 | NSH          | Predators      | Nashville    | 1997            | Nashville    | <a href="http://www.nashvillepredators.com/" class="uri">http://www.nashvillepredators.com/</a> |          34 | TRUE   | Bridgestone Arena        | /api/v1/venues/5030 | Nashville    |     5030 | America/Chicago      |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    34 | Predators          | /api/v1/franchises/34 |
-|  19 | St. Louis Blues       | /api/v1/teams/19 | STL          | Blues          | St. Louis    | 1967            | St Louis     | <a href="http://www.stlouisblues.com/" class="uri">http://www.stlouisblues.com/</a>             |          18 | TRUE   | Enterprise Center        | /api/v1/venues/5076 | St. Louis    |     5076 | America/Chicago      |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    18 | Blues              | /api/v1/franchises/18 |
-|  20 | Calgary Flames        | /api/v1/teams/20 | CGY          | Flames         | Calgary      | 1980            | Calgary      | <a href="http://www.calgaryflames.com/" class="uri">http://www.calgaryflames.com/</a>           |          21 | TRUE   | Scotiabank Saddledome    | /api/v1/venues/5075 | Calgary      |     5075 | America/Denver       |                    -6 | MDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    21 | Flames             | /api/v1/franchises/21 |
-|  21 | Colorado Avalanche    | /api/v1/teams/21 | COL          | Avalanche      | Colorado     | 1979            | Colorado     | <a href="http://www.coloradoavalanche.com/" class="uri">http://www.coloradoavalanche.com/</a>   |          27 | TRUE   | Pepsi Center             | /api/v1/venues/5064 | Denver       |     5064 | America/Denver       |                    -6 | MDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    27 | Avalanche          | /api/v1/franchises/27 |
-|  22 | Edmonton Oilers       | /api/v1/teams/22 | EDM          | Oilers         | Edmonton     | 1979            | Edmonton     | <a href="http://www.edmontonoilers.com/" class="uri">http://www.edmontonoilers.com/</a>         |          25 | TRUE   | Rogers Place             | /api/v1/venues/5100 | Edmonton     |     5100 | America/Edmonton     |                    -6 | MDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    25 | Oilers             | /api/v1/franchises/25 |
-|  23 | Vancouver Canucks     | /api/v1/teams/23 | VAN          | Canucks        | Vancouver    | 1970            | Vancouver    | <a href="http://www.canucks.com/" class="uri">http://www.canucks.com/</a>                       |          20 | TRUE   | Rogers Arena             | /api/v1/venues/5073 | Vancouver    |     5073 | America/Vancouver    |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    20 | Canucks            | /api/v1/franchises/20 |
-|  24 | Anaheim Ducks         | /api/v1/teams/24 | ANA          | Ducks          | Anaheim      | 1993            | Anaheim      | <a href="http://www.anaheimducks.com/" class="uri">http://www.anaheimducks.com/</a>             |          32 | TRUE   | Honda Center             | /api/v1/venues/5046 | Anaheim      |     5046 | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    32 | Ducks              | /api/v1/franchises/32 |
-|  25 | Dallas Stars          | /api/v1/teams/25 | DAL          | Stars          | Dallas       | 1967            | Dallas       | <a href="http://www.dallasstars.com/" class="uri">http://www.dallasstars.com/</a>               |          15 | TRUE   | American Airlines Center | /api/v1/venues/5019 | Dallas       |     5019 | America/Chicago      |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    15 | Stars              | /api/v1/franchises/15 |
-|  26 | Los Angeles Kings     | /api/v1/teams/26 | LAK          | Kings          | Los Angeles  | 1967            | Los Angeles  | <a href="http://www.lakings.com/" class="uri">http://www.lakings.com/</a>                       |          14 | TRUE   | STAPLES Center           | /api/v1/venues/5081 | Los Angeles  |     5081 | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    14 | Kings              | /api/v1/franchises/14 |
-|  28 | San Jose Sharks       | /api/v1/teams/28 | SJS          | Sharks         | San Jose     | 1990            | San Jose     | <a href="http://www.sjsharks.com/" class="uri">http://www.sjsharks.com/</a>                     |          29 | TRUE   | SAP Center at San Jose   | /api/v1/venues/null | San Jose     |       NA | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    29 | Sharks             | /api/v1/franchises/29 |
-|  29 | Columbus Blue Jackets | /api/v1/teams/29 | CBJ          | Blue Jackets   | Columbus     | 1997            | Columbus     | <a href="http://www.bluejackets.com/" class="uri">http://www.bluejackets.com/</a>               |          36 | TRUE   | Nationwide Arena         | /api/v1/venues/5059 | Columbus     |     5059 | America/New\_York    |                    -4 | EDT               |          18 | Metropolitan  | Metro              | /api/v1/divisions/18 | M                     |             6 | Eastern         | /api/v1/conferences/6 |                    36 | Blue Jackets       | /api/v1/franchises/36 |
-|  30 | Minnesota Wild        | /api/v1/teams/30 | MIN          | Wild           | Minnesota    | 1997            | Minnesota    | <a href="http://www.wild.com/" class="uri">http://www.wild.com/</a>                             |          37 | TRUE   | Xcel Energy Center       | /api/v1/venues/5098 | St. Paul     |     5098 | America/Chicago      |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    37 | Wild               | /api/v1/franchises/37 |
-|  52 | Winnipeg Jets         | /api/v1/teams/52 | WPG          | Jets           | Winnipeg     | 2011            | Winnipeg     | <a href="http://winnipegjets.com/" class="uri">http://winnipegjets.com/</a>                     |          35 | TRUE   | Bell MTS Place           | /api/v1/venues/5058 | Winnipeg     |     5058 | America/Winnipeg     |                    -5 | CDT               |          16 | Central       | CEN                | /api/v1/divisions/16 | C                     |             5 | Western         | /api/v1/conferences/5 |                    35 | Jets               | /api/v1/franchises/35 |
-|  53 | Arizona Coyotes       | /api/v1/teams/53 | ARI          | Coyotes        | Arizona      | 1979            | Arizona      | <a href="http://www.arizonacoyotes.com/" class="uri">http://www.arizonacoyotes.com/</a>         |          28 | TRUE   | Gila River Arena         | /api/v1/venues/5043 | Glendale     |     5043 | America/Phoenix      |                    -7 | MST               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    28 | Coyotes            | /api/v1/franchises/28 |
-|  54 | Vegas Golden Knights  | /api/v1/teams/54 | VGK          | Golden Knights | Vegas        | 2016            | Vegas        | <a href="http://www.vegasgoldenknights.com/" class="uri">http://www.vegasgoldenknights.com/</a> |          38 | TRUE   | T-Mobile Arena           | /api/v1/venues/5178 | Las Vegas    |     5178 | America/Los\_Angeles |                    -7 | PDT               |          15 | Pacific       | PAC                | /api/v1/divisions/15 | P                     |             5 | Western         | /api/v1/conferences/5 |                    38 | Golden Knights     | /api/v1/franchises/38 |
-
-    RosterAPI_Call <- head(RosterAPI(10))
-    knitr::kable(RosterAPI_Call)
-
-| franchiseId | jerseyNumber | person.id | person.fullName | person.link            | position.code | position.name | position.type | position.abbreviation |
-|------------:|:-------------|----------:|:----------------|:-----------------------|:--------------|:--------------|:--------------|:----------------------|
-|           5 | 19           |   8469455 | Jason Spezza    | /api/v1/people/8469455 | C             | Center        | Forward       | C                     |
-|           5 | 8            |   8474162 | Jake Muzzin     | /api/v1/people/8474162 | D             | Defenseman    | Defenseman    | D                     |
-|           5 | 73           |   8475160 | Kyle Clifford   | /api/v1/people/8475160 | L             | Left Wing     | Forward       | LW                    |
-|           5 | 91           |   8475166 | John Tavares    | /api/v1/people/8475166 | C             | Center        | Forward       | C                     |
-|           5 | 94           |   8475197 | Tyson Barrie    | /api/v1/people/8475197 | D             | Defenseman    | Defenseman    | D                     |
-|           5 | 52           |   8475716 | Martin Marincin | /api/v1/people/8475716 | D             | Defenseman    | Defenseman    | D                     |
-
-    PersonAPI_Call <- head(PersonAPI(10))
-    knitr::kable(PersonAPI_Call)
-
-|  id | name                | link             | abbreviation | teamName    | locationName | firstYearOfPlay | shortName | officialSiteUrl                                                                 | franchiseId | active | venue.name       | venue.link          | venue.city | venue.timeZone.id | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name | division.nameShort | division.link        | division.abbreviation | conference.id | conference.name | conference.link       | franchise.franchiseId | franchise.teamName | franchise.link       |
-|----:|:--------------------|:-----------------|:-------------|:------------|:-------------|:----------------|:----------|:--------------------------------------------------------------------------------|------------:|:-------|:-----------------|:--------------------|:-----------|:------------------|----------------------:|:------------------|------------:|:--------------|:-------------------|:---------------------|:----------------------|--------------:|:----------------|:----------------------|----------------------:|:-------------------|:---------------------|
-|  10 | Toronto Maple Leafs | /api/v1/teams/10 | TOR          | Maple Leafs | Toronto      | 1917            | Toronto   | <a href="http://www.mapleleafs.com/" class="uri">http://www.mapleleafs.com/</a> |           5 | TRUE   | Scotiabank Arena | /api/v1/venues/null | Toronto    | America/Toronto   |                    -4 | EDT               |          17 | Atlantic      | ATL                | /api/v1/divisions/17 | A                     |             6 | Eastern         | /api/v1/conferences/6 |                     5 | Maple Leafs        | /api/v1/franchises/5 |
-
-    PeopleAPI_Call <- head(PeopleAPI(8468508))
-    knitr::kable(PeopleAPI_Call)
-
-|      id | fullName        | link                   | firstName | lastName | primaryNumber | birthDate  | currentAge | birthCity | birthStateProvince | birthCountry | nationality | height | weight | active | alternateCaptain | captain | rookie | shootsCatches | rosterStatus | currentTeam.id | currentTeam.name    | currentTeam.link | primaryPosition.code | primaryPosition.name | primaryPosition.type | primaryPosition.abbreviation |
-|--------:|:----------------|:-----------------------|:----------|:---------|:--------------|:-----------|-----------:|:----------|:-------------------|:-------------|:------------|:-------|-------:|:-------|:-----------------|:--------|:-------|:--------------|:-------------|---------------:|:--------------------|:-----------------|:---------------------|:---------------------|:---------------------|:-----------------------------|
-| 8468508 | Justin Williams | /api/v1/people/8468508 | Justin    | Williams | 14            | 1981-10-04 |         38 | Cobourg   | ON                 | CAN          | CAN         | 6’ 1"  |    184 | TRUE   | FALSE            | FALSE   | FALSE  | R             | Y            |             12 | Carolina Hurricanes | /api/v1/teams/12 | R                    | Right Wing           | Forward              | RW                           |
-
-    NextGAPI_Call <- head(NextGAPI(1))
-    knitr::kable(NextGAPI_Call)
-
-\|\| \|\| \|\| \|\|
-
-    PriorGAPI_Call <- head(PriorGAPI(12))
-    knitr::kable(PriorGAPI_Call)
-
-<table class="kable_wrapper">
-<tbody>
-<tr>
-<td>
-
-| date       | totalItems | totalEvents | totalGames | totalMatches | games                                                                                                                                                                                                                                                                                                                                | events | matches |
-|:-----------|-----------:|------------:|-----------:|-------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------|:--------|
-| 2020-08-19 |          1 |           0 |          1 |            0 | 2019030145 , /api/v1/game/2019030145/feed/live, P , 20192020 , 2020-08-19T20:00:00Z , Final , 7 , Final , 7 , FALSE , 1 , 4 , 4 , 0 , league , 12 , Carolina Hurricanes , /api/v1/teams/12 , 2 , 4 , 4 , 0 , league , 6 , Boston Bruins , /api/v1/teams/6 , Scotiabank Arena , /api/v1/venues/null , /api/v1/game/2019030145/content | NULL   | NULL    |
-
-</td>
-</tr>
-</tbody>
-</table>
-
-    SeasonAPI_Call <- head(SeasonAPI(12, 20052006))
-    knitr::kable(SeasonAPI_Call)
-
-| franchiseId | jerseyNumber | person.id | person.fullName | person.link            | position.code | position.name | position.type | position.abbreviation | teamName   |
-|------------:|:-------------|----------:|:----------------|:-----------------------|:--------------|:--------------|:--------------|:----------------------|:-----------|
-|          26 | 17           |   8445735 | Rod Brind’Amour | /api/v1/people/8445735 | C             | Center        | Forward       | C                     | Hurricanes |
-|          26 | 28           |   8450725 | Mark Recchi     | /api/v1/people/8450725 | R             | Right Wing    | Forward       | RW                    | Hurricanes |
-|          26 | 2            |   8452371 | Glen Wesley     | /api/v1/people/8452371 | D             | Defenseman    | Defenseman    | D                     | Hurricanes |
-|          26 | 3            |   8456547 | Bret Hedican    | /api/v1/people/8456547 | D             | Defenseman    | Defenseman    | D                     | Hurricanes |
-|          26 | 93           |   8458361 | Doug Weight     | /api/v1/people/8458361 | C             | Center        | Forward       | C                     | Hurricanes |
-|          26 | 4            |   8458519 | Aaron Ward      | /api/v1/people/8458519 | D             | Defenseman    | Defenseman    | D                     | Hurricanes |

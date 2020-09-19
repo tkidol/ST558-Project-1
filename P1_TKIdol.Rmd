@@ -6,7 +6,7 @@ always_allow_html: true
 output: 
    github_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 2
 ---
 
 ```{r, setup, include=FALSE}
@@ -53,23 +53,23 @@ Created 2 wrapper functions to call APIs.  One for the Franchise endpoints takin
 ```{r, Franchise API Wrapper}
 # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
 
+# Lists to validate incoming arguments
 FR_Wrapper <- function(endpoint, team = NULL, ...) {
   menu <- FranchiseAPI()
   records <- c("franchise", "totals", "drilldown", "goalie", "skater")
   teamlist <- list(menu[5])
   frIDs <- list(menu[1])
   
+# Validation tests
   if(!(is.character(endpoint))) stop("Invalid Input")
-  
   if(is.character(team)) {
     if ((team %in% teamlist)) stop ("Invalid Input")
   }
- 
-  if(is.numeric(team)) {
+   if(is.numeric(team)) {
     if((team %in% frIDs)) stop ("Invalid Input")
   }
 
-  
+  # Conditional logic to pull correct API data
     if(endpoint == "franchise") {
     return(FranchiseAPI())
     
@@ -111,25 +111,24 @@ FR_Wrapper <- function(endpoint, team = NULL, ...) {
 ```{r, Stat Wrapper}
 # Stat API Wrapper takes API Modifier (from a list) & team (Team ID or Common Team name (e.g. "Hurricanes)), & Season (for the 'roster & season' endpoint) & returns distinct API data. Note: using 'people' API for analysis but not directly accessible through Wrapper. MultiAPI works directly with multiple 'id' input but not through the Wrapper
 
+# Lists for comparison to validate incoming arguments
 ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
   menu <- FranchiseAPI()
   modifyer <- c("stats", "roster", "person", "nextgame", "priorgame", "expanded", "season")
   teamlist <- list(menu[5])
   teamIDs <- list(menu[4])
-  
+ 
+# Validation tests 
   if((!is.character(mod) & (mod %in% modifyer))) stop("Invalid Input")
-  
   if(is.character(team)) {
       if ((team %in% teamlist)) stop("Invalid Input")
   }
-     
   if(is.numeric(team)) {
     if((team %in% teamIDs)) stop("Invalid Input")
   }
-  
   if(!length(season) != 8) stop("Invalid Input")
   
-
+# Conitional logic to pull correct API data
   if(mod == "stats") {
    return(TeamStatsAPI())
     
@@ -192,7 +191,7 @@ ST_Wrapper <- function(mod, team = NULL, season = 00000000, ...) {
 
 Here are the GET chunks to return APIs associated to the Franchise end points.
 
-## Franchise Main API
+### Main API
 
 ```{r, Franchise API}
 # GET pull for NHL franchise
@@ -210,14 +209,14 @@ return(franchise)
 }
 ```
 
+### Wrapper Test
 ```{r, Franchise API Head, echo = FALSE}
 # API head
 frhead <- FR_Wrapper("franchise")
 kable(head(frhead))
 ```
 
-
-## Team Totals API
+### Team Totals API
 
 ```{r TeamTotal API}
 # GET pull for NHL Team Totals
@@ -239,7 +238,7 @@ tothead <- FR_Wrapper("totals")
 kable(head(tothead))
 ```
 
-## Team Drill Down API
+### Team Drill Down API
 
 ```{r, Team DrillDown API}
 TeamDDAPI <- function(id, ...) {
@@ -254,6 +253,7 @@ drill_down <- fromJSON(drill_down, flatten = TRUE)
 return(drill_down[[1]])
 }
 ```
+### Wrapper test
 
 ```{r, Drilldown API Head, echo = FALSE}
 # API head
@@ -261,7 +261,7 @@ ddhead <- FR_Wrapper("drilldown", 26)
 kable(head(ddhead))
 ```
 
-## Goalie API
+### Goalie API
 
 ```{r Goalie API}
 GoalieAPI <- function(id, ...) {
@@ -276,8 +276,15 @@ goalie <- fromJSON(goalie, flatten = TRUE)
 return(goalie[[1]])
 }
 ```
+### Wrapper Test
 
-## Skater API
+```{r, Goalie API Head, echo = FALSE}
+# API head
+ghead <- FR_Wrapper("goalie", "Avalanche")
+kable(head(ghead))
+```
+
+### Skater API
 
 ```{r, Skater API}
 SkaterAPI <- function(id, ...) {
@@ -292,17 +299,15 @@ skater <- fromJSON(skater, flatten = TRUE)
 return(skater[[1]])
 }
 ```
+### Wrapper Test
 
-```{r, franchise call}
-Franchise <- FranchiseAPI()
-Franchise <- arrange(Franchise, (Franchise[[4]]))
-kable((Franchise), caption = "Franchise All")
+```{r, Skater API Head, echo = FALSE}
+# API head
+skhead <- FR_Wrapper("skater", 2)
+kable(head(skhead))
 ```
 
-```{r, Record API calls}
-SkaterAPI_Call <- head(SkaterAPI(1))
-glimpse(SkaterAPI_Call)
-```
+### Complete Team Stats
 
 ```{r, Team Stats API}
 TeamStatsAPI <- function() {
@@ -317,6 +322,15 @@ return(stats[[2]])
 }
 ```
 
+### Wrapper Test
+
+```{r, Team ST API Head, echo = FALSE}
+# API head
+tshead <- ST_Wrapper("stats")
+kable(head(tshead))
+```
+
+### Roster API
 
 ```{r, Roster API}
 RosterAPI <- function(id, ...) {
@@ -334,6 +348,16 @@ return(roster)
 }
 ```
 
+### Wrapper Test
+
+```{r, Roster Test, echo = FALSE}
+# API head
+roshead <- ST_Wrapper("roster", 15)
+kable(head(roshead))
+```
+
+### Person API
+
 ```{r, Person API}
 PersonAPI <- function(id, ...) {
 person <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "/?expand=person.names"))
@@ -346,6 +370,14 @@ person <- fromJSON(person, flatten = TRUE)
 return(person[[2]])
 }
 ```
+
+### Wrapper Test
+```{r, Person API Head, echo = FALSE}
+# API head
+pershead <- ST_Wrapper("person", "Sharks")
+kable(head(pershead))
+```
+### People API (not in wrapper - internal use)
 
 ```{r, People API}
 # Detailed substitue for PersonAPI
@@ -361,14 +393,24 @@ return(people[[2]])
 }
 ```
 
+### Team Player Function (for internal analysis use)
+
 ```{r, team player}
-## New DF combining People with Roster
+## New DF combining People with Roster for additional player stats
 TeamPlayer <- function (id, ...) {
+  
+# Get player ID from Roster
 playerId <- pull(RosterAPI(id), person.id)
+
+# Seed data frame
 players <- as.data.frame(PeopleAPI(playerId[1]))
+
+# Iterate player IDs over People API to build data frame 
   for (i in 2:length(playerId)) {
     players[i, ] <- (PeopleAPI(playerId[i]))
   }
+
+# Trim for relevant data for analysis
 players <- players %>% select(currentTeam.id, id, fullName, birthCountry, primaryPosition.name)
 if(length(players$currentTeam.id) > 2) {
   players$currentTeam.id = players$currentTeam.id[[1]]
@@ -376,7 +418,7 @@ if(length(players$currentTeam.id) > 2) {
 return(players) 
 }
 ```
-
+### Next Game API
 
 ```{r, Next Game API}
 NextGAPI <- function(id, ...) {
@@ -392,6 +434,16 @@ return(nextG)
 }
 ```
 
+### Wrapper Test
+
+```{r, NG API Head, echo = FALSE}
+# API head
+nghead <- ST_Wrapper("nextgame", "Lightning")
+kable(head(nghead))
+```
+
+### Prior Game API
+
 ```{r, Prior Game API}
 PriorGAPI <- function(id, ...) {
 priorG <- GET(paste0("https://statsapi.web.nhl.com/api/v1/teams/", id, "?expand=team.schedule.previous"))
@@ -406,6 +458,15 @@ return(priorG)
 }
 ```
 
+### Wrapper Test
+
+```{r, Prior API Head, echo = FALSE}
+# API head
+pghead <- ST_Wrapper("priorgame", 28)
+kable(head(pghead))
+```
+
+### Expanded Stats API
 
 ```{r, Expanded Stats API}
 ExpStatsAPI <- function(id, ...) {
@@ -420,6 +481,14 @@ expStats <- as.data.frame(expStats[[2]]$teamStats[[1]]$splits)
 return(expStats)
 }
 ```
+### Wrapper Test
+
+```{r, Exp API Head, echo = FALSE}
+# API head
+exhead <- ST_Wrapper("expanded", 28)
+kable(head(exhead))
+```
+### Season API (tested in Data Collection)
 
 ```{r, Season Stats API}
 SeasonAPI <- function(id, season, ...) {
@@ -436,6 +505,7 @@ season <- as_tibble((season[[2]]$roster.roster[[1]])) %>% mutate("franchiseId" =
 return(season)
 }
 ```
+### Multi Team API (no wrapper but functions directly)
 
 ```{r, Multi Teams API}
 MultiAPI <- function(id, ...) {
@@ -449,6 +519,7 @@ multi <- fromJSON(multi, flatten = TRUE)
 return(multi[[2]])
 }
 ```
+### Playoff API (void of valuable info)
 
 ```{r, Playoffs API}
 PlayoffAPI <- function(id, ...) {
@@ -463,11 +534,9 @@ return(playoff[[2]])
 }
 ```
 
-## 2017 - 2019 Presidents Cup Teams vs. Low Points Teams Analysis
+# 2017 - 2019 Presidents Cup Teams vs. Low Points Teams Analysis
 
-### Language
 
-# Analysis
 
 ## Data
 
@@ -482,7 +551,7 @@ last18 <- SeasonAPI(7, 20172018)
 pres19 <- SeasonAPI(14, 20182019)
 last19 <- SeasonAPI(9, 20182019)
 
-# Combine results into single DS & add year & rank
+# Combine results into single DS & add year & finish
 PresLast <- bind_rows(pres17, last17, pres18, last18, pres19, last19)
 PresLast <- mutate(PresLast, year = 
                   ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Avalanche"), 17,
@@ -490,10 +559,8 @@ PresLast <- mutate(PresLast, year =
 PresLast <- mutate(PresLast, rank = ifelse((PresLast$teamName == "Capitals") | (PresLast$teamName == "Predators") | (PresLast$teamName == "Lightning"), "First", "Last"))
 PresLast <- PresLast %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code)
 
-# Skater for detailed stats
 
 # Franchise ID's for SkaterAPI argument
-
 frIdList <- c(pres17$franchiseId[1], last17$franchiseId[1], pres18$franchiseId[1],last18$franchiseId[1], pres19$franchiseId[1], last19$franchiseId[1])
 
 # Skater for detailed stats
@@ -504,36 +571,39 @@ PresLast_Skater <- bind_rows(PresLast_Skater)
 PresLast_Skater <- PresLast_Skater %>% rename("person.id" = playerId) 
 
 # Join Preslast & Preslast_Skater fo Skaters on Pres-last Teams / Seasons for analysis
-
 PL_SK_Season <- inner_join(PresLast, PresLast_Skater) 
 PL_SK_Season <-as_tibble(PL_SK_Season) %>% select(franchiseId, teamName, year, rank, person.id, person.fullName, jerseyNumber, position.code, seasons, penaltyMinutes, goals, assists, mostPointsOneSeason) %>% distinct()
 
-
+# Get additional categorical stats for Players
 Season_People <- lapply(PL_SK_Season$person.id, PeopleAPI)
 Season_People <- bind_rows(Season_People) %>% select(id, nationality) %>% mutate("person.id" = id)
 
+# Create regions for categorical analysis
 PL_SK_Season <- inner_join(PL_SK_Season, Season_People)
 PL_SK_Season <- mutate(PL_SK_Season, country = ifelse((nationality == "USA"), "USA",
                                                ifelse((nationality == "CAN"), "CAN", "EUR")))
 
+# Create Average PM & Points stats for Players
 PL_SK_Season <- PL_SK_Season %>% mutate(AveragePM = round((penaltyMinutes/seasons), 2), TotalPoints = (goals+assists), AverageTP = round((goals+assists)/seasons), 2)
 
+# Select relevant variables for analysis
 PL_SK_Season <- PL_SK_Season %>% select(franchiseId, teamName, year, rank, person.fullName, country, position.code, seasons, AveragePM, AverageTP) %>% distinct()
 
-
+# Rename for Graphical & Table prentation
 PL_SK_Season <- PL_SK_Season %>% rename("Franchise ID" = franchiseId, "Team" = teamName, "Year" = year, "Finish" = rank, "Name" = person.fullName, "Country" = country, "Position" = position.code, "Player Seasons" = seasons, "Avg Penalty Min" = AveragePM, "Avg Total Pts" = AverageTP)
 
+# Create factor for Team Finish
 PL_SK_Season$Finish <- as.factor(PL_SK_Season$Finish)
 
-
+# Print sample table for report
 kable(head(PL_SK_Season), caption = "Preview of 2017 - 2019 Team Rosters: Presidents Cup vs Last Place")
 ```
 
-## Categorical Analysis
+# Categorical Analysis
 
 Categories for Player Countries (regionalized), Positions (by code), & Team Finish.  
 
-### Total Summaries
+## Total Summaries
 
 
 
@@ -557,7 +627,7 @@ Last <- filter(PL_SK_Season, PL_SK_Season$Finish == "Last")
 Pos_Ctry2_table <- table(Last$Position, Last$Country)
 kable(Pos_Ctry2_table, caption = "Last Place Players")
 ```
-## Visuals
+## Categorical Visuals
 
 ### 1 Factor
 
@@ -602,9 +672,9 @@ FxPMxPtplot <- ggplot(PL_SK_Season, aes(Country, fill = Finish))
 FxPMxPtplot + geom_bar(position = "dodge") + scale_fill_discrete(name = "Team Finish") + labs(x = "Player Country", title = "Player Finish by Country and Position") + facet_wrap(. ~ Position, labeller = (label_both))
 ```
 
-## Quantitative Analysis
+# Quantitative Analysis
 
-### Summaries
+## Summaries
 
 ```{r, player summaries}
 # Function to knit 5 number sum + Mean given Species input
@@ -670,7 +740,7 @@ g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_cont
 
 ### Average Total Points vs Average Penalty Minutes
 
-Breaking out colors by team to show another degree of team detail.  Tamapa Bay jumps out here for the steep Beta 1 - players getting the most points out of their penalty minutes & shortness of line indicate fewer penalty minute outliers (consistent blend of aggression & discipline across roster).  Capitals are next highest in Career points per PM but w less discipline (aggressive play leading to positive results). The 3 Last Place teams stand out for the shallowness (low points per penalty mins) of their lines & clustering in the lower left (fewer points/fewer penalty minutes) - teams appear to be less aggressive/offensively minded
+Breaking out colors by team to show another degree of team detail.  Tamapa Bay jumps out here for the steep Beta 1 - players getting the most points out of their penalty minutes & shortness of line indicate fewer penalty minute outliers (consistent blend of aggression & discipline across roster).  Capitals are next highest in Career points per PM but w less discipline (aggressive play leading to positive results). The 3 Last Place teams stand out for the shallowness (low points per penalty mins) of their lines & clustering in the lower left (fewer points/fewer penalty minutes) - teams appear to be less aggressive/offensively minded - could be Experience related.  The 3 Last Place teams have man tenures under 4 years while the First Place teams are over 5 as a group.  Capitals have the max tenured player at 15 years - The Great 8, Alex Ovechkin - you'll see him at the top of all charts. He's pretty good.
 
 ```{r, dotplot by }
 # Base plot aesthetic with Total Points on x axis
@@ -680,26 +750,4 @@ g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color =
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")
 ```
 
-```{r, Test Stats API calls}
-TeamStatsAPI_Call <- (TeamStatsAPI())
-knitr::kable(TeamStatsAPI_Call)
-
-RosterAPI_Call <- head(RosterAPI(10))
-knitr::kable(RosterAPI_Call)
-
-PersonAPI_Call <- head(PersonAPI(10))
-knitr::kable(PersonAPI_Call)
-
-PeopleAPI_Call <- head(PeopleAPI(8468508))
-knitr::kable(PeopleAPI_Call)
-
-NextGAPI_Call <- head(NextGAPI(1))
-knitr::kable(NextGAPI_Call)
-
-PriorGAPI_Call <- head(PriorGAPI(12))
-knitr::kable(PriorGAPI_Call)
-
-SeasonAPI_Call <- head(SeasonAPI(12, 20052006))
-knitr::kable(SeasonAPI_Call)
-```
 
