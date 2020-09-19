@@ -1,7 +1,7 @@
 NHL
 ================
 Todd Idol
-9/8/2020
+9/18/2020
 
 -   [Link to Project Repo](#link-to-project-repo)
 -   [Packages](#packages)
