@@ -734,7 +734,7 @@ Mixed results among First & Last Placed teams but generally First Place teams sh
 # Base plot aesthetic with Total Points on x axis
 g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = Finish))
 
-# Avg total points histogram
+# Avg PM point plot
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Penalty Minutes vs Average Total Points")
 ```
 
@@ -749,5 +749,3 @@ g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = Avg_Total_Points, color =
 # Avg total points histogram
 g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Total Points vs Average Penalty Minutes")
 ```
-
-

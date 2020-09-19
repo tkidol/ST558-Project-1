@@ -877,7 +877,7 @@ long season.
     # Base plot aesthetic with Total Points on x axis
     g <- ggplot(PL_SK_Season, aes(x = Avg_Penalty_Min, y = PLayer_Seasons, color = Finish))
 
-    # Avg total points histogram
+    # Avg PM point plot
     g + geom_point() + geom_smooth(aes(group = Team), method = lm) + scale_fill_continuous() + labs(title =  "Players Average Penalty Minutes vs Average Total Points")
 
 ![](README_files/figure-gfm/dotplot%20by%20Penalty%20Minutes-1.png)<!-- -->
