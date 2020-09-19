@@ -654,7 +654,7 @@ Consistent with univariate analysis we see fewer players on the winning teams.  
 ```{r, 2 factor bar graphs}
 # Finish by Nationality
 FxCOplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Country)))
-FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationality") + labs(x = "Team Finish")
+FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Country") + labs(x = "Team Finish")
 
 # Country by Position
 FxPosplot <- ggplot(PL_SK_Season, aes(Country, fill = as.factor(Position)))

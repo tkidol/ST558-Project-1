@@ -722,7 +722,7 @@ Last groups in the Qantitative Analysis.
 
     # Finish by Nationality
     FxCOplot <- ggplot(PL_SK_Season, aes(Finish, fill = as.factor(Country)))
-    FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Nationality") + labs(x = "Team Finish")
+    FxCOplot+ geom_bar(position = "dodge") +  scale_fill_discrete(name = "Country") + labs(x = "Team Finish")
 
 ![](README_files/figure-gfm/2%20factor%20bar%20graphs-1.png)<!-- -->
 
