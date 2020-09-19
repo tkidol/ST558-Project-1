@@ -51,7 +51,7 @@ Created 2 wrapper functions to call APIs.  One for the Franchise endpoints takin
 ## Franchise Wrapper
 
 ```{r, Franchise API Wrapper}
-# Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
+# Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data for analysis.
 
 # Lists to validate incoming arguments
 FR_Wrapper <- function(endpoint, team = NULL, ...) {

@@ -68,7 +68,7 @@ the Team stats taking in modifier names, team names & team ID’s.
 Franchise Wrapper
 -----------------
 
-    # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data. 
+    # Franchise Wrapper takes in an API Endpoint (from a list) & Team (either Franchise ID or Common Team name (e.g. "Hurricanes)) & returns distinct API data for analysis.
 
     # Lists to validate incoming arguments
     FR_Wrapper <- function(endpoint, team = NULL, ...) {
